@@ -149,7 +149,7 @@ export default function Footer() {
           © 2024 Tantava. Handcrafted in Bengaluru, India.
         </p>
         <p className="font-label-md text-label-md text-on-surface-variant opacity-50">
-          Website by Studio Elegance
+          Made by Anahat Entertainment
         </p>
       </div>
     </footer>
