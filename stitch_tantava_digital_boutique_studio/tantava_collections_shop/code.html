@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shop Collections | Tantava</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-primary-fixed-variant": "#584400",
+                      "surface": "#fbf9f5",
+                      "secondary": "#496455",
+                      "error-container": "#ffdad6",
+                      "outline": "#7e7665",
+                      "inverse-primary": "#e6c364",
+                      "on-surface-variant": "#4d4637",
+                      "tertiary-fixed-dim": "#ffb3b1",
+                      "inverse-surface": "#30312e",
+                      "on-secondary-container": "#4f6a5b",
+                      "primary-fixed-dim": "#e6c364",
+                      "tertiary-fixed": "#ffdad8",
+                      "secondary-fixed-dim": "#b0cdbb",
+                      "surface-tint": "#755b00",
+                      "background": "#fbf9f5",
+                      "on-tertiary-container": "#6c2a2b",
+                      "on-primary-container": "#503d00",
+                      "tertiary-container": "#ee9290",
+                      "on-tertiary": "#ffffff",
+                      "surface-container-low": "#f5f3ef",
+                      "primary": "#755b00",
+                      "on-background": "#1b1c1a",
+                      "surface-container": "#efeeea",
+                      "on-surface": "#1b1c1a",
+                      "on-error-container": "#93000a",
+                      "on-primary": "#ffffff",
+                      "primary-container": "#c9a84c",
+                      "outline-variant": "#d0c5b2",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-fixed": "#062014",
+                      "on-secondary": "#ffffff",
+                      "surface-container-highest": "#e4e2de",
+                      "on-secondary-fixed-variant": "#324c3e",
+                      "on-tertiary-fixed": "#3d060a",
+                      "on-tertiary-fixed-variant": "#763132",
+                      "surface-variant": "#e4e2de",
+                      "surface-container-high": "#eae8e4",
+                      "on-error": "#ffffff",
+                      "primary-fixed": "#ffe08f",
+                      "on-primary-fixed": "#241a00",
+                      "secondary-fixed": "#ccead6",
+                      "surface-dim": "#dbdad6",
+                      "tertiary": "#934848",
+                      "inverse-on-surface": "#f2f0ed",
+                      "secondary-container": "#ccead6",
+                      "error": "#ba1a1a",
+                      "surface-bright": "#fbf9f5"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "stack-md": "2rem",
+                      "margin-desktop": "64px",
+                      "stack-lg": "4rem",
+                      "margin-mobile": "16px",
+                      "container-max": "1280px",
+                      "gutter": "24px",
+                      "unit": "8px"
+              },
+              "fontFamily": {
+                      "body-lg": ["DM Sans"],
+                      "label-md": ["DM Sans"],
+                      "headline-md": ["Playfair Display"],
+                      "headline-lg": ["Playfair Display"],
+                      "body-md": ["DM Sans"],
+                      "headline-lg-mobile": ["Playfair Display"],
+                      "headline-sm": ["Playfair Display"],
+                      "display-lg": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                      "headline-lg": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                      "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #d0c5b2; border-radius: 2px; }
+        .product-card-hover:hover .hover-image { opacity: 1; }
+        .product-card-hover:hover .base-image { opacity: 0; }
+        .sticky-nav-active { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #c9a84c; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-md shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<a class="font-headline-md text-headline-md text-primary tracking-tight" href="#">Tantava</a>
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-primary border-b border-primary-container pb-1" href="#">Shop</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Collections</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Our Story</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Book Appointment</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Header -->
+<header class="pt-32 pb-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<nav class="flex gap-2 mb-4 text-on-surface-variant font-label-md text-label-md">
+<a class="hover:text-primary" href="#">Home</a>
+<span>/</span>
+<span class="text-primary">Shop All</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">The Curated Collection</h1>
+<p class="max-w-2xl mt-4 font-body-lg text-body-lg text-on-surface-variant">
+                    Discover timeless pieces handcrafted by master artisans, blending centuries-old heritage with modern editorial sophistication.
+                </p>
+</div>
+<div class="flex items-center gap-4 border-b border-outline-variant pb-2 min-w-[200px]">
+<span class="material-symbols-outlined text-outline" data-icon="sort">sort</span>
+<select class="bg-transparent border-none focus:ring-0 font-label-md text-label-md text-on-surface-variant cursor-pointer w-full">
+<option>Sort by: Newest</option>
+<option>Price: Low to High</option>
+<option>Price: High to Low</option>
+<option>Popularity</option>
+</select>
+</div>
+</div>
+</header>
+<main class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-stack-lg">
+<div class="flex flex-col lg:flex-row gap-gutter">
+<!-- Sidebar Filter -->
+<aside class="w-full lg:w-64 flex-shrink-0 space-y-8">
+<!-- Category Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-4 flex justify-between items-center cursor-pointer group">
+                        CATEGORY
+                        <span class="material-symbols-outlined text-sm transition-transform duration-300 group-hover:translate-y-0.5" data-icon="expand_more">expand_more</span>
+</h3>
+<div class="space-y-3 font-body-md text-body-md text-on-surface-variant">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="group-hover:text-primary transition-colors">Sarees</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="group-hover:text-primary transition-colors">Lehengas</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="group-hover:text-primary transition-colors">Fusion Wear</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded border-outline-variant text-primary focus:ring-primary w-4 h-4" type="checkbox"/>
+<span class="group-hover:text-primary transition-colors">Blouses</span>
+</label>
+</div>
+</div>
+<!-- Occasion Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-4 flex justify-between items-center cursor-pointer group">
+                        OCCASION
+                        <span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md hover:border-primary hover:text-primary transition-all">Bridal</button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded-full font-label-md text-label-md">Festive</button>
+<button class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md hover:border-primary hover:text-primary transition-all">Casual</button>
+<button class="px-4 py-2 border border-outline-variant rounded-full font-label-md text-label-md hover:border-primary hover:text-primary transition-all">Formal</button>
+</div>
+</div>
+<!-- Fabric Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-4 flex justify-between items-center cursor-pointer group">
+                        FABRIC
+                        <span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</h3>
+<div class="space-y-3 font-body-md text-body-md text-on-surface-variant">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded-full border-outline-variant text-primary focus:ring-primary w-4 h-4" name="fabric" type="radio"/>
+<span class="group-hover:text-primary transition-colors">Handloom Silk</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded-full border-outline-variant text-primary focus:ring-primary w-4 h-4" name="fabric" type="radio"/>
+<span class="group-hover:text-primary transition-colors">Banarasi Georgette</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="rounded-full border-outline-variant text-primary focus:ring-primary w-4 h-4" name="fabric" type="radio"/>
+<span class="group-hover:text-primary transition-colors">Chanderi</span>
+</label>
+</div>
+</div>
+<!-- Price Range Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-4 flex justify-between items-center cursor-pointer group">
+                        PRICE (₹)
+                        <span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</h3>
+<div class="px-2">
+<input class="w-full h-1 bg-outline-variant appearance-none cursor-pointer accent-primary" max="500000" min="5000" step="1000" type="range"/>
+<div class="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
+<span>₹5,000</span>
+<span>₹5,00,000+</span>
+</div>
+</div>
+</div>
+<!-- Color Section -->
+<div>
+<h3 class="font-label-md text-label-md text-primary mb-4 flex justify-between items-center cursor-pointer group">
+                        COLOR
+                        <span class="material-symbols-outlined text-sm" data-icon="expand_more">expand_more</span>
+</h3>
+<div class="grid grid-cols-5 gap-3">
+<button class="w-8 h-8 rounded-full bg-[#2D4739] border border-outline-variant" title="Forest Green"></button>
+<button class="w-8 h-8 rounded-full bg-[#FFFDF9] border border-outline-variant" title="Ivory"></button>
+<button class="w-8 h-8 rounded-full bg-[#934848] border border-outline-variant" title="Dusty Rose"></button>
+<button class="w-8 h-8 rounded-full bg-[#C9A84C] border border-outline-variant" title="Gold"></button>
+<button class="w-8 h-8 rounded-full bg-[#1b1c1a] border border-outline-variant" title="Ebony"></button>
+</div>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="flex-1">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8">
+<!-- Product Card 1 -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-secondary text-primary-container font-label-md text-[10px] px-3 py-1 uppercase tracking-widest border border-primary-container">Handcrafted</span>
+</div>
+<img alt="" class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxfEFOJR7eUb02ny8c8aJ11yyVWDopvGAgqdCV46XfQEbG080Zb_UM2Lww7HUuJ8zkSumRtfTdh-v9CvmIQlpUBbKRnwCBIkcgxi4oAI50PSOnOOtIJiG8dXiKQEwWpkrj5rY9I9mpGo9b6S8utBLMHR77GNyCg0v4aI7qAT6F-MemhvFL3I9kEEzakxeazEZSfujBzB9tMk1lewpCKxhHwoXqp94d_MAmoERTwR5Eqsb6JbAdPWiEXVLnblgHzWyiMpfv-x_dXDo"/>
+<img alt="" class="hover-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" data-alt="Close up of same fabric draped on a model to show movement and fall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSIuDQbh8IIh7sZnfDHYn77pGQNyK8Ota9iiEgHw33QFEaCbgbgNtCgtIzkqWDDcFW3Ea7qQ9JWAYr-ke9C3PVQG3F06RFSPyNtsvTMs73u6MEswNrS_QBeXsmEL9wxzPg8SVt5JfkDy_xWRKXa_mIo2TDSK4SDa6cIRipevaZDVxD48ad9m3JZLG07d0RkjqzXgBb1vvIxMou1i1hbxK3IoBGFDBX8ggRwBf2p018P1FoGZlXryw5nswb-QqrcUjYle68I7x0rGg"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Vanya Forest Silk Saree</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Heritage Banarasi • ₹1,24,000</p>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-secondary text-primary-container font-label-md text-[10px] px-3 py-1 uppercase tracking-widest border border-primary-container">Limited Pieces</span>
+</div>
+<img alt="" class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSIuDQbh8IIh7sZnfDHYn77pGQNyK8Ota9iiEgHw33QFEaCbgbgNtCgtIzkqWDDcFW3Ea7qQ9JWAYr-ke9C3PVQG3F06RFSPyNtsvTMs73u6MEswNrS_QBeXsmEL9wxzPg8SVt5JfkDy_xWRKXa_mIo2TDSK4SDa6cIRipevaZDVxD48ad9m3JZLG07d0RkjqzXgBb1vvIxMou1i1hbxK3IoBGFDBX8ggRwBf2p018P1FoGZlXryw5nswb-QqrcUjYle68I7x0rGg"/>
+<img alt="" class="hover-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" data-alt="Back view profile of the model wearing the fusion outfit, highlighting the silhouette and clean lines." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxfEFOJR7eUb02ny8c8aJ11yyVWDopvGAgqdCV46XfQEbG080Zb_UM2Lww7HUuJ8zkSumRtfTdh-v9CvmIQlpUBbKRnwCBIkcgxi4oAI50PSOnOOtIJiG8dXiKQEwWpkrj5rY9I9mpGo9b6S8utBLMHR77GNyCg0v4aI7qAT6F-MemhvFL3I9kEEzakxeazEZSfujBzB9tMk1lewpCKxhHwoXqp94d_MAmoERTwR5Eqsb6JbAdPWiEXVLnblgHzWyiMpfv-x_dXDo"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Meera Fusion Ensemble</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Handspun Cotton • ₹85,500</p>
+</div>
+</div>
+<!-- Product Card 3 (Hero Portrait) -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-secondary text-primary-container font-label-md text-[10px] px-3 py-1 uppercase tracking-widest border border-primary-container">Handcrafted</span>
+</div>
+<!-- Note: Resizing IMAGE_5 to fit portrait crop for consistency -->
+<img alt="" class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsxoNU-T7HvRebuq1YDPqVcbBlIwKVhg6mNuDPa6oQlYNDNptMLMyMxQDUpdzOiobI_14-PEB-ItkFSTNJOtzb8BLco84dgnVPcirWGpUtf-ZqkuAWJP7f83SgGZ3kq0vi3tlC209r-VIRtlyWLjHzF3FBVKAH0ESXLFmNB8zf0xZCE8wFBOMOMUfXUp61O8uP8FUhEWL7kv4DX8X0HI-tJdUpTOoTFvrWYY2QzXOROPIxZIef7mD8ZK23I9MU32ZG5E5_BGXiUvk"/>
+<img alt="" class="hover-image absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-700 ease-in-out" data-alt="High detail macro shot of the golden embroidery threads catching the warm boutique light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSIuDQbh8IIh7sZnfDHYn77pGQNyK8Ota9iiEgHw33QFEaCbgbgNtCgtIzkqWDDcFW3Ea7qQ9JWAYr-ke9C3PVQG3F06RFSPyNtsvTMs73u6MEswNrS_QBeXsmEL9wxzPg8SVt5JfkDy_xWRKXa_mIo2TDSK4SDa6cIRipevaZDVxD48ad9m3JZLG07d0RkjqzXgBb1vvIxMou1i1hbxK3IoBGFDBX8ggRwBf2p018P1FoGZlXryw5nswb-QqrcUjYle68I7x0rGg"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Aditi Ivory Lehenga</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Bridal Collection • ₹3,80,000</p>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<img class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" data-alt="A portrait shot of a luxurious deep crimson silk saree with elaborate gold border work, draped artistically over an antique wooden chair in a warm, dimly lit room. The lighting is editorial and moody, focusing on the sheen of the silk and the intricate patterns of the weave." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv3LnQpTIqcI5OYHS5OHiyTafXMNHup70yzvD1HV9YGExOh0nDOUPFelqnPaMH-_PEO-AvVT2Q1aLGpiDoFIsyGBp8n2gqfSOT3s97h22v1YeWYZ4cfbA9_hnMQfDL4udwiWGoNB0wLckeIfnZLBXbYk4ve-_5-CqpN_QKFOobBba6j4OosJoglkQnB7BYjR4_R_HyS0PK1cgiXe_Yx-IeRd5rSLYa8ELHo5BdrYZW4QKBhN9mPJWwogxAuo9cHWguX_d4_mjuu5s"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Crimson Heritage Wrap</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Muga Silk • ₹42,000</p>
+</div>
+</div>
+<!-- Product Card 5 -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<div class="absolute top-4 left-4 z-10">
+<span class="bg-secondary text-primary-container font-label-md text-[10px] px-3 py-1 uppercase tracking-widest border border-primary-container">Limited Pieces</span>
+</div>
+<img class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" data-alt="Sophisticated contemporary Indian jewelry display on a marble pedestal. The collection features handcrafted gold necklaces with emerald accents, glowing under soft studio lights. The aesthetic is clean and high-end, reflecting a modern minimalist approach to luxury heritage crafts." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYY8F0btZlw6RyfLNXerlvvzCYWP41SPvKSdVWgKeXWaffxsywpFQUtUpwPXxSCcZz0rWbbDw3q1KrI3b2uup-ePVXZSAfwFru7O4XruAJBaeaggfnQTx0f91gTrjThKF-qV2OK9bQjLPA5_xmC4HwtO-IxUJzR47BkBtUbe05tMtxKk3yIsqaqmSYAajy9fCGdMtdDL6DQ8cCbuKaG7KcU5XLWOnyDuSR_xIF1KFNtBYpyqvFcn7nB2TgaGLobAncqwL4RnxZC80"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Emerald Temple Set</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">22k Gold • ₹2,15,000</p>
+</div>
+</div>
+<!-- Product Card 6 -->
+<div class="product-card-hover group relative">
+<div class="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+<img class="base-image w-full h-full object-cover transition-opacity duration-700 ease-in-out" data-alt="An ethereal editorial shot of a woman in a flowing pastel peach chiffon anarkali suit, walking through a sun-drenched courtyard filled with white flowers. The image has a soft-focus, dreamy quality with high-key lighting that emphasizes the lightness of the fabric and the romantic, artisanal mood of the brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjeBwYk8JsWTWTijrZNiLO0_k7RAIU9AdyIivz4XbqRgClhKp-FFE-GND64bRwmTLKcxh6qyaMplOIxoiR0f93WrCiaiAG5qcDDRmHCBgEwPZiwEj3ah9c8aJ7ll9bALxd7fiIAUb83oZBgvEhWk4uWfa9J7-TnCBNWwoW8gWc3ahnAIEg2cJl_gujh23tyJPITlLS_9IJDdunBiCqkJeZBMLYrkacjPPSDfO2-lzI14R16dqnhO-oiQAi3ltqW5QyyaJxM90awP4"/>
+<div class="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<button class="absolute bottom-4 left-1/2 -translate-x-1/2 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 bg-surface text-primary font-label-md text-label-md px-6 py-3 shadow-lg transition-all duration-500 whitespace-nowrap">
+                                QUICK VIEW
+                            </button>
+</div>
+<div class="space-y-1">
+<h3 class="font-headline-sm text-headline-sm text-primary">Zia Peach Anarkali</h3>
+<p class="font-label-md text-label-md text-on-surface-variant">Chiffon Silk • ₹68,000</p>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-20 flex justify-center items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<span class="font-label-md text-label-md text-primary">1</span>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">2</button>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors">8</button>
+<button class="w-10 h-10 flex items-center justify-center border border-outline-variant text-on-surface-variant hover:border-primary hover:text-primary transition-all">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-low w-full py-stack-lg border-t border-outline-variant/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-1 space-y-4">
+<a class="font-headline-sm text-headline-sm text-primary" href="#">Tantava</a>
+<p class="font-body-md text-body-md text-on-surface-variant">Handcrafting the soul of Indian heritage into modern silhouettes for the discerning eye.</p>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary mb-6 uppercase tracking-widest">Collections</h4>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface-variant">
+<li><a class="hover:text-primary underline transition-all" href="#">Heritage Sarees</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Bridal Couture</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Modern Fusion</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Accessories</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary mb-6 uppercase tracking-widest">Client Care</h4>
+<ul class="space-y-3 font-body-md text-body-md text-on-surface-variant">
+<li><a class="hover:text-primary underline transition-all" href="#">Book Appointment</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Shipping &amp; Returns</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Privacy Policy</a></li>
+<li><a class="hover:text-primary underline transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-primary mb-6 uppercase tracking-widest">Follow Us</h4>
+<div class="flex gap-4">
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#">Instagram</a>
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#">Pinterest</a>
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#">WhatsApp</a>
+</div>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-16 pt-8 border-t border-outline-variant/30">
+<p class="font-label-md text-label-md text-on-surface-variant text-center md:text-left">© 2024 Tantava. Handcrafted in Bengaluru, India.</p>
+</div>
+</footer>
+<!-- SideNavBar (Concierge FAB) -->
+<div class="fixed bottom-8 right-8 z-50 flex items-center justify-center">
+<button class="bg-secondary text-on-secondary rounded-full p-4 shadow-lg hover:scale-105 transition-transform duration-300 flex items-center gap-3 group active:scale-95" id="concierge-fab">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 font-label-md text-label-md whitespace-nowrap">
+                Chat to Order
+            </span>
+</button>
+</div>
+<!-- Quick View Modal (Hidden by default) -->
+<div class="fixed inset-0 z-[60] bg-on-surface/40 backdrop-blur-sm hidden flex items-center justify-center p-margin-mobile" id="quick-view-modal">
+<div class="bg-surface w-full max-w-4xl max-h-[90vh] overflow-y-auto custom-scrollbar relative">
+<button class="absolute top-4 right-4 text-on-surface hover:text-primary z-10" onclick="closeModal()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+<div class="flex flex-col md:flex-row">
+<div class="w-full md:w-1/2 aspect-[0.73] bg-surface-container">
+<img alt="" class="w-full h-full object-cover" id="modal-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsxoNU-T7HvRebuq1YDPqVcbBlIwKVhg6mNuDPa6oQlYNDNptMLMyMxQDUpdzOiobI_14-PEB-ItkFSTNJOtzb8BLco84dgnVPcirWGpUtf-ZqkuAWJP7f83SgGZ3kq0vi3tlC209r-VIRtlyWLjHzF3FBVKAH0ESXLFmNB8zf0xZCE8wFBOMOMUfXUp61O8uP8FUhEWL7kv4DX8X0HI-tJdUpTOoTFvrWYY2QzXOROPIxZIef7mD8ZK23I9MU32ZG5E5_BGXiUvk"/>
+</div>
+<div class="w-full md:w-1/2 p-8 md:p-12 space-y-6">
+<div>
+<span class="font-label-md text-label-md text-primary tracking-widest uppercase">New Arrival</span>
+<h2 class="font-headline-md text-headline-md text-primary mt-2" id="modal-title">Vanya Forest Silk Saree</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-1" id="modal-price">₹1,24,000</p>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Each weave tells a story of heritage. Hand-loomed with pure mulberry silk and dipped in organic forest dyes, this piece features the signature 'Tantava' intricate gold zari work.
+                    </p>
+<div class="space-y-4 pt-4 border-t border-outline-variant">
+<div>
+<span class="font-label-md text-label-md block mb-2">Select Size</span>
+<div class="flex gap-2">
+<button class="w-12 h-12 border border-outline-variant rounded flex items-center justify-center font-label-md hover:border-primary hover:text-primary">XS</button>
+<button class="w-12 h-12 border border-primary rounded flex items-center justify-center font-label-md text-primary">S</button>
+<button class="w-12 h-12 border border-outline-variant rounded flex items-center justify-center font-label-md hover:border-primary hover:text-primary">M</button>
+<button class="w-12 h-12 border border-outline-variant rounded flex items-center justify-center font-label-md hover:border-primary hover:text-primary">L</button>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded font-label-md text-label-md tracking-widest hover:bg-on-primary-fixed-variant transition-colors">
+                            ADD TO BAG
+                        </button>
+<button class="w-full border border-primary text-primary py-4 rounded font-label-md text-label-md tracking-widest hover:bg-primary-container/10 transition-colors">
+                            BOOK VIRTUAL CONSULTATION
+                        </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+        // Simple Interaction Scripts
+        const modal = document.getElementById('quick-view-modal');
+        const quickViewBtns = document.querySelectorAll('.product-card-hover button');
+
+        quickViewBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.product-card-hover');
+                const title = card.querySelector('h3').innerText;
+                const price = card.querySelector('p').innerText.split('•')[1].trim();
+                const imgSrc = card.querySelector('.base-image').src;
+                
+                document.getElementById('modal-title').innerText = title;
+                document.getElementById('modal-price').innerText = price;
+                document.getElementById('modal-img').src = imgSrc;
+                
+                modal.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        });
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            document.body.classList.remove('overflow-hidden');
+        }
+
+        // Close modal on click outside
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        // Filter Dropdown Toggles (Conceptual)
+        document.querySelectorAll('aside h3').forEach(header => {
+            header.addEventListener('click', () => {
+                const content = header.nextElementSibling;
+                const icon = header.querySelector('span');
+                if (content.classList.contains('hidden')) {
+                    content.classList.remove('hidden');
+                    icon.style.transform = 'rotate(0deg)';
+                } else {
+                    content.classList.add('hidden');
+                    icon.style.transform = 'rotate(-90deg)';
+                }
+            });
+        });
+    </script>
+</body></html>

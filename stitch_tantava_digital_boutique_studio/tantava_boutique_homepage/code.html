@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tantava | Artisanal Luxury Boutique</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&amp;family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-primary-fixed-variant": "#584400",
+                    "surface": "#fbf9f5",
+                    "secondary": "#496455",
+                    "error-container": "#ffdad6",
+                    "outline": "#7e7665",
+                    "inverse-primary": "#e6c364",
+                    "on-surface-variant": "#4d4637",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "inverse-surface": "#30312e",
+                    "on-secondary-container": "#4f6a5b",
+                    "primary-fixed-dim": "#e6c364",
+                    "tertiary-fixed": "#ffdad8",
+                    "secondary-fixed-dim": "#b0cdbb",
+                    "surface-tint": "#755b00",
+                    "background": "#fbf9f5",
+                    "on-tertiary-container": "#6c2a2b",
+                    "on-primary-container": "#503d00",
+                    "tertiary-container": "#ee9290",
+                    "on-tertiary": "#ffffff",
+                    "surface-container-low": "#f5f3ef",
+                    "primary": "#755b00",
+                    "on-background": "#1b1c1a",
+                    "surface-container": "#efeeea",
+                    "on-surface": "#1b1c1a",
+                    "on-error-container": "#93000a",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#c9a84c",
+                    "outline-variant": "#d0c5b2",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-fixed": "#062014",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#e4e2de",
+                    "on-secondary-fixed-variant": "#324c3e",
+                    "on-tertiary-fixed": "#3d060a",
+                    "on-tertiary-fixed-variant": "#763132",
+                    "surface-variant": "#e4e2de",
+                    "surface-container-high": "#eae8e4",
+                    "on-error": "#ffffff",
+                    "primary-fixed": "#ffe08f",
+                    "on-primary-fixed": "#241a00",
+                    "secondary-fixed": "#ccead6",
+                    "surface-dim": "#dbdad6",
+                    "tertiary": "#934848",
+                    "inverse-on-surface": "#f2f0ed",
+                    "secondary-container": "#ccead6",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#fbf9f5"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-md": "2rem",
+                    "margin-desktop": "64px",
+                    "stack-lg": "4rem",
+                    "margin-mobile": "16px",
+                    "container-max": "1280px",
+                    "gutter": "24px",
+                    "unit": "8px"
+            },
+            "fontFamily": {
+                    "body-lg": ["DM Sans"],
+                    "label-md": ["DM Sans"],
+                    "headline-md": ["Playfair Display"],
+                    "headline-lg": ["Playfair Display"],
+                    "body-md": ["DM Sans"],
+                    "headline-lg-mobile": ["Playfair Display"],
+                    "headline-sm": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.2", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                    "headline-lg": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg-mobile": ["36px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .frosted-nav {
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .hero-zoom {
+            animation: slowZoom 20s infinite alternate ease-in-out;
+        }
+        @keyframes slowZoom {
+            from { transform: scale(1); }
+            to { transform: scale(1.1); }
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #efeeea;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #c9a84c;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/90 frosted-nav shadow-sm">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md text-primary tracking-tight" href="#">Tantava</a>
+<!-- Desktop Navigation Links -->
+<div class="hidden md:flex items-center gap-8">
+<a class="font-label-md text-label-md text-primary border-b border-primary-container pb-1" href="#">Shop</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Collections</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Our Story</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Book Appointment</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">Contact</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-4 md:gap-6">
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</button>
+<button class="relative text-on-surface-variant hover:text-primary transition-all duration-300">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary">0</span>
+</button>
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-screen min-h-[600px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute inset-0 bg-black/30 z-10"></div>
+<img alt="Tantava Hero" class="w-full h-full object-cover hero-zoom" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsxoNU-T7HvRebuq1YDPqVcbBlIwKVhg6mNuDPa6oQlYNDNptMLMyMxQDUpdzOiobI_14-PEB-ItkFSTNJOtzb8BLco84dgnVPcirWGpUtf-ZqkuAWJP7f83SgGZ3kq0vi3tlC209r-VIRtlyWLjHzF3FBVKAH0ESXLFmNB8zf0xZCE8wFBOMOMUfXUp61O8uP8FUhEWL7kv4DX8X0HI-tJdUpTOoTFvrWYY2QzXOROPIxZIef7mD8ZK23I9MU32ZG5E5_BGXiUvk"/>
+</div>
+<div class="relative z-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<div class="max-w-2xl animate-fade-in-up">
+<h1 class="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-white mb-6">
+                    Tantava — Where Tradition Meets Contemporary
+                </h1>
+<p class="font-body-lg text-body-lg text-white/90 mb-8 max-w-lg">
+                    Discover a curated collection of handcrafted elegance, celebrating the timeless artistry of Indian heritage through a modern lens.
+                </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="bg-secondary text-on-secondary px-10 py-4 rounded-lg font-label-md text-label-md hover:scale-[1.02] transition-transform duration-300">
+                        Shop Now
+                    </button>
+<button class="border border-white text-white px-10 py-4 rounded-lg font-label-md text-label-md hover:bg-white/10 transition-all duration-300 backdrop-blur-sm">
+                        View Lookbook
+                    </button>
+</div>
+</div>
+</div>
+</header>
+<!-- New Arrivals Section -->
+<section class="py-stack-lg bg-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">New Arrivals</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Our latest handcrafted masterpieces, fresh from the loom.</p>
+</div>
+<button class="hidden md:flex items-center gap-2 text-primary font-label-md text-label-md hover:gap-3 transition-all duration-300">
+                    View All Collections <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex overflow-x-auto gap-gutter pb-8 custom-scrollbar scroll-smooth">
+<!-- Product Card 1 -->
+<div class="min-w-[280px] md:min-w-[340px] group cursor-pointer">
+<div class="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300">
+<img alt="Handcrafted Saree" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxfEFOJR7eUb02ny8c8aJ11yyVWDopvGAgqdCV46XfQEbG080Zb_UM2Lww7HUuJ8zkSumRtfTdh-v9CvmIQlpUBbKRnwCBIkcgxi4oAI50PSOnOOtIJiG8dXiKQEwWpkrj5rY9I9mpGo9b6S8utBLMHR77GNyCg0v4aI7qAT6F-MemhvFL3I9kEEzakxeazEZSfujBzB9tMk1lewpCKxhHwoXqp94d_MAmoERTwR5Eqsb6JbAdPWiEXVLnblgHzWyiMpfv-x_dXDo"/>
+<div class="absolute top-4 left-4 bg-secondary border border-primary-container px-3 py-1 text-on-secondary font-label-md text-[12px] flex items-center gap-1">
+                            HANDCRAFTED
+                        </div>
+</div>
+<h3 class="font-headline-sm text-[18px] text-on-surface mb-1">Burgundy Zari Silk Saree</h3>
+<p class="font-label-md text-label-md text-primary mb-2">₹42,000</p>
+<button class="w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+                        Add to Bag
+                    </button>
+</div>
+<!-- Product Card 2 -->
+<div class="min-w-[280px] md:min-w-[340px] group cursor-pointer">
+<div class="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300">
+<img alt="Indo-western Fusion" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDSIuDQbh8IIh7sZnfDHYn77pGQNyK8Ota9iiEgHw33QFEaCbgbgNtCgtIzkqWDDcFW3Ea7qQ9JWAYr-ke9C3PVQG3F06RFSPyNtsvTMs73u6MEswNrS_QBeXsmEL9wxzPg8SVt5JfkDy_xWRKXa_mIo2TDSK4SDa6cIRipevaZDVxD48ad9m3JZLG07d0RkjqzXgBb1vvIxMou1i1hbxK3IoBGFDBX8ggRwBf2p018P1FoGZlXryw5nswb-QqrcUjYle68I7x0rGg"/>
+<div class="absolute top-4 left-4 bg-secondary border border-primary-container px-3 py-1 text-on-secondary font-label-md text-[12px] flex items-center gap-1">
+                            TRENDING
+                        </div>
+</div>
+<h3 class="font-headline-sm text-[18px] text-on-surface mb-1">Dusty Rose Fusion Ensemble</h3>
+<p class="font-label-md text-label-md text-primary mb-2">₹28,500</p>
+<button class="w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+                        Add to Bag
+                    </button>
+</div>
+<!-- Product Card 3 (Placeholder) -->
+<div class="min-w-[280px] md:min-w-[340px] group cursor-pointer">
+<div class="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 bg-surface-container shadow-sm flex items-center justify-center">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A portrait-oriented fashion photograph showcasing a high-end designer lehenga with intricate gold embroidery. The garment is draped elegantly in a warm, cream-colored studio setting with soft side lighting that highlights the texture of the fabric. The overall mood is sophisticated and artisanal, reflecting a luxury boutique aesthetic with subtle gold and ivory tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_lLOKJqdhF4StqSlzNgGicgYt6zBcOwoeqaR92eUlFfaIA45axMAVEUbXJN9VoyvLfctw5gAAeGS4ohW-eMJwQDB3rFRC7z3jAIZdssKd-E1Ed1nFgBVxFcDUBw2bOEMfkxgUUy0ExBiFCUr3Aw7eUBo92tpTT4JQn9CuUnoauRps3TJel5yzIucBVq30zU1Y5QjY1YJ6aAVREah7HMaVF1tJs6bNoF8YnzQomOcl4i3UhCXyNEtLDbmpl5V20OnAdT6E9yy9nIo"/>
+</div>
+<h3 class="font-headline-sm text-[18px] text-on-surface mb-1">Ivory Organza Lehenga</h3>
+<p class="font-label-md text-label-md text-primary mb-2">₹64,000</p>
+<button class="w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+                        Add to Bag
+                    </button>
+</div>
+<!-- Product Card 4 (Placeholder) -->
+<div class="min-w-[280px] md:min-w-[340px] group cursor-pointer">
+<div class="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 bg-surface-container shadow-sm flex items-center justify-center">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Detailed close-up of an embroidered designer Kurta set in a rich forest green silk. The intricate patterns are stitched with metallic gold thread, reflecting a sophisticated craftsmanship. The image is captured with shallow depth of field in a warm, naturally lit boutique environment, emphasizing luxury and heritage style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdo0YdwtD6hV2i-prDCGaFw0psh_2nvgdJZlfG9Fg3RaMlthF4rx_rKHvG9uoLlJBNRrC5fvKjdcwVDiPhtRWZM7YtmS8LGR263s7wSfcRJIt2dY3DHmfcUKY4S1DSpqrDjbImPoYcMtw1wn5yMobuimqh2CU6wOgyLxvevyauv-LBV1lIn4g_47ApAlr6ytl9ycyHYwnHlS4dfh28ZL02DC73Sb7Pfvx67-Tdgdl5mPYk3pCk_6eCE0u-y4GxyS0IQspkGSBMfuM"/>
+</div>
+<h3 class="font-headline-sm text-[18px] text-on-surface mb-1">Emerald Embellished Kurta Set</h3>
+<p class="font-label-md text-label-md text-primary mb-2">₹18,900</p>
+<button class="w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant hover:bg-surface-container transition-colors">
+                        Add to Bag
+                    </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Category Bento Grid -->
+<section class="py-stack-lg bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<h2 class="font-headline-md text-headline-md text-on-surface text-center mb-16 italic">Curated Collections</h2>
+<div class="grid grid-cols-1 md:grid-cols-12 md:grid-rows-2 gap-gutter h-auto md:h-[800px]">
+<!-- Large Tile -->
+<div class="md:col-span-8 md:row-span-2 relative group overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="A wide-angle editorial shot of a stunning luxury lehenga collection displayed in a minimalist gallery-style boutique. The lighting is warm and golden, casting soft shadows across the ivory-toned walls. The focus is on the intricate craftsmanship and high-end aesthetic of the garments, evoking a sense of heritage and modern luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALwf9w4zbv9apFBpM6urohqaRBt_SOWRXjMWRfrtXWV1LCRY5sSxTtG0Yu477ClwkfXBLy3ZMoYBVq9uh52alDpOYyMqjvMr24XmAH52DmDhPMZ0PGHKFNZBEAtb0aiiGBwplOAvvhHcVp6v-PuPG3Sr4n74YhWJukVFb4pzhMyk0n5urONuz8tNrPJGDLiYh47ulyBCGxFDS0VFz7naWHKOxOJdVQZj_Jn5sPyltHKQMxutvyoKs5YwwXY8SXDi1Y2sojFycL9ug"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-10 left-10 text-white">
+<h3 class="font-headline-lg text-headline-lg mb-4">Lehengas</h3>
+<p class="font-body-md text-body-md mb-6 max-w-sm">Ethereal silhouettes for your most cherished moments.</p>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md uppercase tracking-widest border-b border-white/40 pb-1 hover:border-white transition-all" href="#">Explore Category</a>
+</div>
+</div>
+<!-- Small Tile 1 -->
+<div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="A sophisticated close-up of luxury silk sarees in deep emerald and gold tones, draped over a minimal wooden stand. The lighting is soft and cinematic, highlighting the rich sheen of the fabric and the artisanal quality of the weave. The background is a clean ivory, maintaining a focused editorial aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkocyoz8KWlXcG2qsjYDM3WRdDH3Ir076AW29ZemhTqyz3rBLt_a4ZTCbmmA87Wld_im6eQwzujHVuLjxdBLt45X1Bng_-FIEl2aAup01LWplExfgehxFD4MUUFyDHX8SvkOKY63yHWwQkcdbplG3HCflle4iRtSx4sB7aRo9v59DuClBIWvrpgd5qb3oCwriwd4XVCA5B91gpGr6jiey6dugtlsq54CMRwH-IhvdC1Fw5gy2VoaRK-NrLLImYXegWrX4q9idakhc"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<h3 class="font-headline-md text-headline-md text-white">Sarees</h3>
+</div>
+</div>
+<!-- Small Tile 2 -->
+<div class="md:col-span-4 md:row-span-1 relative group overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="Professional editorial photography of a modern Kurta set in a neutral ivory tone, styled with minimal gold jewelry. The setting is a bright, sunlit room with clean lines and a high-end boutique feel. The overall mood is serene and exclusive, focusing on the refined simplicity of contemporary ethnic wear." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi5IvHuqF_0swwGlT1rk13kOJz_1UgEPl53-YHX_9NrtMAdGeJzr0_gMIqUYbHSI02961QfOdjde8QfpjneTYZsjSlEmOvkJJlJ5lJBPWA9UL7uSZySA4GPB2zqRUBoA5hL0PJ1KQ2Kyc4u0sMPS9f_QFkOmiI7GHId4F08ly8_pzbqwDsBexVvCUEwzFoAa7GJMCO7JGm-hlznlykokGsRRLscGRGARzFbj6UsbEIJsP3PxrtScGzFpF6HGarVvkl2ubkBkZGZX4"/>
+<div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-300"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<h3 class="font-headline-md text-headline-md text-white text-center">Kurta Sets &amp; Fusion</h3>
+</div>
+</div>
+</div>
+<div class="mt-gutter grid grid-cols-1 md:grid-cols-2 gap-gutter h-auto md:h-[400px]">
+<div class="relative group overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="An elegant long gown with subtle Indian-inspired floral embroidery, displayed in an airy, high-key studio. The lighting creates a soft glow on the ivory and pastel tones of the garment. The mood is feminine and high-fashion, with a focus on graceful movement and artisanal details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPes-rWGHHDDueIAP8bz-ONnZ2il2H3NgmsNbKe976m-qOPkBaBXGbABwEw7wUVqIEeUOQoqAxK3o3qZ-ugLoSX2lgfmMD8WmzjqneHfWzu5cktcbK1QFXRAaMOfFlHQ8Wp3AjKzHWkUVRVElD3oN66KYgVFKy_20x4JGCcAPwAvW5EAZEzTucQu6672Wmfzu7JElGw8ccwOwW2SDCyifGEBiEwQGlXsMiEpFsBadN-Do58bcnhVkFB43rPVuus_KF6UhMyVWLSUw"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+<h3 class="font-headline-md text-headline-md text-white">Evening Gowns</h3>
+</div>
+</div>
+<div class="relative group overflow-hidden rounded-lg">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="Close-up of vibrant handcrafted bridal accessories and intricate jewelry displayed on a warm ivory surface. The lighting is bright and warm, reflecting off the gold and pearl details. The aesthetic is clean and luxurious, capturing the essence of traditional Indian bridal artistry with a modern presentation." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCOqcJ7bVXSvuTwIdpKFD2GrJBx48Ey0ZNJuTvksRRedX6okT_AR9q2be92ImOuklKzfr8LqhXFp2-OxWcRpVOF_e1ixif4q8pBSMdzmMIMpPZjyJI00FNYghPL_32cpP2JsaQO-7DElhdr83ckBeclZFIQVgK_igx7NC9fIl5GJ9kUhqaK8yNFz1_0lyYboVjT-dcOlzjpFwG6xRV8tf71LDQUGph02u6O5kQUgZQmyIWqCcKV1kfJ6HA7GaQeM7wCIBjMbNdq_M"/>
+<div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+<h3 class="font-headline-md text-headline-md text-white">Bridal Couture</h3>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Our Story Section -->
+<section class="py-stack-lg bg-surface">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex flex-col md:flex-row items-center gap-16">
+<div class="w-full md:w-1/2 relative">
+<div class="aspect-square rounded-lg overflow-hidden relative z-10 shadow-xl">
+<img alt="Nikitha Priya Bharana" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjWmzWgfw0-umEOYMYml4bFwDqX1bC5vMWKalU8OUWTX3QTfjaZQ2tzjHWDbKtEQWbfTG4tb1GHokU-Mpda8Tgeh3H5YLLM2Qz351Gi9Mxk4spBPnTO_x-2zEkBxAdMTFkmO9Hr0Fxe-npGESDAf1mKyWcYNcBaaWd6WOCJf-x8nvKd2Q0FQnQbjMRoKSjcScWcUV_JgOPvZXDjYwqNsMLa3Dm3vHW1LwyYieJrOCOGTEfTQ0GO0Qff9pTNBdDm4yIqA5VuMa3vb8"/>
+</div>
+<div class="absolute -bottom-6 -right-6 w-full h-full border-2 border-primary-container rounded-lg z-0"></div>
+</div>
+<div class="w-full md:w-1/2">
+<span class="font-label-md text-label-md text-primary tracking-widest uppercase mb-4 block">The Visionary</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-6">Nikitha Priya Bharana</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-6 italic leading-relaxed">
+                        "Tantava is not just a boutique; it's a revival of our roots. Every thread we weave tells a story of an artisan's soul, brought to life for the modern woman who values her heritage as much as her individuality."
+                    </p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">
+                        Founded in Bengaluru, Tantava celebrates the confluence of time-honored Indian craftsmanship and contemporary fashion sensibilities. Nikitha's journey began with a passion for preserving the dying arts of hand-weaving and intricate Zardozi, reimagining them into silhouettes that resonate with global aesthetics.
+                    </p>
+<button class="text-primary font-bold font-label-md text-label-md flex items-center gap-2 group">
+                        Read Our Story <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="east">east</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Appointment Banner -->
+<section class="my-stack-lg px-margin-mobile md:px-margin-desktop">
+<div class="max-w-container-max mx-auto bg-secondary rounded-xl p-12 md:p-20 text-center relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
+<div class="grid grid-cols-6 h-full w-full">
+<div class="border-r border-on-secondary"></div>
+<div class="border-r border-on-secondary"></div>
+<div class="border-r border-on-secondary"></div>
+<div class="border-r border-on-secondary"></div>
+<div class="border-r border-on-secondary"></div>
+</div>
+</div>
+<div class="relative z-10 max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg text-on-secondary mb-6">Your Dream Ensemble Awaits</h2>
+<p class="font-body-lg text-body-lg text-on-secondary/80 mb-10">
+                    Book a personalized one-on-one consultation with our designers at our Bengaluru studio or virtually via video call.
+                </p>
+<button class="bg-primary-container text-on-primary-container px-12 py-5 rounded-lg font-label-md text-label-md hover:scale-105 transition-all shadow-lg">
+                    Book Appointment
+                </button>
+</div>
+</div>
+</section>
+<!-- Testimonials Carousel -->
+<section class="py-stack-lg bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop text-center">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-12 italic">The Tantava Experience</h2>
+<div class="relative overflow-hidden">
+<div class="flex transition-transform duration-500 ease-out" id="testimonial-track">
+<!-- Testimonial 1 -->
+<div class="min-w-full px-4">
+<div class="max-w-3xl mx-auto">
+<span class="material-symbols-outlined text-primary text-[48px] mb-6 opacity-30" data-icon="format_quote">format_quote</span>
+<p class="font-headline-sm text-headline-sm text-on-surface mb-8">"The attention to detail in my wedding lehenga was unparalleled. I felt like royalty. The design process was so collaborative and personal."</p>
+<h4 class="font-label-md text-label-md text-primary font-bold uppercase tracking-widest">— Anjali R., Mumbai</h4>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-4 mt-12">
+<button class="w-3 h-3 rounded-full bg-primary" onclick="scrollTestimonial(0)"></button>
+<button class="w-3 h-3 rounded-full bg-outline-variant hover:bg-primary transition-colors" onclick="scrollTestimonial(1)"></button>
+<button class="w-3 h-3 rounded-full bg-outline-variant hover:bg-primary transition-colors" onclick="scrollTestimonial(2)"></button>
+</div>
+</div>
+</div>
+</section>
+<!-- Instagram Feed -->
+<section class="py-stack-lg">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="flex items-center justify-between mb-8">
+<h2 class="font-headline-sm text-headline-sm">@TantavaOfficial</h2>
+<a class="text-primary font-label-md text-label-md" href="#">Follow on Instagram</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-6 gap-4">
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post featuring a candid shot of silk threads in various shades of ivory and gold being hand-spun on a traditional wooden loom. The lighting is warm and sun-drenched, emphasizing the artisanal heritage of the boutique." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBckJzbPa1VaPciLz5-Stj4BVQ_nMwf-eL36yP1Y8w1B-kywINxnsk179zwjkqAasw6UoXzvo5s09G6sT1N9ifYIFi6XHU9rq5gUhxulrCu3uJuNQy3jJwtNkC-IM6C9oRiuOosvREIwgjXZ5-prq_V73HxOqhRpAr12m1C6SoV6drL24-Hc4XvY3n82gvel7PzJ5iimtGRb6IsSizVI-bZhV7zvq1LGZM-qnudow5_kNOFJOPL9Y2vM5NVVpE6DXFlNp2flvNkl6o"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post showing a model wearing a minimalist gold-bordered saree, posed against a textured lime-washed wall. The aesthetic is high-fashion and editorial, with soft, natural lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDj_cUwkXvsTvTFo_HQ2Iwuw6oSq99CxZNcBsxta7T36F00ox_6WrJytGvgv3GCAZL7yOteYxKHtrBKSkjPXDbyjpFX-Itxc3Skz0RGEGJHT59aeKel-Z8hWcoH3YlAypNEpwBBe3eNhRcil87dK224dkJ17gfZza-c49CFjpukXUopEfH7J6GZwzVW4C1o5f37R_-OIG4Kg6yqQ587HqvNrMSgaB4oulOMH6qib61OES8Vj5rJfbzFegCpUZVm_toT0y1sxti7xY"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post featuring a close-up of intricate hand embroidery on a deep red fabric, showcasing metallic gold thread and tiny pearls. The craftsmanship is highly detailed and luxurious." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCxuq2ZHtKURhjgx24Vp7AjZmwzmuuKPLAv54-jmNjKhEYYIQI1IFmVA0SEAz06mGRpBDJXR3YrrCgJMi7cPetPU2OSiwEXC6CEEzumImn66zyoCAHcvKnRE5CSqUbdQSQKezZ_ro9sPtAkcbNGrRsbKpC0-7Flj9yGQW-HFMP4he1ra5dHq3ZDqHKgMK6krCQ3LxAXoled_PkKmFBzWgeGgkYR3xtfNIk1IfC-PC0KFaAv5p3jxz4WhAxy5f8jlZvtWPG-_DVVjY"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post showing a behind-the-scenes look at the Tantava boutique studio, with organized fabrics and design sketches on a clean, modern desk. The atmosphere is professional and creative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv_qEL3eGUbtVWZYHYqlUMlzvSPVSWjxXhjKOCeloiYF8bb7F_dcCK0qvQ_06q4vnXyIap973eR769dnT8fHb8aErBcn2BRdYClVOD650Hgt-Baoar-__ISjvtjwRGNGiHZxMb7qMO90sIGmYJNtvtko8VoGehKxwLWR487ZqAlBW_OSZh-A-8gDhqqPHBZ-PtDNmYAOlGe7WJycFXfnIo-dGUqu7otE0s8yfRjcMHtup2yTlc15EZtOogTOmhUCcHUnjmFUegge0"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post with a beautiful flat lay of bridal accessories, jewelry, and a perfume bottle on an ivory linen surface, bathed in soft afternoon light." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8yV43O0UPitofLpcq9nKTny7YGQ4teLhzbTvt6lygKeIfW4npwJPrwWkKybDO_y-6mQAbcNhI2gUyONmDgAmq7L9lHwDnX5C2EKM05jgb6fLMl3W5MYyznp5F2VxfNu17ZFeJIiCvo6szFc5kOnPRTYSj0LPdWA84Xzm_X0VhPO7ggSEHzyGUGWuQpwp03YwyRf4GUPPbMgV8JkF2dobKjVUXPfU_zpB0sICFWtbDyvmc_7T6Tz5d-u1JJnHcvd_XLDBvIx0O31w"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+<div class="aspect-square rounded-lg overflow-hidden group relative">
+<img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" data-alt="Instagram post featuring a joyful bride in a custom Tantava lehenga, spinning in a sunlit garden. The movement of the fabric is captured beautifully with a slight motion blur." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVZ-NoPYyBsSspTfRYohBe912xvurgC6VTswm5qA5YOcdpSjQ1XXSiGHIry6TpTJkUSxGbSID3ev7b1yqPq_ujxmY18erNW_XS8hqiKF1KEKa_VRiK8950CA_Y-Xgy4Sz-AYtw41pZz3j6Z1lOeBg0DkE8PXLew54saARitLo5EJMmt5BLExwKWpF7jYPNyuZ-nFzbDYewCsxbWjiFJpqfF9LWP6Qio2HJcTuxDFOWN23X9Zhg5i24zKxB27IIF836cD-KBazMdf0"/>
+<div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="favorite">favorite</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-low w-full py-stack-lg border-t border-outline-variant/30">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div>
+<a class="font-headline-sm text-headline-sm text-primary mb-6 block" href="#">Tantava</a>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-xs">
+                    Handcrafted luxury from Bengaluru, India. Honoring heritage, celebrating modern elegance.
+                </p>
+<div class="flex gap-4">
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#"><span class="material-symbols-outlined" data-icon="language">language</span></a>
+<a class="text-on-surface-variant hover:text-primary transition-all" href="#"><span class="material-symbols-outlined" data-icon="photo_camera">photo_camera</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-secondary font-bold mb-6">Collections</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Shop</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Lehengas</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Sarees</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Indo-western</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-secondary font-bold mb-6">Experience</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Our Story</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Book Appointment</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Instagram</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Contact</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-secondary font-bold mb-6">Policies</h4>
+<ul class="space-y-4">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Privacy Policy</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Terms of Service</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all" href="#">Shipping &amp; Returns</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-stack-lg pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
+<p class="font-label-md text-label-md text-on-surface-variant">© 2024 Tantava. Handcrafted in Bengaluru, India.</p>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-50">Website by Studio Elegance</p>
+</div>
+</footer>
+<!-- WhatsApp Floating CTA -->
+<a class="fixed bottom-8 right-8 z-50 flex items-center justify-center bg-secondary dark:bg-secondary-container text-on-secondary shadow-lg rounded-full p-4 hover:scale-105 active:scale-95 transition-all group" href="#">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-label-md text-label-md px-0 group-hover:px-2">Chat to Order</span>
+</div>
+</a>
+<script>
+        function scrollTestimonial(index) {
+            const track = document.getElementById('testimonial-track');
+            track.style.transform = `translateX(-${index * 100}%)`;
+            
+            // Update dots
+            const dots = track.parentElement.nextElementSibling.children;
+            Array.from(dots).forEach((dot, i) => {
+                if(i === index) {
+                    dot.classList.remove('bg-outline-variant');
+                    dot.classList.add('bg-primary');
+                } else {
+                    dot.classList.add('bg-outline-variant');
+                    dot.classList.remove('bg-primary');
+                }
+            });
+        }
+
+        // Simple fade-in effect on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+    </script>
+</body></html>
