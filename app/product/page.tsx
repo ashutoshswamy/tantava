@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ConciergeButton from "../components/ConciergeButton";
+import { Award, Ruler, Heart, MessageCircle, ChevronDown } from "lucide-react";
 
 const relatedProducts = [
   {
@@ -78,7 +78,7 @@ export default function ProductPage() {
                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsxoNU-T7HvRebuq1YDPqVcbBlIwKVhg6mNuDPa6oQlYNDNptMLMyMxQDUpdzOiobI_14-PEB-ItkFSTNJOtzb8BLco84dgnVPcirWGpUtf-ZqkuAWJP7f83SgGZ3kq0vi3tlC209r-VIRtlyWLjHzF3FBVKAH0ESXLFmNB8zf0xZCE8wFBOMOMUfXUp61O8uP8FUhEWL7kv4DX8X0HI-tJdUpTOoTFvrWYY2QzXOROPIxZIef7mD8ZK23I9MU32ZG5E5_BGXiUvk"
                 />
                 <div className="absolute top-4 left-4 bg-secondary text-on-secondary px-3 py-1 rounded-sm flex items-center gap-2 border border-primary-container">
-                  <span className="material-symbols-outlined text-[14px]">workspace_premium</span>
+                  <Award size={14} />
                   <span className="font-label-md text-[12px] tracking-widest uppercase">Handcrafted</span>
                 </div>
               </div>
@@ -118,7 +118,7 @@ export default function ProductPage() {
                       Select Size
                     </span>
                     <button className="text-primary font-label-md text-label-md underline underline-offset-4 hover:opacity-80 transition-opacity flex items-center gap-1">
-                      <span className="material-symbols-outlined text-[16px]">straighten</span>
+                      <Ruler size={16} />
                       Size Guide
                     </button>
                   </div>
@@ -146,14 +146,14 @@ export default function ProductPage() {
                       Add to Cart
                     </button>
                     <button className="w-14 h-14 border border-outline-variant flex items-center justify-center rounded-lg hover:border-primary hover:text-primary transition-all active:scale-90">
-                      <span className="material-symbols-outlined">favorite</span>
+                      <Heart size={20} />
                     </button>
                   </div>
                   <Link
                     href="/book-appointment"
                     className="w-full flex items-center justify-center gap-2 border border-primary-container text-primary font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest hover:bg-primary/5 transition-all"
                   >
-                    <span className="material-symbols-outlined text-[20px]">chat</span>
+                    <MessageCircle size={20} />
                     Request Custom Size
                   </Link>
                 </div>
@@ -173,9 +173,7 @@ export default function ProductPage() {
                       <span className="font-label-md text-label-md uppercase tracking-wider group-hover:text-primary transition-colors">
                         {item.title}
                       </span>
-                      <span className="material-symbols-outlined chevron-icon transition-transform duration-300">
-                        expand_more
-                      </span>
+                      <ChevronDown size={20} className="chevron-icon transition-transform duration-300" />
                     </button>
                     <div className="accordion-content pt-2">
                       <p className="font-body-md text-body-md text-on-surface-variant">
@@ -216,7 +214,7 @@ export default function ProductPage() {
                       alt={rel.name}
                     />
                     <div className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-                      <span className="material-symbols-outlined text-[20px]">favorite</span>
+                      <Heart size={20} />
                     </div>
                   </div>
                   <h3 className="font-label-md text-label-md text-on-surface-variant group-hover:text-primary transition-colors uppercase">
@@ -231,7 +229,6 @@ export default function ProductPage() {
       </main>
 
       <Footer />
-      <ConciergeButton />
     </>
   );
 }

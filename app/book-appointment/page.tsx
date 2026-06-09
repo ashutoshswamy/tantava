@@ -2,44 +2,107 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useUser } from "@clerk/nextjs";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ConciergeButton from "../components/ConciergeButton";
+import { CheckCircle2, MessageCircle, Loader2, ArrowRight, ChevronDown } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function BookAppointmentPage() {
+  const { user } = useUser();
   const [formData, setFormData] = useState({
-    name: "",
+    name: user?.fullName || "",
     phone: "",
+    email: user?.emailAddresses[0]?.emailAddress || "",
     date: "",
     occasion: "",
     message: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Thank you! We will call you within 24 hours to finalize your time slot.");
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+      if (!res.ok) throw new Error("Failed to submit");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong. Please try again or contact us directly.");
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (submitted) {
+    return (
+      <>
+        <Navbar activePage="book-appointment" />
+        <main className="min-h-screen pt-32 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="text-center max-w-lg px-4"
+          >
+            <div className="w-20 h-20 rounded-full bg-secondary/20 flex items-center justify-center mx-auto mb-6">
+              <CheckCircle2 size={40} className="text-secondary" />
+            </div>
+            <h1 className="font-headline-lg text-headline-lg text-primary mb-4">
+              Appointment Requested!
+            </h1>
+            <p className="font-body-lg text-body-lg text-on-surface-variant mb-8">
+              Thank you, {formData.name}. Our team will call you within 24 hours to finalize your
+              appointment at the Tantava Studio.
+            </p>
+            <Link
+              href="/"
+              className="inline-block px-8 py-4 bg-primary text-on-primary rounded-lg font-label-md text-label-md"
+            >
+              Return Home
+            </Link>
+          </motion.div>
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
       <Navbar activePage="book-appointment" />
 
       <main className="pt-32 pb-stack-lg">
-        {/* Hero */}
-        <section className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16 text-center">
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-16 text-center"
+        >
           <h1 className="font-headline-lg text-headline-lg md:text-display-lg mb-4 text-primary">
             Private Consultations
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
-            Experience the art of slow fashion with a personalized walkthrough
-            of our latest handcrafted collections at our Bengaluru studio.
+            Experience the art of slow fashion with a personalized walkthrough of our latest
+            curated ethnic &amp; Indo-Western collections at our Pune studio.
           </p>
-        </section>
+        </motion.section>
 
-        {/* Booking + Info */}
         <section className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-gutter">
-          {/* Studio Info */}
-          <div className="lg:col-span-5 space-y-12">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="lg:col-span-5 space-y-12"
+          >
             <div className="relative overflow-hidden group">
               <img
                 alt="Tantava Studio Interior"
@@ -52,13 +115,9 @@ export default function BookAppointmentPage() {
             </div>
             <div className="space-y-6">
               <div>
-                <h3 className="font-headline-sm text-headline-sm text-primary mb-2">
-                  Our Studio
-                </h3>
+                <h3 className="font-headline-sm text-headline-sm text-primary mb-2">Our Studio</h3>
                 <p className="font-body-md text-body-md text-on-surface-variant">
-                  42, Heritage Lane, Indiranagar
-                  <br />
-                  Bengaluru, Karnataka 560038
+                  Kothrud, Pune, Maharashtra
                 </p>
               </div>
               <div>
@@ -78,18 +137,27 @@ export default function BookAppointmentPage() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-3 px-8 py-4 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity"
                 >
-                  <span className="material-symbols-outlined">chat</span>
+                  <MessageCircle size={20} />
                   Quick Contact via WhatsApp
                 </a>
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Booking Form */}
-          <div className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-12 shadow-[0_10px_40px_rgba(45,71,57,0.04)] rounded-lg">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-12 shadow-[0_10px_40px_rgba(45,71,57,0.04)] rounded-lg"
+          >
             <h2 className="font-headline-sm text-headline-sm text-primary mb-8">
               Request an Appointment
             </h2>
+            {error && (
+              <div className="mb-6 p-4 bg-error-container text-on-error-container rounded-lg font-body-md text-body-md">
+                {error}
+              </div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="relative group">
@@ -97,15 +165,16 @@ export default function BookAppointmentPage() {
                     type="text"
                     id="name"
                     placeholder=" "
+                    required
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="peer w-full bg-transparent border-0 border-b border-outline-variant py-2 font-body-md text-on-surface focus:ring-0 focus:border-primary transition-all outline-none"
                   />
                   <label
                     htmlFor="name"
-                    className="absolute left-0 top-2 font-label-md text-label-md text-on-surface-variant transition-all peer-focus:-top-4 peer-focus:text-primary peer-focus:text-label-md peer-[:not(:placeholder-shown)]:-top-4"
+                    className="absolute left-0 top-2 font-label-md text-label-md text-on-surface-variant transition-all peer-focus:-top-4 peer-focus:text-primary peer-[:not(:placeholder-shown)]:-top-4"
                   >
-                    Full Name
+                    Full Name *
                   </label>
                 </div>
                 <div className="relative group">
@@ -113,6 +182,7 @@ export default function BookAppointmentPage() {
                     type="tel"
                     id="phone"
                     placeholder=" "
+                    required
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     className="peer w-full bg-transparent border-0 border-b border-outline-variant py-2 font-body-md text-on-surface focus:ring-0 focus:border-primary transition-all outline-none"
@@ -121,9 +191,26 @@ export default function BookAppointmentPage() {
                     htmlFor="phone"
                     className="absolute left-0 top-2 font-label-md text-label-md text-on-surface-variant transition-all peer-focus:-top-4 peer-focus:text-primary peer-[:not(:placeholder-shown)]:-top-4"
                   >
-                    Phone Number
+                    Phone Number *
                   </label>
                 </div>
+              </div>
+
+              <div className="relative group">
+                <input
+                  type="email"
+                  id="email"
+                  placeholder=" "
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="peer w-full bg-transparent border-0 border-b border-outline-variant py-2 font-body-md text-on-surface focus:ring-0 focus:border-primary transition-all outline-none"
+                />
+                <label
+                  htmlFor="email"
+                  className="absolute left-0 top-2 font-label-md text-label-md text-on-surface-variant transition-all peer-focus:-top-4 peer-focus:text-primary peer-[:not(:placeholder-shown)]:-top-4"
+                >
+                  Email Address
+                </label>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -132,6 +219,7 @@ export default function BookAppointmentPage() {
                     type="date"
                     id="date"
                     placeholder=" "
+                    required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
                     className="peer w-full bg-transparent border-0 border-b border-outline-variant py-2 font-body-md text-on-surface focus:ring-0 focus:border-primary transition-all outline-none"
@@ -140,7 +228,7 @@ export default function BookAppointmentPage() {
                     htmlFor="date"
                     className="absolute left-0 -top-4 font-label-md text-label-md text-on-surface-variant"
                   >
-                    Preferred Date
+                    Preferred Date *
                   </label>
                 </div>
                 <div className="relative group">
@@ -151,10 +239,10 @@ export default function BookAppointmentPage() {
                     className="peer w-full bg-transparent border-0 border-b border-outline-variant py-2 font-body-md text-on-surface focus:ring-0 focus:border-primary transition-all appearance-none outline-none"
                   >
                     <option value="" disabled></option>
-                    <option value="wedding">Wedding</option>
+                    <option value="office">Office Wear</option>
                     <option value="festive">Festive Celebration</option>
-                    <option value="everyday">Everyday Luxury</option>
-                    <option value="gift">Gifting</option>
+                    <option value="everyday">Everyday Elegance</option>
+                    <option value="custom">Custom Sizing</option>
                   </select>
                   <label
                     htmlFor="occasion"
@@ -162,9 +250,7 @@ export default function BookAppointmentPage() {
                   >
                     Occasion
                   </label>
-                  <span className="absolute right-0 top-2 material-symbols-outlined text-on-surface-variant pointer-events-none">
-                    expand_more
-                  </span>
+                  <ChevronDown size={18} className="absolute right-0 top-2 text-on-surface-variant pointer-events-none" />
                 </div>
               </div>
 
@@ -188,41 +274,31 @@ export default function BookAppointmentPage() {
               <div className="pt-4">
                 <button
                   type="submit"
-                  className="w-full md:w-auto px-12 py-4 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                  disabled={loading}
+                  className="w-full md:w-auto px-12 py-4 bg-primary text-on-primary rounded-lg font-label-md text-label-md hover:opacity-90 transition-all flex items-center justify-center gap-2 disabled:opacity-60"
                 >
-                  Confirm Request
-                  <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                  {loading ? (
+                    <>
+                      <Loader2 size={16} className="animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Confirm Request
+                      <ArrowRight size={16} />
+                    </>
+                  )}
                 </button>
                 <p className="mt-4 font-label-md text-[12px] text-on-surface-variant opacity-70">
                   We will call you within 24 hours to finalize your time slot.
                 </p>
               </div>
             </form>
-          </div>
-        </section>
-
-        {/* Gallery */}
-        <section className="mt-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto overflow-hidden">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuDOlC7Rn-FI2A2-tYaOCeRtH8X9VsP19Rxd_u2MWQLJQCuDyHTm61nLfE1x5c22TIjPlZvBQWUxIhsbQrjjFY4cB49F5_OU1EocSQbNMidXIzaAi2PKBzmMTcCcKREhBlpeArbmylVvUCLuIZ5EwxqMdaJ2Pf6vTJDul4lNvAmRNJyG800oEZj-EQxYC7vUJED_0Uj6r2QiH09tg3R3un4swm8pE87CSZl95pvPar1FN3gOGBIb_RvFLKArWarVvvFhTtvdbIX7MQg",
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuBZuCrA6WRqVHoiU2tHvB_r74Z3wKPPCTdxdUs1KGKwiXEF3YNdQiikaSrXoJeeguSrFXNvlnE5EuWUsdWHdbuk6ERvpeCddWlxU2bROiVZsH2Gi7JRbcx_ifHrAb7FamQZaktCa9RyDvsMtY0x9ZRuvpGzSPyY05qJ2Xr5a7QICPm6tA_flbJZe94_mLdyeGPG9hD_hurozn8M4a74_AWJcC7AhZ9yB_aRXDb9JU4W1_KSvvupwNWi8VP2QKNO8oKu-bG3bFGjnUU",
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuAgukwLoJjeKH58tUIJ4t10sVGhETS-KuBDrvboi0wTNKHSbZXeJjB3gaKWWg2_HmDoMom_XpNPfwhO0y9p1lFHltIOu-qgWBxQ61u40N90PeaLByp746HUfBqQSVesROlQizKAzOm98728-yOUACceF-3wtn004g9qGh7o28keAZH53xn5ku13-NVjU1hOL91OYyBp3mJ4xXdtVJq0UusQDg7HcM_LCCRAXKVCxxSJLi5HonEYinwdn7vcnkatcjSZCslrzF_dFMk",
-              "https://lh3.googleusercontent.com/aida-public/AB6AXuD-D5Bo2LGkFUfbyyQJv1FQ9ICDPz3v4VhB6-6LJeCpUAJfvpjdZ6O-ok38GINmZPhIUMu7TuUak9Nb2xko0m_-88vpXyNLahcxYnxH0bb6CGa13BlqVxSOLABuvAmrt8J_eN9HQDnx0EixQcI5EfSJZmeLOcmAskokobmTkkxOoJOw6NG0UFGFuXxaoOvD9_IMBuDbz5qCpcXxzc7GZEuIOFfCcxvMwGQJVAwYdijYvL1LDvX-OXPRmspegdyF6GZfhzyC28gWeGg",
-            ].map((src, i) => (
-              <div
-                key={i}
-                className={`aspect-[3/4] bg-surface-container overflow-hidden ${i % 2 === 1 ? "translate-y-8" : ""}`}
-              >
-                <img className="w-full h-full object-cover" src={src} alt={`Gallery ${i + 1}`} />
-              </div>
-            ))}
-          </div>
+          </motion.div>
         </section>
       </main>
 
       <Footer />
-      <ConciergeButton />
     </>
   );
 }

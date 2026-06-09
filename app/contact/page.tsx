@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import ConciergeButton from "../components/ConciergeButton";
+import { MessageCircle, ArrowRight, Camera, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -23,22 +24,28 @@ export default function ContactPage() {
       <Navbar activePage="contact" />
 
       <main className="pt-32 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-        {/* Hero */}
-        <header className="mb-stack-md text-center max-w-2xl mx-auto">
+        <motion.header
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-stack-md text-center max-w-2xl mx-auto"
+        >
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4">
-            Connect with Our Studio
+            Get in Touch
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant">
-            Whether you seek a bespoke creation or wish to inquire about our
-            latest collections, we are here to assist your journey into
-            handcrafted luxury.
+            Questions about sizing, fabric, or an order? Reach us here or chat directly on WhatsApp — we typically respond within a few hours.
           </p>
-        </header>
+        </motion.header>
 
-        {/* Bento Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-gutter">
           {/* Contact Form */}
-          <div className="md:col-span-7 bg-surface-container-lowest p-8 md:p-12 rounded-lg shadow-sm">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="md:col-span-7 bg-surface-container-lowest p-8 md:p-12 rounded-lg shadow-sm"
+          >
             <h2 className="font-headline-sm text-headline-sm text-on-surface mb-8">
               Send an Inquiry
             </h2>
@@ -121,15 +128,20 @@ export default function ContactPage() {
                 SUBMIT INQUIRY
               </button>
             </form>
-          </div>
+          </motion.div>
 
           {/* Side Cards */}
-          <div className="md:col-span-5 space-y-gutter">
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="md:col-span-5 space-y-gutter"
+          >
             {/* Concierge Card */}
             <div className="bg-primary-container p-8 rounded-lg flex flex-col justify-between items-start h-[320px] shadow-sm">
               <div>
                 <div className="bg-primary/20 p-3 rounded-full mb-6 inline-block">
-                  <span className="material-symbols-outlined text-on-primary-container">chat</span>
+                  <MessageCircle size={24} className="text-on-primary-container" />
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-primary-container mb-2">
                   Tantava Concierge
@@ -146,9 +158,7 @@ export default function ContactPage() {
                 className="flex items-center gap-2 font-label-md text-label-md text-on-primary-container group"
               >
                 START CONVERSATION
-                <span className="material-symbols-outlined group-hover:translate-x-1 transition-transform">
-                  arrow_forward
-                </span>
+                <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
 
@@ -157,7 +167,7 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <span className="material-symbols-outlined text-secondary">photo_camera</span>
+                    <Camera size={20} className="text-secondary" />
                   </div>
                   <div>
                     <p className="font-label-md text-label-md text-on-surface-variant">
@@ -175,45 +185,24 @@ export default function ContactPage() {
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <span className="material-symbols-outlined text-secondary">location_on</span>
+                    <MapPin size={20} className="text-secondary" />
                   </div>
                   <div>
                     <p className="font-label-md text-label-md text-on-surface-variant">
                       Studio Location
                     </p>
                     <p className="font-body-md text-body-md text-on-surface">
-                      Indiranagar, Bengaluru, KA
+                      Kothrud, Pune, Maharashtra
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Map Section */}
-          <div className="md:col-span-12 rounded-lg overflow-hidden h-[450px] relative shadow-sm">
-            <img
-              className="w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxYWZ6j3g-LrREhMaHh5jKm1sgqfpmYJdhssBuwm-No8VHps84FcVgs5CettUZk8bKUitCiwQA9hdXyj-Eq2-qrmjXf5SNx5P1T2nl4pjIg4JOXpgeIJPJ4pikXQtKzgm0ziUv9tdzDIwX4q6orEAxFwIBbVcFK1L73tzDVCaVUimnQH7vb0JNBBT5loM-eVztUottiaLPgpS54LnTt3gIe_g_KbNNjeaQHJGbX8nbeqgZsABeko2p9XyJ7rDdc2hFCReol3tegEY"
-              alt="Studio Location Map"
-            />
-            <div className="absolute inset-0 bg-secondary/10 pointer-events-none" />
-            <div className="absolute bottom-8 left-8 bg-surface/90 backdrop-blur-md p-6 rounded-lg max-w-sm">
-              <h4 className="font-headline-sm text-headline-sm text-primary mb-2">Our Studio</h4>
-              <p className="font-body-md text-body-md text-on-surface-variant mb-4">
-                Visit us by appointment for a personalized viewing and
-                measurements.
-              </p>
-              <p className="font-label-md text-label-md text-on-surface">
-                Mon – Sat, 10:00 AM – 7:00 PM
-              </p>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </main>
 
       <Footer />
-      <ConciergeButton />
     </>
   );
 }
