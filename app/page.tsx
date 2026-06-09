@@ -1,17 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ArrowRight, Truck, Ruler, MessageCircle, Store, Pencil, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-
-const newArrivals = [
-  { name: "Mauve Floral Anarkali",            price: "₹10,500", badge: "TRENDING",    img: "/catalog/IMG_2139.png" },
-  { name: "Turmeric Zari Embroidered Suit",   price: "₹13,500", badge: "HANDCRAFTED", img: "/catalog/IMG_2133.png" },
-  { name: "Chartreuse Chikankari Tassel Set", price: "₹11,500", badge: "HANDCRAFTED", img: "/catalog/2902c634-87c6-40c8-a8bc-000a14c0630c.jpg" },
-  { name: "Crimson Silk Embroidered Suit",    price: "₹9,200",  badge: "NEW",         img: "/catalog/IMG_2163.png" },
-];
+import type { Product } from "@/lib/supabase";
 
 const craftPromises = [
   { icon: <Truck size={20} className="opacity-80" />, label: "Pan India Shipping" },
@@ -48,6 +43,16 @@ const fadeUp = {
 };
 
 export default function HomePage() {
+  const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetch("/api/products?active=true&limit=4")
+      .then((r) => r.json())
+      .then((data) => setNewArrivals(Array.isArray(data) ? data : []));
+  }, []);
+
+  const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
+
   return (
     <>
       <Navbar />
@@ -144,9 +149,9 @@ export default function HomePage() {
           </div>
 
           <div className="flex overflow-x-auto gap-gutter pb-8 custom-scrollbar scroll-smooth">
-            {newArrivals.map((item, i) => (
+            {newArrivals.map((product, i) => (
               <motion.div
-                key={item.name}
+                key={product.id}
                 custom={i}
                 initial="hidden"
                 whileInView="visible"
@@ -154,23 +159,23 @@ export default function HomePage() {
                 variants={fadeUp}
               >
                 <Link
-                  href="/shop"
+                  href={`/shop/${product.id}`}
                   className="min-w-[280px] md:min-w-[340px] group cursor-pointer block"
                 >
                   <div className="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300">
                     <img
-                      alt={item.name}
+                      alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                      src={item.img}
+                      src={product.images[0] || ""}
                     />
-                    {item.badge && (
+                    {product.badge && (
                       <div className="absolute top-4 left-4 bg-secondary border border-primary-container px-3 py-1 text-on-secondary font-label-md text-[12px]">
-                        {item.badge}
+                        {product.badge}
                       </div>
                     )}
                   </div>
-                  <h3 className="font-headline-sm text-[18px] text-on-surface mb-1">{item.name}</h3>
-                  <p className="font-label-md text-label-md text-primary mb-2">{item.price}</p>
+                  <h3 className="font-headline-sm text-[18px] text-on-surface mb-1">{product.name}</h3>
+                  <p className="font-label-md text-label-md text-primary mb-2">{formatPrice(product.price)}</p>
                   <div className="w-full py-3 border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface-variant text-center hover:bg-surface-container transition-colors">
                     View Details
                   </div>

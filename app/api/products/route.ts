@@ -8,10 +8,13 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const active = searchParams.get("active");
 
+  const limit = searchParams.get("limit");
+
   let query = supabase.from("products").select("*").order("created_at", { ascending: false });
 
   if (category) query = query.eq("category", category);
   if (active !== "all") query = query.eq("is_active", true);
+  if (limit) query = query.limit(parseInt(limit, 10));
 
   const { data, error } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
