@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
 import { useCart } from "@/store/cart";
 import CartDrawer from "./CartDrawer";
-import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
+import { User, ShoppingBag, Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface NavbarProps {
@@ -64,10 +64,6 @@ export default function Navbar({ activePage }: NavbarProps) {
           </div>
 
           <div className="flex items-center gap-4 md:gap-5">
-            <button className="text-on-surface-variant hover:text-primary transition-all duration-300">
-              <Search size={20} />
-            </button>
-
             {isSignedIn ? (
               <Link href="/account" className="text-on-surface-variant hover:text-primary transition-all duration-300">
                 <User size={20} />

@@ -119,46 +119,6 @@ export default function ShopPage() {
               </div>
             </div>
 
-            <div>
-              <h3 className="font-label-md text-label-md text-primary mb-4 uppercase tracking-wider">
-                Price Range
-              </h3>
-              <div className="px-2">
-                <input
-                  type="range"
-                  min="5000"
-                  max="500000"
-                  step="1000"
-                  className="w-full h-1 bg-outline-variant appearance-none cursor-pointer accent-primary"
-                />
-                <div className="flex justify-between mt-2 font-label-md text-label-md text-on-surface-variant">
-                  <span>₹5,000</span>
-                  <span>₹5,00,000+</span>
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-label-md text-label-md text-primary mb-4 uppercase tracking-wider">
-                Color
-              </h3>
-              <div className="grid grid-cols-5 gap-3">
-                {[
-                  { bg: "#2D4739", title: "Forest Green" },
-                  { bg: "#FFFDF9", title: "Ivory" },
-                  { bg: "#934848", title: "Dusty Rose" },
-                  { bg: "#C9A84C", title: "Gold" },
-                  { bg: "#1b1c1a", title: "Ebony" },
-                ].map((c) => (
-                  <button
-                    key={c.title}
-                    title={c.title}
-                    className="w-8 h-8 rounded-full border-2 border-outline-variant hover:border-primary transition-colors"
-                    style={{ backgroundColor: c.bg }}
-                  />
-                ))}
-              </div>
-            </div>
           </aside>
 
           {/* Product Grid */}
