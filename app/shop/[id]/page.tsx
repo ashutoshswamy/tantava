@@ -6,6 +6,7 @@ import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { useCart } from "@/store/cart";
+import { useWishlist } from "@/store/wishlist";
 import type { Product } from "@/lib/supabase";
 import {
   Loader2, Award, Ruler, Check, Heart, MessageCircle, ChevronDown,
@@ -23,11 +24,12 @@ export default function ProductDetailPage() {
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSize, setSelectedSize] = useState("S");
+  const [selectedSize, setSelectedSize] = useState("XS");
   const [selectedImg, setSelectedImg] = useState(0);
   const [openAccordion, setOpenAccordion] = useState(0);
   const [added, setAdded] = useState(false);
   const { addItem } = useCart();
+  const { toggleItem, isWished } = useWishlist();
 
   useEffect(() => {
     fetch(`/api/products/${params.id}`)
@@ -65,7 +67,7 @@ export default function ProductDetailPage() {
   return (
     <>
       <Navbar activePage="shop" />
-      <main className="pt-24 pb-stack-lg">
+      <main className="pt-28 md:pt-32 pb-stack-lg">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
           <nav className="flex gap-2 text-on-surface-variant font-label-md text-label-md mb-8">
             <Link href="/" className="hover:text-primary">Home</Link>
@@ -79,9 +81,9 @@ export default function ProductDetailPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="grid grid-cols-1 lg:grid-cols-12 gap-12"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"
           >
-            <div className="lg:col-span-7 flex flex-col md:flex-row-reverse gap-4">
+            <div className="lg:col-span-7 flex flex-col sm:flex-row-reverse gap-4">
               <div className="relative w-full aspect-[1/1.2] bg-surface-container overflow-hidden rounded-lg group">
                 <img
                   alt={product.name}
@@ -101,7 +103,7 @@ export default function ProductDetailPage() {
                 )}
               </div>
               {product.images.length > 1 && (
-                <div className="flex md:flex-col gap-4 overflow-x-auto md:w-24">
+                <div className="flex sm:flex-col gap-4 overflow-x-auto sm:w-24">
                   {product.images.map((img, i) => (
                     <button
                       key={i}
@@ -117,7 +119,7 @@ export default function ProductDetailPage() {
 
             <div className="lg:col-span-5 flex flex-col gap-stack-md">
               <div>
-                <h1 className="font-headline-lg text-headline-lg text-on-surface mb-2">{product.name}</h1>
+                <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">{product.name}</h1>
                 <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.price)}</p>
                 <p className="text-on-surface-variant font-label-md text-label-md mt-1">MRP incl. of all taxes</p>
                 {product.fabric && (
@@ -136,8 +138,8 @@ export default function ProductDetailPage() {
                       Size Guide
                     </button>
                   </div>
-                  <div className="grid grid-cols-5 gap-2">
-                    {["XS", "S", "M", "L", "XL"].map((size) => (
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                       <button
                         key={size}
                         onClick={() => setSelectedSize(size)}
@@ -154,7 +156,7 @@ export default function ProductDetailPage() {
                 </div>
 
                 <div className="flex flex-col gap-4 pt-4">
-                  <div className="flex gap-4">
+                  <div className="flex flex-col min-[420px]:flex-row gap-4">
                     <button
                       onClick={handleAddToCart}
                       disabled={product.stock_quantity === 0}
@@ -185,8 +187,23 @@ export default function ProductDetailPage() {
                         )}
                       </AnimatePresence>
                     </button>
-                    <button className="w-14 h-14 border border-outline-variant flex items-center justify-center rounded-lg hover:border-primary hover:text-primary transition-all active:scale-90">
-                      <Heart size={20} />
+                    <button
+                      onClick={() =>
+                        toggleItem({
+                          productId: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.images[0] || "",
+                          category: product.category,
+                        })
+                      }
+                      className={`h-14 w-full min-[420px]:w-14 border rounded-lg flex items-center justify-center transition-all active:scale-90 ${
+                        isWished(product.id)
+                          ? "border-primary bg-primary text-on-primary"
+                          : "border-outline-variant hover:border-primary hover:text-primary"
+                      }`}
+                    >
+                      <Heart size={20} className={isWished(product.id) ? "fill-on-primary" : ""} />
                     </button>
                   </div>
                   <Link
@@ -194,7 +211,7 @@ export default function ProductDetailPage() {
                     className="w-full flex items-center justify-center gap-2 border border-primary-container text-primary font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest hover:bg-primary/5 transition-all"
                   >
                     <MessageCircle size={20} />
-                    Request Custom Size
+                    Book a Styling Session
                   </Link>
                 </div>
               </div>

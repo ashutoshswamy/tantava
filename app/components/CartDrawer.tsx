@@ -43,7 +43,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
             transition={{ type: "spring", damping: 28, stiffness: 300 }}
             className="fixed top-0 right-0 h-full w-full max-w-md z-[80] bg-surface shadow-2xl flex flex-col"
           >
-            <div className="flex items-center justify-between px-8 py-6 border-b border-outline-variant/30">
+            <div className="flex items-center justify-between px-5 sm:px-8 py-4 sm:py-6 border-b border-outline-variant/30">
               <h2 className="font-headline-sm text-headline-sm text-on-surface">
                 Your Bag
                 {items.length > 0 && (
@@ -60,7 +60,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto custom-scrollbar px-8 py-6">
+            <div className="flex-1 overflow-y-auto custom-scrollbar px-4 py-5 sm:px-8 sm:py-6">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center h-full gap-4 text-center">
                   <ShoppingBag size={64} className="text-outline-variant" />
@@ -135,7 +135,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
             </div>
 
             {items.length > 0 && (
-              <div className="border-t border-outline-variant/30 px-8 py-6 space-y-4">
+              <div className="border-t border-outline-variant/30 px-4 py-5 sm:px-8 sm:py-6 space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="font-body-md text-body-md text-on-surface-variant">
                     Subtotal

@@ -96,7 +96,7 @@ export default function BookAppointmentPage() {
           </p>
         </motion.section>
 
-        <section className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-gutter">
+        <section className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-gutter">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -148,7 +148,7 @@ export default function BookAppointmentPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="lg:col-span-7 bg-surface-container-lowest p-8 md:p-12 shadow-[0_10px_40px_rgba(45,71,57,0.04)] rounded-lg"
+            className="lg:col-span-7 bg-surface-container-lowest p-5 sm:p-8 md:p-12 shadow-[0_10px_40px_rgba(45,71,57,0.04)] rounded-lg"
           >
             <h2 className="font-headline-sm text-headline-sm text-primary mb-8">
               Request an Appointment
@@ -242,7 +242,6 @@ export default function BookAppointmentPage() {
                     <option value="office">Office Wear</option>
                     <option value="festive">Festive Celebration</option>
                     <option value="everyday">Everyday Elegance</option>
-                    <option value="custom">Custom Sizing</option>
                   </select>
                   <label
                     htmlFor="occasion"

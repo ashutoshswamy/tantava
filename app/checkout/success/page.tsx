@@ -33,7 +33,7 @@ function SuccessContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }}
-          className="font-headline-lg text-headline-lg text-on-surface mb-4"
+          className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4"
         >
           Order Confirmed!
         </motion.h1>
@@ -78,7 +78,7 @@ function SuccessContent() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="mt-12 p-8 bg-surface-container-low rounded-xl"
+          className="mt-12 p-5 sm:p-8 bg-surface-container-low rounded-xl"
         >
           <h2 className="font-headline-sm text-headline-sm text-on-surface mb-4">
             What happens next?

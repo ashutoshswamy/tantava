@@ -32,8 +32,8 @@ export type Order = {
   status: "pending" | "paid" | "processing" | "shipped" | "delivered" | "cancelled";
   razorpay_order_id: string | null;
   razorpay_payment_id: string | null;
+  razorpay_signature: string | null;
   shipping_address: ShippingAddress | null;
-  tracking_number: string | null;
   admin_notes: string | null;
   created_at: string;
   updated_at: string;

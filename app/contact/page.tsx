@@ -34,7 +34,7 @@ export default function ContactPage() {
             Get in Touch
           </h1>
           <p className="font-body-lg text-body-lg text-on-surface-variant">
-            Questions about sizing, fabric, or an order? Reach us here or chat directly on WhatsApp — we typically respond within a few hours.
+            Questions about sizing, fabric, or an order? Reach us here or chat directly on WhatsApp we typically respond within a few hours.
           </p>
         </motion.header>
 
@@ -44,7 +44,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="md:col-span-7 bg-surface-container-lowest p-8 md:p-12 rounded-lg shadow-sm"
+            className="md:col-span-7 bg-surface-container-lowest p-5 sm:p-8 md:p-12 rounded-lg shadow-sm"
           >
             <h2 className="font-headline-sm text-headline-sm text-on-surface mb-8">
               Send an Inquiry
@@ -138,7 +138,7 @@ export default function ContactPage() {
             className="md:col-span-5 space-y-gutter"
           >
             {/* Concierge Card */}
-            <div className="bg-primary-container p-8 rounded-lg flex flex-col justify-between items-start h-[320px] shadow-sm">
+            <div className="bg-primary-container p-6 sm:p-8 rounded-lg flex min-h-[280px] flex-col justify-between items-start shadow-sm">
               <div>
                 <div className="bg-primary/20 p-3 rounded-full mb-6 inline-block">
                   <MessageCircle size={24} className="text-on-primary-container" />

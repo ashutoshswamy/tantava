@@ -1,64 +1,64 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors */
-  --color-background: #fbf9f5;
-  --color-surface: #fbf9f5;
-  --color-surface-dim: #dbdad6;
-  --color-surface-bright: #fbf9f5;
+  /* Colors — Girly Blush Rose palette */
+  --color-background: #fff0f5;
+  --color-surface: #fff0f5;
+  --color-surface-dim: #e8cdd7;
+  --color-surface-bright: #fff8fb;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #f5f3ef;
-  --color-surface-container: #efeeea;
-  --color-surface-container-high: #eae8e4;
-  --color-surface-container-highest: #e4e2de;
-  --color-surface-variant: #e4e2de;
-  --color-surface-tint: #755b00;
-  --color-on-surface: #1b1c1a;
-  --color-on-surface-variant: #4d4637;
-  --color-on-background: #1b1c1a;
-  --color-inverse-surface: #30312e;
-  --color-inverse-on-surface: #f2f0ed;
-  --color-outline: #7e7665;
-  --color-outline-variant: #d0c5b2;
-  --color-primary: #755b00;
+  --color-surface-container-low: #fce8f0;
+  --color-surface-container: #f8dde9;
+  --color-surface-container-high: #f3d2e3;
+  --color-surface-container-highest: #eec7dd;
+  --color-surface-variant: #eec7dd;
+  --color-surface-tint: #9e3462;
+  --color-on-surface: #21101a;
+  --color-on-surface-variant: #533347;
+  --color-on-background: #21101a;
+  --color-inverse-surface: #372128;
+  --color-inverse-on-surface: #fce8f0;
+  --color-outline: #8c5971;
+  --color-outline-variant: #d9afc0;
+  --color-primary: #9e3462;
   --color-on-primary: #ffffff;
-  --color-primary-container: #c9a84c;
-  --color-on-primary-container: #503d00;
-  --color-inverse-primary: #e6c364;
-  --color-primary-fixed: #ffe08f;
-  --color-primary-fixed-dim: #e6c364;
-  --color-on-primary-fixed: #241a00;
-  --color-on-primary-fixed-variant: #584400;
-  --color-secondary: #496455;
+  --color-primary-container: #f4a8c6;
+  --color-on-primary-container: #6b1e3f;
+  --color-inverse-primary: #f7bdd0;
+  --color-primary-fixed: #ffdce8;
+  --color-primary-fixed-dim: #f7bdd0;
+  --color-on-primary-fixed: #3c0021;
+  --color-on-primary-fixed-variant: #7d1a48;
+  --color-secondary: #b94f7e;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #ccead6;
-  --color-on-secondary-container: #4f6a5b;
-  --color-secondary-fixed: #ccead6;
-  --color-secondary-fixed-dim: #b0cdbb;
-  --color-on-secondary-fixed: #062014;
-  --color-on-secondary-fixed-variant: #324c3e;
-  --color-tertiary: #934848;
+  --color-secondary-container: #fce4ef;
+  --color-on-secondary-container: #7d1a48;
+  --color-secondary-fixed: #fce4ef;
+  --color-secondary-fixed-dim: #f7bdd0;
+  --color-on-secondary-fixed: #3c0021;
+  --color-on-secondary-fixed-variant: #7d1a48;
+  --color-tertiary: #7952a0;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #ee9290;
-  --color-on-tertiary-container: #6c2a2b;
-  --color-tertiary-fixed: #ffdad8;
-  --color-tertiary-fixed-dim: #ffb3b1;
-  --color-on-tertiary-fixed: #3d060a;
-  --color-on-tertiary-fixed-variant: #763132;
+  --color-tertiary-container: #ddb8f5;
+  --color-on-tertiary-container: #4a2d7a;
+  --color-tertiary-fixed: #eeddff;
+  --color-tertiary-fixed-dim: #ddb8f5;
+  --color-on-tertiary-fixed: #2c0b55;
+  --color-on-tertiary-fixed-variant: #5e3889;
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
   /* Font families */
-  --font-display-lg: "Playfair Display", serif;
-  --font-headline-lg: "Playfair Display", serif;
-  --font-headline-lg-mobile: "Playfair Display", serif;
-  --font-headline-md: "Playfair Display", serif;
-  --font-headline-sm: "Playfair Display", serif;
-  --font-body-lg: "DM Sans", sans-serif;
-  --font-body-md: "DM Sans", sans-serif;
-  --font-label-md: "DM Sans", sans-serif;
+  --font-display-lg: var(--font-cormorant), serif;
+  --font-headline-lg: var(--font-cormorant), serif;
+  --font-headline-lg-mobile: var(--font-cormorant), serif;
+  --font-headline-md: var(--font-cormorant), serif;
+  --font-headline-sm: var(--font-cormorant), serif;
+  --font-body-lg: var(--font-nunito), sans-serif;
+  --font-body-md: var(--font-nunito), sans-serif;
+  --font-label-md: var(--font-nunito), sans-serif;
 
   /* Text sizes */
   --text-display-lg: 64px;
@@ -88,7 +88,7 @@
   --spacing-stack-md: 2rem;
   --spacing-stack-lg: 4rem;
 
-  /* Border radius — matches design defaults */
+  /* Border radius */
   --radius: 0.25rem;
   --radius-sm: 0.25rem;
   --radius-lg: 0.5rem;
@@ -125,17 +125,17 @@
   -webkit-backdrop-filter: blur(10px);
 }
 
-.hero-zoom {
-  animation: slowZoom 20s infinite alternate ease-in-out;
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-@keyframes slowZoom {
-  from {
-    transform: scale(1);
-  }
-  to {
-    transform: scale(1.1);
-  }
+.animate-marquee {
+  animation: marquee 38s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -143,10 +143,10 @@
   width: 4px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #efeeea;
+  background: #fce8f0;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #c9a84c;
+  background: #f4a8c6;
   border-radius: 2px;
 }
 
@@ -162,58 +162,17 @@
   transform: rotate(180deg);
 }
 
-/* ── Marquee ── */
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-.animate-marquee {
-  animation: marquee 38s linear infinite;
-}
-
-/* ── Reveal animations ── */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(18px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-up   { animation: fadeUp 0.75s ease both; }
-.animate-fade-up-1 { animation: fadeUp 0.75s 0.15s ease both; }
-.animate-fade-up-2 { animation: fadeUp 0.75s 0.30s ease both; }
-.animate-fade-up-3 { animation: fadeUp 0.75s 0.45s ease both; }
-.animate-fade-up-4 { animation: fadeUp 0.75s 0.60s ease both; }
-
-/* ── Gold shimmer on hover ── */
-@keyframes shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position:  200% center; }
-}
-
-/* ── Thin gold rule utility ── */
-.gold-rule {
-  display: block;
-  width: 40px;
-  height: 1px;
-  background-color: #c9a84c;
-}
-
 .product-thumbnail-active {
-  border: 1px solid #755b00;
+  border: 1px solid #9e3462;
 }
 
-.gold-underline {
-  position: relative;
-}
-.gold-underline::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: -2px;
-  left: 50%;
-  background-color: #c9a84c;
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-.gold-underline:hover::after {
-  width: 100%;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

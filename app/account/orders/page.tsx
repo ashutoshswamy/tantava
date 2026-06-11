@@ -32,8 +32,8 @@ function StatusTimeline({ status }: { status: string }) {
   const currentIdx = STATUS_FLOW.indexOf(status as (typeof STATUS_FLOW)[number]);
 
   return (
-    <div className="mt-4">
-      <div className="flex items-center gap-0">
+    <div className="mt-4 overflow-x-auto">
+      <div className="flex items-center gap-0 min-w-[320px]">
         {STATUS_FLOW.map((step, idx) => {
           const done = idx <= currentIdx;
           const active = idx === currentIdx;
@@ -98,7 +98,7 @@ export default function OrdersPage() {
             <Link href="/account" className="text-on-surface-variant hover:text-primary transition-colors">
               <ArrowLeft size={20} />
             </Link>
-            <h1 className="font-headline-lg text-headline-lg text-on-surface">My Orders</h1>
+            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">My Orders</h1>
           </div>
 
           {loading ? (
@@ -121,7 +121,7 @@ export default function OrdersPage() {
           ) : (
             <div className="space-y-6">
               {orders.map((order) => (
-                <div key={order.id} className="bg-surface-container-low rounded-xl p-6">
+                <div key={order.id} className="bg-surface-container-low rounded-xl p-4 sm:p-6">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
                     <div>
                       <p className="font-label-md text-label-md text-on-surface-variant">

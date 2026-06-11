@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 const isAdminRoute = createRouteMatcher(["/admin(.*)"]);
 const isProtectedRoute = createRouteMatcher(["/account(.*)", "/checkout(.*)"]);
 
-export default clerkMiddleware(async (auth, req) => {
+export const proxy = clerkMiddleware(async (auth, req) => {
   if (isAdminRoute(req)) {
     const { userId } = await auth();
     if (!userId) {

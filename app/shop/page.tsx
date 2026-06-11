@@ -7,8 +7,9 @@ import Footer from "../components/Footer";
 import { useCart } from "@/store/cart";
 import type { Product } from "@/lib/supabase";
 import {
-  SlidersHorizontal, Loader2, ExternalLink, X, ChevronDown,
+  SlidersHorizontal, Loader2, ExternalLink, X, Heart, Search,
 } from "lucide-react";
+import { useWishlist } from "@/store/wishlist";
 import { AnimatePresence, motion } from "framer-motion";
 
 const SORT_OPTIONS = ["Newest", "Price: Low to High", "Price: High to Low"];
@@ -26,9 +27,11 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sort, setSort] = useState("Newest");
+  const [searchQuery, setSearchQuery] = useState("");
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
-  const [selectedSize, setSelectedSize] = useState("S");
+  const [selectedSize, setSelectedSize] = useState("XS");
   const { addItem } = useCart();
+  const { toggleItem, isWished } = useWishlist();
 
   useEffect(() => {
     fetch("/api/products?active=true")
@@ -41,9 +44,12 @@ export default function ShopPage() {
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   const filtered = products
-    .filter((p) =>
-      selectedCategory === "All" || p.category.toLowerCase() === selectedCategory.toLowerCase()
-    )
+    .filter((p) => {
+      const matchCat = selectedCategory === "All" || p.category.toLowerCase() === selectedCategory.toLowerCase();
+      const q = searchQuery.trim().toLowerCase();
+      const matchSearch = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      return matchCat && matchSearch;
+    })
     .sort((a, b) => {
       if (sort === "Price: Low to High") return a.price - b.price;
       if (sort === "Price: High to Low") return b.price - a.price;
@@ -78,18 +84,36 @@ export default function ShopPage() {
               Handcrafted Kurtis & Fusion Wear
             </h1>
             <p className="max-w-2xl mt-4 font-body-lg text-body-lg text-on-surface-variant">
-              {products.length > 0 ? `${products.length} pieces` : "Discover our collection"} — kurtas, anarkalis, and fusion sets for office, festive, and everyday elegance.
+              {products.length > 0 ? `${products.length} pieces` : "Discover our collection"} kurtas, anarkalis, and fusion sets for office, festive, and everyday elegance.
             </p>
           </div>
-          <div className="flex items-center gap-4 border-b border-outline-variant pb-2 min-w-[200px]">
-            <SlidersHorizontal size={20} className="text-outline" />
-            <select
-              value={sort}
-              onChange={(e) => setSort(e.target.value)}
-              className="bg-transparent border-none focus:ring-0 font-label-md text-label-md text-on-surface-variant cursor-pointer w-full outline-none"
-            >
-              {SORT_OPTIONS.map((o) => <option key={o}>{o}</option>)}
-            </select>
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {/* Search */}
+            <div className="flex w-full sm:min-w-[260px] items-center gap-2 border border-outline-variant rounded-lg px-4 py-2.5 bg-surface-container-lowest">
+              <Search size={16} className="text-outline flex-shrink-0" />
+              <input
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search…"
+                className="bg-transparent font-label-md text-label-md text-on-surface placeholder:text-outline outline-none w-full"
+              />
+              {searchQuery && (
+                <button onClick={() => setSearchQuery("")} className="text-outline hover:text-primary">
+                  <X size={14} />
+                </button>
+              )}
+            </div>
+            {/* Sort */}
+            <div className="flex w-full sm:w-auto items-center gap-2 border-b border-outline-variant pb-2 sm:pb-2 sm:min-w-[180px]">
+              <SlidersHorizontal size={18} className="text-outline" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value)}
+                className="bg-transparent border-none focus:ring-0 font-label-md text-label-md text-on-surface-variant cursor-pointer w-full outline-none"
+              >
+                {SORT_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+              </select>
+            </div>
           </div>
         </div>
       </header>
@@ -136,7 +160,7 @@ export default function ShopPage() {
             ) : (
               <motion.div
                 layout
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-12 gap-x-8"
+                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-y-10 md:gap-y-12 gap-x-5 md:gap-x-8"
               >
                 <AnimatePresence>
                   {filtered.map((product, i) => (
@@ -157,8 +181,28 @@ export default function ShopPage() {
                             </span>
                           </div>
                         )}
+                        {/* Wishlist heart */}
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleItem({
+                              productId: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.images[0] || "",
+                              category: product.category,
+                            });
+                          }}
+                          className={`absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-sm ${
+                            isWished(product.id)
+                              ? "bg-primary text-on-primary"
+                              : "bg-surface/80 text-on-surface-variant hover:bg-primary hover:text-on-primary"
+                          }`}
+                        >
+                          <Heart size={16} className={isWished(product.id) ? "fill-on-primary" : ""} />
+                        </button>
                         {product.stock_quantity === 0 && (
-                          <div className="absolute top-4 right-4 z-10 bg-error text-on-error px-2 py-1 text-[10px] font-label-md rounded">
+                          <div className="absolute top-4 left-4 z-10 bg-error text-on-error px-2 py-1 text-[10px] font-label-md rounded">
                             Sold Out
                           </div>
                         )}
@@ -168,9 +212,9 @@ export default function ShopPage() {
                           src={product.images[0] || ""}
                         />
                         <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 translate-y-8 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-500">
+                        <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
                           <button
-                            onClick={() => { setModalProduct(product); setSelectedSize("S"); }}
+                            onClick={() => { setModalProduct(product); setSelectedSize("XS"); }}
                             className="flex-1 bg-surface text-primary font-label-md text-label-md px-4 py-3 shadow-lg text-[12px] tracking-widest hover:bg-primary hover:text-on-primary transition-colors"
                           >
                             QUICK VIEW
@@ -233,7 +277,7 @@ export default function ShopPage() {
                     src={modalProduct.images[0] || ""}
                   />
                 </div>
-                <div className="w-full md:w-1/2 p-8 md:p-12 space-y-6">
+                <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-12 space-y-6">
                   <div>
                     <span className="font-label-md text-label-md text-primary tracking-widest uppercase capitalize">
                       {modalProduct.category}
@@ -249,8 +293,8 @@ export default function ShopPage() {
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div>
                       <span className="font-label-md text-label-md block mb-2">Select Size</span>
-                      <div className="flex gap-2">
-                        {["XS", "S", "M", "L"].map((size) => (
+                      <div className="flex flex-wrap gap-2">
+                        {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
                           <button
                             key={size}
                             onClick={() => setSelectedSize(size)}

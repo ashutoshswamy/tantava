@@ -140,7 +140,7 @@ export default function CheckoutPage() {
       <Navbar />
       <main className="pt-32 pb-stack-lg">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-          <h1 className="font-headline-lg text-headline-lg text-on-surface mb-12">Checkout</h1>
+          <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-8 md:mb-12">Checkout</h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
             {/* Shipping Form */}
@@ -198,7 +198,7 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   <div>
                     <label className="block font-label-md text-label-md text-on-surface-variant mb-2">
                       City
@@ -247,7 +247,7 @@ export default function CheckoutPage() {
                   ) : (
                     <>
                       <Lock size={18} />
-                      PAY SECURELY — {formatPrice(total())}
+                      PAY SECURELY {formatPrice(total())}
                     </>
                   )}
                 </button>
@@ -263,7 +263,7 @@ export default function CheckoutPage() {
 
             {/* Order Summary */}
             <div className="lg:col-span-5">
-              <div className="bg-surface-container-low rounded-xl p-8 sticky top-32">
+              <div className="bg-surface-container-low rounded-xl p-5 sm:p-8 lg:sticky lg:top-32">
                 <h2 className="font-headline-sm text-headline-sm text-on-surface mb-6">
                   Order Summary
                 </h2>

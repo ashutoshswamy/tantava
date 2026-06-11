@@ -1,17 +1,32 @@
 import { SignUp } from "@clerk/nextjs";
+import { AuthShell } from "@/app/components/AuthShell";
 
 export default function SignUpPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-surface-container-low py-20 px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-8">
-          <h1 className="font-headline-lg text-headline-lg text-primary mb-2">Join Tantava</h1>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            Create an account to begin your journey
-          </p>
-        </div>
-        <SignUp />
-      </div>
-    </div>
+    <AuthShell
+      title="Create your Tantava account"
+      description="Save your favorites, track your orders, and move through checkout faster every time."
+    >
+        <SignUp
+          path="/sign-up"
+          routing="path"
+          signInUrl="/sign-in"
+          fallbackRedirectUrl="/account"
+          appearance={{
+            elements: {
+              rootBox: "w-full",
+              cardBox: "w-full",
+              card: "w-full shadow-none border border-outline-variant/40 bg-surface-container-lowest",
+              headerTitle: "hidden",
+              headerSubtitle: "hidden",
+              socialButtonsBlockButton:
+                "border-outline-variant/60 bg-surface hover:bg-surface-container-low",
+              formButtonPrimary:
+                "bg-primary text-on-primary hover:bg-on-primary-fixed-variant",
+              footerActionLink: "text-primary hover:text-on-primary-fixed-variant",
+            },
+          }}
+        />
+    </AuthShell>
   );
 }
