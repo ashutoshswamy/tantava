@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SocialLogo } from "social-logos";
+import { Camera, MessageCircle } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -14,10 +14,10 @@ export default function Footer() {
           </p>
           <div className="flex gap-4">
             <a href="https://instagram.com/_tantava" className="text-on-surface-variant hover:text-primary transition-all" aria-label="Instagram">
-              <SocialLogo icon="instagram" size={24} />
+              <Camera size={24} />
             </a>
             <a href="https://wa.me/919999999999" className="text-on-surface-variant hover:text-primary transition-all" aria-label="WhatsApp">
-              <SocialLogo icon="whatsapp" size={24} />
+              <MessageCircle size={24} />
             </a>
           </div>
         </div>
