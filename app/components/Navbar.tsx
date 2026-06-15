@@ -12,7 +12,7 @@ import { User, ShoppingBag, Menu, X, Search, Heart } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
 interface NavbarProps {
-  activePage?: "shop" | "book-appointment" | "contact";
+  activePage?: "shop" | "contact";
 }
 
 export default function Navbar({ activePage }: NavbarProps) {
@@ -53,9 +53,8 @@ export default function Navbar({ activePage }: NavbarProps) {
         <div className="grid grid-cols-[1fr_auto_1fr] items-center px-4 py-3 sm:px-6 md:px-margin-desktop md:py-4 max-w-container-max mx-auto">
           {/* Left: nav links */}
           <div className="hidden md:flex items-center gap-6">
-            <Link href="/shop"             className={linkClass("shop") + " whitespace-nowrap"}>Shop</Link>
-            <Link href="/book-appointment" className={linkClass("book-appointment") + " whitespace-nowrap"}>Book Appointment</Link>
-            <Link href="/contact"          className={linkClass("contact") + " whitespace-nowrap"}>Contact</Link>
+            <Link href="/shop"    className={linkClass("shop") + " whitespace-nowrap"}>Shop</Link>
+            <Link href="/contact" className={linkClass("contact") + " whitespace-nowrap"}>Contact</Link>
             {isAdmin && (
               <Link
                 href="/admin"
@@ -156,10 +155,9 @@ export default function Navbar({ activePage }: NavbarProps) {
               className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-6 flex flex-col gap-5 overflow-hidden"
             >
               {[
-                { href: "/shop",             label: "Shop" },
-                { href: "/book-appointment", label: "Book Appointment" },
-                { href: "/contact",          label: "Contact" },
-                { href: "/wishlist",         label: "Wishlist" },
+                { href: "/shop",     label: "Shop" },
+                { href: "/contact",  label: "Contact" },
+                { href: "/wishlist", label: "Wishlist" },
               ].map(({ href, label }) => (
                 <Link
                   key={href}

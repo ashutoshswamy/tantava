@@ -44,13 +44,16 @@ export async function POST(req: NextRequest) {
     for (const item of orderData.items) {
       const { data: prod } = await supabase
         .from("products")
-        .select("stock_quantity")
+        .select("size_inventory")
         .eq("id", item.product_id)
         .single();
-      if (prod) {
+      if (prod && item.size) {
+        const inv: Record<string, number> = prod.size_inventory || {};
+        const current = inv[item.size] ?? 0;
+        const updated = { ...inv, [item.size]: Math.max(0, current - item.quantity) };
         await supabase
           .from("products")
-          .update({ stock_quantity: Math.max(0, prod.stock_quantity - item.quantity) })
+          .update({ size_inventory: updated })
           .eq("id", item.product_id);
       }
     }

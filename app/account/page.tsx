@@ -7,17 +7,16 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { useWishlist } from "@/store/wishlist";
 import { useCart } from "@/store/cart";
-import { User, Package, CalendarDays, ShoppingBag, Headphones, Heart, Trash2 } from "lucide-react";
+import { User, Package, ShoppingBag, Headphones, Heart, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
 const quickLinks = [
-  { href: "/account/orders",    icon: <Package size={28} />,      title: "My Orders",         desc: "Track and manage your orders" },
-  { href: "/wishlist",          icon: <Heart size={28} />,         title: "My Wishlist",        desc: "View your saved pieces" },
-  { href: "/book-appointment",  icon: <CalendarDays size={28} />, title: "Book Appointment",  desc: "Schedule a private consultation" },
-  { href: "/shop",              icon: <ShoppingBag size={28} />,  title: "Continue Shopping", desc: "Explore our curated collections" },
-  { href: "/contact",           icon: <Headphones size={28} />,   title: "Support",            desc: "Get help with your orders" },
+  { href: "/account/orders", icon: <Package size={28} />,     title: "My Orders",         desc: "Track and manage your orders" },
+  { href: "/wishlist",       icon: <Heart size={28} />,        title: "My Wishlist",        desc: "View your saved pieces" },
+  { href: "/shop",           icon: <ShoppingBag size={28} />, title: "Continue Shopping", desc: "Explore our curated collections" },
+  { href: "/contact",        icon: <Headphones size={28} />,  title: "Support",            desc: "Get help with your orders" },
 ];
 
 const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;

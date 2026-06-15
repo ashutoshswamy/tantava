@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Order } from "@/lib/supabase";
 import {
-  Loader2, IndianRupee, Receipt, Package, CalendarRange,
+  Loader2, IndianRupee, Receipt, Package,
   PlusCircle, Warehouse, AlertTriangle, ClipboardList, ArrowRight, BarChart2,
 } from "lucide-react";
 
@@ -14,7 +14,6 @@ type Stats = {
   totalProducts: number;
   pendingOrders: number;
   lowStockProducts: number;
-  pendingAppointments: number;
   dailyRevenue: { date: string; revenue: number; orders: number }[];
 };
 
@@ -79,21 +78,13 @@ export default function AdminDashboard() {
       color: "#3b82f6",
       sub: `${stats.lowStockProducts} low stock`,
     },
-    {
-      label: "Appointments",
-      value: stats.pendingAppointments,
-      icon: <CalendarRange size={18} />,
-      color: "#059669",
-      sub: "Awaiting confirmation",
-    },
   ];
 
   const QUICK_ACTIONS = [
-    { href: "/admin/analytics",    icon: <BarChart2 size={18} />,      label: "View Analytics",        color: "#9e3462" },
-    { href: "/admin/products/new", icon: <PlusCircle size={18} />,     label: "Add New Product",       color: "#7952a0" },
-    { href: "/admin/orders",       icon: <Receipt size={18} />,        label: "View All Orders",       color: "#3b82f6" },
-    { href: "/admin/inventory",    icon: <Warehouse size={18} />,      label: "Update Inventory",      color: "#059669" },
-    { href: "/admin/appointments", icon: <CalendarRange size={18} />,  label: "Manage Appointments",   color: "#b94f7e" },
+    { href: "/admin/analytics",    icon: <BarChart2 size={18} />,  label: "View Analytics",   color: "#9e3462" },
+    { href: "/admin/products/new", icon: <PlusCircle size={18} />, label: "Add New Product",  color: "#7952a0" },
+    { href: "/admin/orders",       icon: <Receipt size={18} />,    label: "View All Orders",  color: "#3b82f6" },
+    { href: "/admin/inventory",    icon: <Warehouse size={18} />,  label: "Update Inventory", color: "#059669" },
   ];
 
   return (

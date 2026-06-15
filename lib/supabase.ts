@@ -5,6 +5,18 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+export type Collection = {
+  id: string;
+  name: string;
+  slug: string;
+  description: string | null;
+  cover_image: string | null;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -13,10 +25,11 @@ export type Product = {
   category: string;
   fabric: string | null;
   images: string[];
-  stock_quantity: number;
+  size_inventory: Record<string, number>;
   sku: string | null;
   badge: string | null;
   is_active: boolean;
+  collection_id: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -58,15 +71,3 @@ export type ShippingAddress = {
   pincode: string;
 };
 
-export type Appointment = {
-  id: string;
-  user_id: string | null;
-  name: string;
-  phone: string;
-  email: string | null;
-  date: string;
-  occasion: string | null;
-  message: string | null;
-  status: "pending" | "confirmed" | "completed" | "cancelled";
-  created_at: string;
-};

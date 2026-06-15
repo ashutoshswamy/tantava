@@ -9,7 +9,7 @@ import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
 import type { Product } from "@/lib/supabase";
 import {
-  Loader2, Award, Ruler, Check, Heart, MessageCircle, ChevronDown,
+  Loader2, Award, Ruler, Check, Heart, ChevronDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -96,11 +96,14 @@ export default function ProductDetailPage() {
                     <span className="font-label-md text-[12px] tracking-widest uppercase">{product.badge}</span>
                   </div>
                 )}
-                {product.stock_quantity <= 3 && product.stock_quantity > 0 && (
-                  <div className="absolute bottom-4 left-4 bg-error/90 text-on-error px-3 py-1 rounded text-[12px] font-label-md">
-                    Only {product.stock_quantity} left
-                  </div>
-                )}
+                {(() => {
+                  const sizeQty = product.size_inventory?.[selectedSize] ?? 0;
+                  return sizeQty > 0 && sizeQty <= 3 ? (
+                    <div className="absolute bottom-4 left-4 bg-error/90 text-on-error px-3 py-1 rounded text-[12px] font-label-md">
+                      Only {sizeQty} left in {selectedSize}
+                    </div>
+                  ) : null;
+                })()}
               </div>
               {product.images.length > 1 && (
                 <div className="flex sm:flex-col gap-4 overflow-x-auto sm:w-24">
@@ -139,54 +142,62 @@ export default function ProductDetailPage() {
                     </button>
                   </div>
                   <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                      <button
-                        key={size}
-                        onClick={() => setSelectedSize(size)}
-                        className={`h-12 border font-label-md flex items-center justify-center transition-colors ${
-                          selectedSize === size
-                            ? "border-primary bg-primary/5 text-primary"
-                            : "border-outline-variant hover:border-primary"
-                        }`}
-                      >
-                        {size}
-                      </button>
-                    ))}
+                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => {
+                      const qty = product.size_inventory?.[size] ?? 0;
+                      const outOfStock = qty === 0;
+                      return (
+                        <button
+                          key={size}
+                          onClick={() => !outOfStock && setSelectedSize(size)}
+                          disabled={outOfStock}
+                          className={`h-12 border font-label-md flex items-center justify-center transition-colors relative ${
+                            outOfStock
+                              ? "border-outline-variant/30 text-on-surface-variant/30 cursor-not-allowed"
+                              : selectedSize === size
+                              ? "border-primary bg-primary/5 text-primary"
+                              : "border-outline-variant hover:border-primary"
+                          }`}
+                        >
+                          {size}
+                          {outOfStock && <span className="absolute inset-0 flex items-center justify-center"><span className="absolute w-full h-px bg-outline-variant/50 rotate-45" /></span>}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-4 pt-4">
                   <div className="flex flex-col min-[420px]:flex-row gap-4">
-                    <button
-                      onClick={handleAddToCart}
-                      disabled={product.stock_quantity === 0}
-                      className={`flex-1 font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${
-                        added
-                          ? "bg-secondary text-on-secondary"
-                          : product.stock_quantity === 0
-                          ? "bg-surface-container-high text-on-surface-variant cursor-not-allowed"
-                          : "bg-secondary text-on-secondary hover:bg-secondary/90"
-                      }`}
-                    >
-                      <AnimatePresence mode="wait">
-                        {added ? (
-                          <motion.span
-                            key="added"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            className="flex items-center gap-2"
-                          >
-                            <Check size={18} />
-                            Added to Bag
-                          </motion.span>
-                        ) : product.stock_quantity === 0 ? (
-                          <motion.span key="out">Out of Stock</motion.span>
-                        ) : (
-                          <motion.span key="add">Add to Bag</motion.span>
-                        )}
-                      </AnimatePresence>
-                    </button>
+                    {(() => {
+                      const selectedQty = product.size_inventory?.[selectedSize] ?? 0;
+                      const disabled = selectedQty === 0;
+                      return (
+                        <button
+                          onClick={handleAddToCart}
+                          disabled={disabled}
+                          className={`flex-1 font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest transition-all shadow-md active:scale-95 flex items-center justify-center gap-2 ${
+                            added
+                              ? "bg-secondary text-on-secondary"
+                              : disabled
+                              ? "bg-surface-container-high text-on-surface-variant cursor-not-allowed"
+                              : "bg-secondary text-on-secondary hover:bg-secondary/90"
+                          }`}
+                        >
+                          <AnimatePresence mode="wait">
+                            {added ? (
+                              <motion.span key="added" initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.8 }} className="flex items-center gap-2">
+                                <Check size={18} />
+                                Added to Bag
+                              </motion.span>
+                            ) : disabled ? (
+                              <motion.span key="out">Out of Stock in {selectedSize}</motion.span>
+                            ) : (
+                              <motion.span key="add">Add to Bag</motion.span>
+                            )}
+                          </AnimatePresence>
+                        </button>
+                      );
+                    })()}
                     <button
                       onClick={() =>
                         toggleItem({
@@ -206,13 +217,6 @@ export default function ProductDetailPage() {
                       <Heart size={20} className={isWished(product.id) ? "fill-on-primary" : ""} />
                     </button>
                   </div>
-                  <Link
-                    href="/book-appointment"
-                    className="w-full flex items-center justify-center gap-2 border border-primary-container text-primary font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest hover:bg-primary/5 transition-all"
-                  >
-                    <MessageCircle size={20} />
-                    Book a Styling Session
-                  </Link>
                 </div>
               </div>
 

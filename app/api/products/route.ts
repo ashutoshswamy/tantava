@@ -7,13 +7,14 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const category = searchParams.get("category");
   const active = searchParams.get("active");
-
+  const collectionId = searchParams.get("collection_id");
   const limit = searchParams.get("limit");
 
   let query = supabase.from("products").select("*").order("created_at", { ascending: false });
 
   if (category) query = query.eq("category", category);
   if (active !== "all") query = query.eq("is_active", true);
+  if (collectionId) query = query.eq("collection_id", collectionId);
   if (limit) query = query.limit(parseInt(limit, 10));
 
   const { data, error } = await query;

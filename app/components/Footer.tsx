@@ -39,9 +39,8 @@ export default function Footer() {
           <h4 className="font-label-md text-label-md text-secondary font-bold mb-6">Experience</h4>
           <ul className="space-y-4">
             {[
-              { label: "Book Appointment", href: "/book-appointment" },
-              { label: "Contact",          href: "/contact" },
-              { label: "Instagram",        href: "https://instagram.com/_tantava" },
+              { label: "Contact",   href: "/contact" },
+              { label: "Instagram", href: "https://instagram.com/_tantava" },
             ].map(({ label, href }) => (
               <li key={label}>
                 <Link href={href} className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">

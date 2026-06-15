@@ -39,6 +39,7 @@ export default function AdminProductsPage() {
   };
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
+  const totalStock = (inv: Record<string, number>) => Object.values(inv || {}).reduce((s, v) => s + v, 0);
 
   const filtered = products.filter(
     (p) =>
@@ -100,7 +101,7 @@ export default function AdminProductsPage() {
                       {formatPrice(product.price)}
                     </p>
                     <p className="text-[12px] text-[#8c5971] capitalize">
-                      {product.category} • Stock {product.stock_quantity}
+                      {product.category} • Stock {totalStock(product.size_inventory)}
                     </p>
                   </div>
                 </div>
@@ -176,17 +177,14 @@ export default function AdminProductsPage() {
                     {formatPrice(product.price)}
                   </td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`font-label-md text-[13px] ${
-                        product.stock_quantity === 0
-                          ? "text-red-500"
-                          : product.stock_quantity < 3
-                          ? "text-yellow-600"
-                          : "text-green-600"
-                      }`}
-                    >
-                      {product.stock_quantity}
-                    </span>
+                    {(() => {
+                      const total = totalStock(product.size_inventory);
+                      return (
+                        <span className={`font-label-md text-[13px] ${total === 0 ? "text-red-500" : total < 5 ? "text-yellow-600" : "text-green-600"}`}>
+                          {total}
+                        </span>
+                      );
+                    })()}
                   </td>
                   <td className="px-6 py-4 hidden sm:table-cell">
                     <button

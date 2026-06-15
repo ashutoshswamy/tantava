@@ -9,8 +9,8 @@ export async function GET() {
   const supabase = createServerSupabase();
   const { data: products, error } = await supabase
     .from("products")
-    .select("id, name, sku, category, stock_quantity, is_active")
-    .order("stock_quantity", { ascending: true });
+    .select("id, name, sku, category, size_inventory, is_active")
+    .order("name", { ascending: true });
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
@@ -28,24 +28,29 @@ export async function POST(req: NextRequest) {
   if (!userId || !authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerSupabase();
-  const { product_id, change, reason } = await req.json();
+  const { product_id, size, change, reason } = await req.json();
+
+  if (!size) return NextResponse.json({ error: "size is required" }, { status: 400 });
 
   const { data: product } = await supabase
     .from("products")
-    .select("stock_quantity")
+    .select("size_inventory")
     .eq("id", product_id)
     .single();
 
   if (!product) return NextResponse.json({ error: "Product not found" }, { status: 404 });
 
-  const newQty = Math.max(0, product.stock_quantity + change);
+  const current: Record<string, number> = product.size_inventory || {};
+  const currentQty = current[size] ?? 0;
+  const newQty = Math.max(0, currentQty + change);
+  const newInventory = { ...current, [size]: newQty };
 
   const [updateRes] = await Promise.all([
-    supabase.from("products").update({ stock_quantity: newQty }).eq("id", product_id),
-    supabase.from("inventory_logs").insert({ product_id, change, reason }),
+    supabase.from("products").update({ size_inventory: newInventory }).eq("id", product_id),
+    supabase.from("inventory_logs").insert({ product_id, size, change, reason }),
   ]);
 
   if (updateRes.error) return NextResponse.json({ error: updateRes.error.message }, { status: 500 });
 
-  return NextResponse.json({ success: true, new_quantity: newQty });
+  return NextResponse.json({ success: true, size, new_quantity: newQty });
 }

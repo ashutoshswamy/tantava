@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   Loader2, TrendingUp, TrendingDown, Users, IndianRupee,
-  ShoppingBag, Package, CalendarRange, Minus,
+  ShoppingBag, Package, Minus,
 } from "lucide-react";
 
 type AnalyticsData = {
@@ -16,7 +16,6 @@ type AnalyticsData = {
   revenueGrowth: number | null;
   uniqueCustomers: number;
   avgOrderValue: number;
-  appointmentsByStatus: Record<string, number>;
   inventoryHealth: { total: number; outOfStock: number; lowStock: number; healthy: number };
 };
 
@@ -115,17 +114,6 @@ export default function AnalyticsPage() {
           <p className="text-[#d9afc0] text-[10px]">All time</p>
         </div>
 
-        {/* Appointments */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-5">
-          <CalendarRange size={18} className="text-[#059669] mb-3" />
-          <p className="text-[22px] font-bold text-[#21101a]">
-            {data.appointmentsByStatus.pending ?? 0}
-          </p>
-          <p className="text-[#8c5971] text-[11px] mt-1">Pending appointments</p>
-          <p className="text-[#d9afc0] text-[10px]">
-            {data.appointmentsByStatus.confirmed ?? 0} confirmed
-          </p>
-        </div>
       </div>
 
       {/* Revenue chart */}

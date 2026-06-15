@@ -145,10 +145,10 @@ export default function HomePage() {
                   Shop the Collection
                 </Link>
                 <Link
-                  href="/book-appointment"
+                  href="/contact"
                   className="w-full sm:w-auto border border-primary text-primary px-10 py-4 rounded-lg font-label-md text-label-md hover:bg-primary/10 transition-all duration-300 text-center"
                 >
-                  Book a Styling Session
+                  Contact Us
                 </Link>
               </motion.div>
             </div>
@@ -386,14 +386,14 @@ export default function HomePage() {
                 <em style={{ fontStyle: "italic" }}>Perfect Look</em>
               </h2>
               <p className="text-white/60 text-[15px] leading-relaxed mb-10 max-w-sm">
-                Book a one-on-one styling session with our team in Pune, or reach us instantly on WhatsApp.
+                Reach out to our team in Pune, or connect with us instantly on WhatsApp.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/book-appointment"
+                  href="/contact"
                   className="inline-block bg-white text-primary px-8 py-4 rounded-xl font-label-md text-label-md hover:bg-white/90 transition-colors shadow-lg text-center"
                 >
-                  Book a Session
+                  Get in Touch
                 </Link>
                 <a
                   href="https://wa.me/919999999999"

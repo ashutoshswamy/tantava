@@ -12,21 +12,19 @@ export async function GET() {
   since90.setDate(since90.getDate() - 89);
   const since90Str = since90.toISOString().split("T")[0];
 
-  const [paidOrdersRes, allOrdersRes, productsRes, appointmentsRes] = await Promise.all([
+  const [paidOrdersRes, allOrdersRes, productsRes] = await Promise.all([
     supabase
       .from("orders")
       .select("id, total, subtotal, items, created_at, status")
       .eq("status", "paid")
       .gte("created_at", since90Str),
     supabase.from("orders").select("id, status, total, created_at, user_id"),
-    supabase.from("products").select("id, name, category, price, stock_quantity, is_active"),
-    supabase.from("appointments").select("id, status, created_at"),
+    supabase.from("products").select("id, name, category, price, size_inventory, is_active"),
   ]);
 
   const paidOrders = paidOrdersRes.data || [];
   const allOrders = allOrdersRes.data || [];
   const products = productsRes.data || [];
-  const appointments = appointmentsRes.data || [];
 
   // Revenue by day — last 30 days
   const last30Days = Array.from({ length: 30 }, (_, i) => {
@@ -107,16 +105,11 @@ export async function GET() {
       ? paidOrders.reduce((sum: number, o) => sum + o.total, 0) / paidOrders.length
       : 0;
 
-  // Appointments by status
-  const apptByStatus: Record<string, number> = {};
-  for (const a of appointments) {
-    apptByStatus[a.status] = (apptByStatus[a.status] || 0) + 1;
-  }
-
   // Inventory health
+  const totalStock = (inv: Record<string, number>) => Object.values(inv).reduce((s, v) => s + v, 0);
   const activeProducts = products.filter((p) => p.is_active);
-  const outOfStock = activeProducts.filter((p) => p.stock_quantity === 0).length;
-  const lowStock = activeProducts.filter((p) => p.stock_quantity > 0 && p.stock_quantity < 3).length;
+  const outOfStock = activeProducts.filter((p) => totalStock(p.size_inventory || {}) === 0).length;
+  const lowStock = activeProducts.filter((p) => { const t = totalStock(p.size_inventory || {}); return t > 0 && t < 5; }).length;
 
   return NextResponse.json({
     revenueByDay,
@@ -128,7 +121,6 @@ export async function GET() {
     revenueGrowth,
     uniqueCustomers,
     avgOrderValue,
-    appointmentsByStatus: apptByStatus,
     inventoryHealth: {
       total: activeProducts.length,
       outOfStock,

@@ -5,17 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import {
-  LayoutDashboard, Package, Warehouse, Receipt, CalendarRange,
-  ChevronLeft, ChevronRight, BarChart2, ExternalLink,
+  LayoutDashboard, Package, Warehouse, Receipt,
+  ChevronLeft, ChevronRight, BarChart2, ExternalLink, Layers,
 } from "lucide-react";
 
 const NAV_ITEMS = [
-  { href: "/admin",               icon: <LayoutDashboard size={20} />, label: "Dashboard" },
-  { href: "/admin/analytics",     icon: <BarChart2 size={20} />,       label: "Analytics" },
-  { href: "/admin/products",      icon: <Package size={20} />,         label: "Products" },
-  { href: "/admin/inventory",     icon: <Warehouse size={20} />,       label: "Inventory" },
-  { href: "/admin/orders",        icon: <Receipt size={20} />,         label: "Orders" },
-  { href: "/admin/appointments",  icon: <CalendarRange size={20} />,   label: "Appointments" },
+  { href: "/admin",              icon: <LayoutDashboard size={20} />, label: "Dashboard" },
+  { href: "/admin/analytics",    icon: <BarChart2 size={20} />,       label: "Analytics" },
+  { href: "/admin/products",     icon: <Package size={20} />,         label: "Products" },
+  { href: "/admin/collections",  icon: <Layers size={20} />,          label: "Collections" },
+  { href: "/admin/inventory",    icon: <Warehouse size={20} />,       label: "Inventory" },
+  { href: "/admin/orders",       icon: <Receipt size={20} />,         label: "Orders" },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

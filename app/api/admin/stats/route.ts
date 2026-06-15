@@ -14,22 +14,20 @@ export async function GET() {
 
   const supabase = createServerSupabase();
 
-  const [ordersRes, productsRes, appointmentsRes, revenueRes] = await Promise.all([
+  const [ordersRes, productsRes, revenueRes] = await Promise.all([
     supabase.from("orders").select("id, status, total, created_at"),
-    supabase.from("products").select("id, stock_quantity, is_active"),
-    supabase.from("appointments").select("id, status"),
+    supabase.from("products").select("id, size_inventory, is_active"),
     supabase.from("orders").select("total").eq("status", "paid"),
   ]);
 
   const orders = ordersRes.data || [];
   const products = productsRes.data || [];
-  const appointments = appointmentsRes.data || [];
   const revenue = revenueRes.data || [];
 
   const totalRevenue = revenue.reduce((sum, o) => sum + o.total, 0);
   const pendingOrders = orders.filter((o) => o.status === "pending").length;
-  const lowStockProducts = products.filter((p) => p.stock_quantity < 3 && p.is_active).length;
-  const pendingAppointments = appointments.filter((a) => a.status === "pending").length;
+  const totalStock = (inv: Record<string, number>) => Object.values(inv || {}).reduce((s, v) => s + v, 0);
+  const lowStockProducts = products.filter((p) => p.is_active && totalStock(p.size_inventory) < 5).length;
 
   const last7Days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
@@ -51,7 +49,6 @@ export async function GET() {
     totalProducts: products.length,
     pendingOrders,
     lowStockProducts,
-    pendingAppointments,
     dailyRevenue,
   });
 }

@@ -92,7 +92,6 @@ export default function ContactPage() {
                   className="peer w-full bg-transparent border-0 border-b border-outline-variant focus:border-primary focus:ring-0 transition-colors py-2 px-0 font-body-md text-body-md appearance-none outline-none"
                 >
                   <option value="bespoke">Bespoke Order</option>
-                  <option value="appointment">Book Appointment</option>
                   <option value="collaboration">Collaboration</option>
                   <option value="other">General Inquiry</option>
                 </select>

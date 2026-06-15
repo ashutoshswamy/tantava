@@ -201,7 +201,7 @@ export default function ShopPage() {
                         >
                           <Heart size={16} className={isWished(product.id) ? "fill-on-primary" : ""} />
                         </button>
-                        {product.stock_quantity === 0 && (
+                        {Object.values(product.size_inventory || {}).reduce((s, v) => s + v, 0) === 0 && (
                           <div className="absolute top-4 left-4 z-10 bg-error text-on-error px-2 py-1 text-[10px] font-label-md rounded">
                             Sold Out
                           </div>
@@ -294,28 +294,41 @@ export default function ShopPage() {
                     <div>
                       <span className="font-label-md text-label-md block mb-2">Select Size</span>
                       <div className="flex flex-wrap gap-2">
-                        {["XS", "S", "M", "L", "XL", "XXL"].map((size) => (
-                          <button
-                            key={size}
-                            onClick={() => setSelectedSize(size)}
-                            className={`w-12 h-12 border rounded flex items-center justify-center font-label-md transition-all ${
-                              selectedSize === size
-                                ? "border-primary text-primary bg-primary/5"
-                                : "border-outline-variant hover:border-primary hover:text-primary"
-                            }`}
-                          >
-                            {size}
-                          </button>
-                        ))}
+                        {["XS", "S", "M", "L", "XL", "XXL"].map((size) => {
+                          const qty = modalProduct.size_inventory?.[size] ?? 0;
+                          const outOfStock = qty === 0;
+                          return (
+                            <button
+                              key={size}
+                              onClick={() => !outOfStock && setSelectedSize(size)}
+                              disabled={outOfStock}
+                              className={`w-12 h-12 border rounded flex items-center justify-center font-label-md transition-all relative ${
+                                outOfStock
+                                  ? "border-outline-variant/30 text-on-surface-variant/30 cursor-not-allowed"
+                                  : selectedSize === size
+                                  ? "border-primary text-primary bg-primary/5"
+                                  : "border-outline-variant hover:border-primary hover:text-primary"
+                              }`}
+                            >
+                              {size}
+                              {outOfStock && <span className="absolute inset-0 flex items-center justify-center"><span className="absolute w-full h-px bg-outline-variant/50 rotate-45" /></span>}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleAddToCart(modalProduct)}
-                      disabled={modalProduct.stock_quantity === 0}
-                      className="w-full bg-primary text-on-primary py-4 rounded font-label-md text-label-md tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50"
-                    >
-                      {modalProduct.stock_quantity === 0 ? "Out of Stock" : "ADD TO BAG"}
-                    </button>
+                    {(() => {
+                      const selectedQty = modalProduct.size_inventory?.[selectedSize] ?? 0;
+                      return (
+                        <button
+                          onClick={() => handleAddToCart(modalProduct)}
+                          disabled={selectedQty === 0}
+                          className="w-full bg-primary text-on-primary py-4 rounded font-label-md text-label-md tracking-widest hover:opacity-90 transition-opacity disabled:opacity-50"
+                        >
+                          {selectedQty === 0 ? `Out of Stock in ${selectedSize}` : "ADD TO BAG"}
+                        </button>
+                      );
+                    })()}
                     <Link
                       href={`/shop/${modalProduct.id}`}
                       onClick={() => setModalProduct(null)}
