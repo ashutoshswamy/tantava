@@ -92,7 +92,7 @@ export default function OrdersPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-32 pb-stack-lg min-h-screen">
+      <main className="pt-8 sm:pt-12 pb-stack-lg min-h-screen">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
           <div className="flex items-center gap-4 mb-10">
             <Link href="/account" className="text-on-surface-variant hover:text-primary transition-colors">

@@ -6,7 +6,7 @@ import Link from "next/link";
 import type { Collection, Product } from "@/lib/supabase";
 import { ArrowLeft, Loader2, Upload, X, ExternalLink } from "lucide-react";
 
-const inputCls = "w-full bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg px-4 py-3 text-[#21101a] placeholder:text-[#d9afc0] font-body-md text-[14px] focus:border-[#9e3462]/50 focus:outline-none transition-colors";
+const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors";
 
 export default function EditCollectionPage() {
   const params = useParams();
@@ -137,32 +137,35 @@ export default function EditCollectionPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={48} className="text-[#9e3462] animate-spin" />
+        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#21101a]">
-      <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/collections" className="text-[#8c5971] hover:text-[#21101a] transition-colors">
-          <ArrowLeft size={20} />
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+      <div className="flex items-center gap-3 mb-8">
+        <Link href="/admin/collections" className="p-2 text-[#8c5971] hover:text-[#1a0914] hover:bg-[#fdeaf2] rounded-xl transition-colors">
+          <ArrowLeft size={18} />
         </Link>
-        <h1 className="font-headline-lg text-[28px] text-[#21101a]">Edit Collection</h1>
+        <div>
+          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Edit Collection</h1>
+          <p className="text-[#8c5971] text-[13px] mt-0.5">Update collection details and manage products</p>
+        </div>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-body-md text-[14px]">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-[13px]">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6 space-y-5">
-          <h2 className="text-[#8c5971] font-label-md text-[13px] uppercase tracking-wider">Collection Details</h2>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-5">
+          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Collection Details</h2>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Name *</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Name *</label>
             <input
               required
               value={form.name}
@@ -172,18 +175,18 @@ export default function EditCollectionPage() {
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Slug *</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Slug *</label>
             <input
               required
               value={form.slug}
               onChange={(e) => setForm({ ...form, slug: e.target.value })}
               className={inputCls}
             />
-            <p className="text-[#d9afc0] text-[11px] mt-1">URL: /collections/{form.slug}</p>
+            <p className="text-[#dbb6ca] text-[11px] mt-1">URL: /collections/{form.slug}</p>
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Description</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Description</label>
             <textarea
               rows={3}
               value={form.description}
@@ -193,15 +196,15 @@ export default function EditCollectionPage() {
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Cover Image</label>
-            <div className="flex gap-3">
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Cover Image</label>
+            <div className="flex gap-2.5">
               <input
                 value={form.cover_image}
                 onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
                 className={inputCls}
                 placeholder="https://..."
               />
-              <label className={`flex items-center gap-2 px-4 py-3 bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg text-[#8c5971] hover:text-[#21101a] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap font-label-md text-[13px] ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              <label className={`flex items-center gap-2 px-4 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[13px] flex-shrink-0 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
                 {uploading ? "Uploading..." : "Upload"}
                 <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
@@ -209,13 +212,13 @@ export default function EditCollectionPage() {
             </div>
             {form.cover_image && (
               <div className="mt-3">
-                <img src={form.cover_image} alt="Cover preview" className="h-24 w-auto rounded-lg border border-[#eec7dd] object-cover" />
+                <img src={form.cover_image} alt="Cover preview" className="h-24 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
               </div>
             )}
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Sort Order</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Sort Order</label>
             <input
               type="number"
               min="0"
@@ -223,20 +226,20 @@ export default function EditCollectionPage() {
               onChange={(e) => setForm({ ...form, sort_order: e.target.value })}
               className={inputCls}
             />
-            <p className="text-[#d9afc0] text-[11px] mt-1">Lower numbers appear first</p>
+            <p className="text-[#dbb6ca] text-[11px] mt-1">Lower numbers appear first</p>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
           <div>
-            <p className="text-[#21101a] font-label-md text-[14px]">Active / Visible on site</p>
-            <p className="text-[#8c5971] text-[12px]">Toggle to hide from public pages</p>
+            <p className="text-[#1a0914] font-medium text-[14px]">Active / Visible on site</p>
+            <p className="text-[#8c5971] text-[12px] mt-0.5">Toggle to hide from public pages</p>
           </div>
           <button
             type="button"
             onClick={() => setForm({ ...form, is_active: !form.is_active })}
-            className={`w-12 h-6 rounded-full transition-colors relative ${
-              form.is_active ? "bg-[#9e3462]" : "bg-[#eec7dd]"
+            className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
+              form.is_active ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
             }`}
           >
             <div
@@ -247,11 +250,11 @@ export default function EditCollectionPage() {
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             type="submit"
             disabled={saving}
-            className="flex-1 py-4 bg-[#9e3462] text-white font-label-md text-[14px] rounded-lg hover:bg-[#7d1a48] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {saving ? (
               <>
@@ -262,7 +265,7 @@ export default function EditCollectionPage() {
           </button>
           <Link
             href="/admin/collections"
-            className="px-6 py-4 border border-[#d9afc0] text-center text-[#8c5971] rounded-lg hover:border-[#9e3462]/40 hover:text-[#21101a] transition-colors font-label-md text-[14px]"
+            className="px-8 py-3.5 border border-[#dbb6ca] text-center text-[#8c5971] rounded-xl hover:border-[#c2477f]/40 hover:text-[#1a0914] transition-colors font-medium text-[14px]"
           >
             Cancel
           </Link>
@@ -270,43 +273,43 @@ export default function EditCollectionPage() {
       </form>
 
       {/* Products in this collection */}
-      <div className="mt-8 bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6 space-y-4">
+      <div className="mt-6 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-[#8c5971] font-label-md text-[13px] uppercase tracking-wider">
+          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">
             Products in this Collection ({collectionProducts.length})
           </h2>
           <button
             type="button"
             onClick={() => setShowAddProduct(!showAddProduct)}
-            className="text-[12px] text-[#9e3462] font-label-md hover:text-[#7d1a48] transition-colors"
+            className="text-[12px] text-[#c2477f] font-medium hover:text-[#962259] transition-colors"
           >
             {showAddProduct ? "Hide" : "+ Assign Products"}
           </button>
         </div>
 
         {collectionProducts.length === 0 && !showAddProduct && (
-          <p className="text-[#d9afc0] text-[13px]">No products assigned yet. Click "Assign Products" to add some.</p>
+          <p className="text-[#dbb6ca] text-[13px]">No products assigned yet. Click "Assign Products" to add some.</p>
         )}
 
         {collectionProducts.length > 0 && (
           <div className="space-y-2">
             {collectionProducts.map((p) => (
-              <div key={p.id} className="flex items-center justify-between gap-3 p-3 bg-[#fce8f0]/50 rounded-lg border border-[#eec7dd]/60">
+              <div key={p.id} className="flex items-center justify-between gap-3 p-3 bg-[#fdeaf2]/50 rounded-xl border border-[#f2cfe3]">
                 <div className="flex items-center gap-3 min-w-0">
                   {p.images[0] ? (
-                    <img src={p.images[0]} alt={p.name} className="w-10 h-10 rounded-lg object-cover border border-[#eec7dd] flex-shrink-0" />
+                    <img src={p.images[0]} alt={p.name} className="w-10 h-10 rounded-lg object-cover border border-[#f2cfe3] flex-shrink-0" />
                   ) : (
-                    <div className="w-10 h-10 rounded-lg bg-[#eec7dd] flex-shrink-0" />
+                    <div className="w-10 h-10 rounded-lg bg-[#f2cfe3] flex-shrink-0" />
                   )}
                   <div className="min-w-0">
-                    <p className="font-label-md text-[13px] text-[#21101a] truncate">{p.name}</p>
+                    <p className="font-medium text-[13px] text-[#1a0914] truncate">{p.name}</p>
                     <p className="text-[11px] text-[#8c5971]">₹{(p.price / 100).toLocaleString("en-IN")}</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <Link
                     href={`/admin/products/${p.id}`}
-                    className="p-1.5 text-[#8c5971] hover:text-[#21101a] hover:bg-white rounded-lg transition-colors"
+                    className="p-1.5 text-[#8c5971] hover:text-[#1a0914] hover:bg-white rounded-lg transition-colors"
                   >
                     <ExternalLink size={14} />
                   </Link>
@@ -325,19 +328,19 @@ export default function EditCollectionPage() {
         )}
 
         {showAddProduct && allProducts.length > 0 && (
-          <div className="mt-4 space-y-2 border-t border-[#eec7dd] pt-4">
-            <p className="text-[#8c5971] font-label-md text-[12px] uppercase tracking-wider mb-3">Add Products</p>
+          <div className="mt-4 space-y-2 border-t border-[#f2cfe3] pt-4">
+            <p className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-3">Add Products</p>
             <div className="max-h-64 overflow-y-auto space-y-2 pr-1">
               {allProducts.map((p) => (
-                <div key={p.id} className="flex items-center justify-between gap-3 p-3 bg-white rounded-lg border border-[#eec7dd]/60 hover:border-[#eec7dd] transition-colors">
+                <div key={p.id} className="flex items-center justify-between gap-3 p-3 bg-white rounded-xl border border-[#f2cfe3] hover:border-[#dbb6ca] transition-colors">
                   <div className="flex items-center gap-3 min-w-0">
                     {p.images[0] ? (
-                      <img src={p.images[0]} alt={p.name} className="w-9 h-9 rounded-lg object-cover border border-[#eec7dd] flex-shrink-0" />
+                      <img src={p.images[0]} alt={p.name} className="w-9 h-9 rounded-lg object-cover border border-[#f2cfe3] flex-shrink-0" />
                     ) : (
-                      <div className="w-9 h-9 rounded-lg bg-[#eec7dd] flex-shrink-0" />
+                      <div className="w-9 h-9 rounded-lg bg-[#f2cfe3] flex-shrink-0" />
                     )}
                     <div className="min-w-0">
-                      <p className="font-label-md text-[13px] text-[#21101a] truncate">{p.name}</p>
+                      <p className="font-medium text-[13px] text-[#1a0914] truncate">{p.name}</p>
                       <p className="text-[11px] text-[#8c5971]">{p.category}</p>
                     </div>
                   </div>
@@ -345,7 +348,7 @@ export default function EditCollectionPage() {
                     type="button"
                     onClick={() => addProduct(p)}
                     disabled={addingId === p.id}
-                    className="flex-shrink-0 px-3 py-1.5 text-[12px] text-[#9e3462] border border-[#9e3462]/30 rounded-lg hover:bg-[#fce8f0] transition-colors font-label-md disabled:opacity-50 flex items-center gap-1"
+                    className="flex-shrink-0 px-3 py-1.5 text-[12px] text-[#c2477f] border border-[#c2477f]/30 rounded-xl hover:bg-[#fdeaf2] transition-colors font-medium disabled:opacity-50 flex items-center gap-1"
                   >
                     {addingId === p.id ? <Loader2 size={12} className="animate-spin" /> : null}
                     Add
@@ -357,7 +360,7 @@ export default function EditCollectionPage() {
         )}
 
         {showAddProduct && allProducts.length === 0 && (
-          <p className="text-[#d9afc0] text-[13px] border-t border-[#eec7dd] pt-4 mt-4">All products are already in this collection.</p>
+          <p className="text-[#dbb6ca] text-[13px] border-t border-[#f2cfe3] pt-4 mt-4">All products are already in this collection.</p>
         )}
       </div>
     </div>

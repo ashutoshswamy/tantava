@@ -53,16 +53,16 @@ function OrderCard({
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   return (
-    <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
+    <div className="bg-white border border-[#f2cfe3] rounded-2xl p-4 sm:p-6">
       {/* Header row */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4 pb-4 border-b border-[#f2cfe3]">
         <div>
-          <p className="text-[#21101a] font-label-md text-[14px]">
+          <p className="text-[#1a0914] font-semibold text-[14px]">
             #{order.id.slice(0, 8).toUpperCase()}
           </p>
           <p className="text-[#8c5971] text-[12px] mt-0.5">
             {order.user_name || order.user_email || order.user_id.slice(0, 10)}
-            {" • "}
+            {" · "}
             {new Date(order.created_at).toLocaleDateString("en-IN", {
               day: "numeric",
               month: "short",
@@ -70,18 +70,18 @@ function OrderCard({
             })}
           </p>
         </div>
-        <span className="text-[#9e3462] font-headline-sm text-[18px]">
+        <span className="text-[#c2477f] font-bold text-[20px]">
           {formatPrice(order.total)}
         </span>
       </div>
 
       {/* Items */}
-      <div className="flex flex-wrap gap-3 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {order.items.map((item, idx) => (
-          <div key={idx} className="flex items-center gap-2 bg-[#fce8f0] rounded-lg px-3 py-2">
-            <img src={item.image} alt={item.name} className="w-8 h-10 object-cover rounded" />
+          <div key={idx} className="flex items-center gap-2 bg-[#fdeaf2] rounded-xl px-3 py-2">
+            <img src={item.image} alt={item.name} className="w-8 h-10 object-cover rounded-lg" />
             <div>
-              <p className="text-[#21101a] font-label-md text-[12px]">{item.name}</p>
+              <p className="text-[#1a0914] font-medium text-[12px]">{item.name}</p>
               <p className="text-[#8c5971] text-[11px]">
                 {item.size} × {item.quantity}
               </p>
@@ -92,7 +92,7 @@ function OrderCard({
 
       {/* Shipping */}
       {order.shipping_address && (
-        <p className="text-[#8c5971] font-label-md text-[12px] mb-1">
+        <p className="text-[#8c5971] text-[12px] mb-1">
           📍{" "}
           {[
             order.shipping_address.line1,
@@ -105,22 +105,22 @@ function OrderCard({
         </p>
       )}
       {order.razorpay_payment_id && (
-        <p className="text-[#d9afc0] font-label-md text-[11px] mb-4">
+        <p className="text-[#dbb6ca] text-[11px] mb-4">
           Payment: {order.razorpay_payment_id}
         </p>
       )}
 
-      {/* ── Admin controls ── */}
-      <div className="border-t border-[#eec7dd] pt-4 mt-2 space-y-3">
+      {/* Admin controls */}
+      <div className="border-t border-[#f2cfe3] pt-4 mt-2 space-y-3">
         {/* Status selector */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <span className="text-[#8c5971] text-[12px] font-label-md sm:w-24 sm:shrink-0">Status</span>
+          <span className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider sm:w-20 sm:shrink-0">Status</span>
           <div className="relative">
             <select
               value={edit.status}
               onChange={(e) => setEdit((p) => ({ ...p, status: e.target.value }))}
-              className={`pl-3 pr-8 py-1.5 rounded-lg font-label-md text-[12px] capitalize cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-[#9e3462]/40 transition-colors ${
-                STATUS_STYLES[edit.status] || "bg-[#fce8f0] text-[#8c5971]"
+              className={`pl-3 pr-8 py-1.5 rounded-xl font-medium text-[12px] capitalize cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-[#c2477f]/40 transition-colors ${
+                STATUS_STYLES[edit.status] || "bg-[#fdeaf2] text-[#8c5971]"
               }`}
             >
               {ORDER_STATUSES.map((s) => (
@@ -138,13 +138,13 @@ function OrderCard({
 
         {/* Admin notes */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3">
-          <span className="text-[#8c5971] text-[12px] font-label-md sm:w-24 sm:shrink-0 sm:pt-1.5">Notes</span>
+          <span className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider sm:w-20 sm:shrink-0 sm:pt-1.5">Notes</span>
           <textarea
             value={edit.admin_notes}
             onChange={(e) => setEdit((p) => ({ ...p, admin_notes: e.target.value }))}
             placeholder="Internal notes (not visible to customer)"
             rows={2}
-            className="w-full flex-1 sm:max-w-sm bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg px-3 py-1.5 text-[12px] text-[#21101a] placeholder:text-[#d9afc0] focus:outline-none focus:border-[#9e3462]/40 resize-none transition-colors"
+            className="w-full flex-1 sm:max-w-sm bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:outline-none focus:border-[#c2477f]/40 resize-none transition-colors"
           />
         </div>
 
@@ -154,7 +154,7 @@ function OrderCard({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#9e3462] text-white font-label-md text-[12px] hover:bg-[#7d1a48] transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#c2477f] text-white font-medium text-[12px] hover:bg-[#962259] transition-colors disabled:opacity-50"
             >
               {saving ? (
                 <Loader2 size={12} className="animate-spin" />
@@ -167,7 +167,7 @@ function OrderCard({
         )}
         {saved && !dirty && (
           <div className="flex justify-end">
-            <span className="text-green-600 text-[12px] font-label-md">Saved ✓</span>
+            <span className="text-green-600 text-[12px] font-medium">Saved ✓</span>
           </div>
         )}
       </div>
@@ -186,7 +186,8 @@ export default function AdminOrdersPage() {
       .then((data) => {
         setOrders(Array.isArray(data) ? data : []);
         setLoading(false);
-      });
+      })
+      .catch(() => setLoading(false));
   }, []);
 
   const handleUpdate = async (id: string, patch: Partial<OrderEdit>) => {
@@ -204,10 +205,12 @@ export default function AdminOrdersPage() {
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 text-[#21101a]">
-      <div className="mb-8">
-        <h1 className="font-headline-lg text-[28px] text-[#21101a] mb-1">Orders</h1>
-        <p className="text-[#8c5971] text-[13px]">{orders.length} total orders</p>
+    <div className="p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Orders</h1>
+          <p className="text-[#8c5971] text-[13px] mt-0.5">{orders.length} total orders</p>
+        </div>
       </div>
 
       <div className="flex gap-2 flex-wrap mb-6">
@@ -215,10 +218,10 @@ export default function AdminOrdersPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-4 py-2 rounded-lg font-label-md text-[12px] capitalize transition-colors ${
+            className={`px-4 py-2 rounded-xl font-medium text-[12px] capitalize transition-colors ${
               filter === s
-                ? "bg-[#9e3462] text-white"
-                : "bg-white border border-[#eec7dd] text-[#533347] hover:bg-[#fce8f0] hover:text-[#21101a]"
+                ? "bg-[#c2477f] text-white"
+                : "bg-white border border-[#f2cfe3] text-[#52304a] hover:bg-[#fdeaf2] hover:text-[#1a0914]"
             }`}
           >
             {s}
@@ -228,7 +231,7 @@ export default function AdminOrdersPage() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Loader2 size={48} className="text-[#9e3462] animate-spin" />
+          <Loader2 size={40} className="text-[#c2477f] animate-spin" />
         </div>
       ) : (
         <div className="space-y-4">
@@ -236,9 +239,10 @@ export default function AdminOrdersPage() {
             <OrderCard key={order.id} order={order} onUpdate={handleUpdate} />
           ))}
           {filtered.length === 0 && (
-            <div className="text-center py-20 text-[#8c5971]">
-              <Receipt size={48} className="mx-auto mb-2 opacity-40" />
-              <p>No orders found</p>
+            <div className="text-center py-20">
+              <Receipt size={40} className="mx-auto mb-3 text-[#dbb6ca]" />
+              <p className="text-[#8c5971] text-[14px] font-medium">No orders found</p>
+              <p className="text-[#dbb6ca] text-[12px] mt-1">Try a different status filter</p>
             </div>
           )}
         </div>

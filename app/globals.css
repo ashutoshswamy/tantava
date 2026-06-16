@@ -1,50 +1,50 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors — Girly Blush Rose palette */
-  --color-background: #fff0f5;
-  --color-surface: #fff0f5;
-  --color-surface-dim: #e8cdd7;
-  --color-surface-bright: #fff8fb;
+  /* Colors — White base, Blush Rose girly palette */
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-surface-dim: #ecd4df;
+  --color-surface-bright: #ffffff;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-container-low: #fce8f0;
-  --color-surface-container: #f8dde9;
-  --color-surface-container-high: #f3d2e3;
-  --color-surface-container-highest: #eec7dd;
-  --color-surface-variant: #eec7dd;
-  --color-surface-tint: #9e3462;
-  --color-on-surface: #21101a;
-  --color-on-surface-variant: #533347;
-  --color-on-background: #21101a;
-  --color-inverse-surface: #372128;
-  --color-inverse-on-surface: #fce8f0;
+  --color-surface-container-low: #fff5f8;
+  --color-surface-container: #fdeaf2;
+  --color-surface-container-high: #f8dcea;
+  --color-surface-container-highest: #f2cfe3;
+  --color-surface-variant: #f0cade;
+  --color-surface-tint: #c2477f;
+  --color-on-surface: #1a0914;
+  --color-on-surface-variant: #52304a;
+  --color-on-background: #1a0914;
+  --color-inverse-surface: #361523;
+  --color-inverse-on-surface: #fdeaf2;
   --color-outline: #8c5971;
-  --color-outline-variant: #d9afc0;
-  --color-primary: #9e3462;
+  --color-outline-variant: #dbb6ca;
+  --color-primary: #c2477f;
   --color-on-primary: #ffffff;
-  --color-primary-container: #f4a8c6;
-  --color-on-primary-container: #6b1e3f;
-  --color-inverse-primary: #f7bdd0;
-  --color-primary-fixed: #ffdce8;
-  --color-primary-fixed-dim: #f7bdd0;
-  --color-on-primary-fixed: #3c0021;
-  --color-on-primary-fixed-variant: #7d1a48;
-  --color-secondary: #b94f7e;
+  --color-primary-container: #fad0e4;
+  --color-on-primary-container: #7a1a4a;
+  --color-inverse-primary: #f9c2d8;
+  --color-primary-fixed: #ffe0ee;
+  --color-primary-fixed-dim: #f9c2d8;
+  --color-on-primary-fixed: #3d0023;
+  --color-on-primary-fixed-variant: #962259;
+  --color-secondary: #e0608f;
   --color-on-secondary: #ffffff;
-  --color-secondary-container: #fce4ef;
-  --color-on-secondary-container: #7d1a48;
-  --color-secondary-fixed: #fce4ef;
-  --color-secondary-fixed-dim: #f7bdd0;
-  --color-on-secondary-fixed: #3c0021;
-  --color-on-secondary-fixed-variant: #7d1a48;
-  --color-tertiary: #7952a0;
+  --color-secondary-container: #fce8f2;
+  --color-on-secondary-container: #8c1f55;
+  --color-secondary-fixed: #fce8f2;
+  --color-secondary-fixed-dim: #f9c2d8;
+  --color-on-secondary-fixed: #3d0023;
+  --color-on-secondary-fixed-variant: #8c1f55;
+  --color-tertiary: #9b6abf;
   --color-on-tertiary: #ffffff;
-  --color-tertiary-container: #ddb8f5;
-  --color-on-tertiary-container: #4a2d7a;
-  --color-tertiary-fixed: #eeddff;
-  --color-tertiary-fixed-dim: #ddb8f5;
-  --color-on-tertiary-fixed: #2c0b55;
-  --color-on-tertiary-fixed-variant: #5e3889;
+  --color-tertiary-container: #ead4f8;
+  --color-on-tertiary-container: #5e3589;
+  --color-tertiary-fixed: #f2e5ff;
+  --color-tertiary-fixed-dim: #ead4f8;
+  --color-on-tertiary-fixed: #2e0d5c;
+  --color-on-tertiary-fixed-variant: #7348a3;
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-error-container: #ffdad6;
@@ -61,23 +61,23 @@
   --font-label-md: var(--font-nunito), sans-serif;
 
   /* Text sizes */
-  --text-display-lg: 64px;
-  --text-display-lg--line-height: 1.1;
-  --text-headline-lg: 48px;
-  --text-headline-lg--line-height: 1.2;
-  --text-headline-lg-mobile: 36px;
+  --text-display-lg: 56px;
+  --text-display-lg--line-height: 1.08;
+  --text-headline-lg: 42px;
+  --text-headline-lg--line-height: 1.15;
+  --text-headline-lg-mobile: 28px;
   --text-headline-lg-mobile--line-height: 1.2;
-  --text-headline-md: 32px;
-  --text-headline-md--line-height: 1.3;
-  --text-headline-sm: 24px;
-  --text-headline-sm--line-height: 1.4;
-  --text-body-lg: 18px;
-  --text-body-lg--line-height: 1.6;
-  --text-body-md: 16px;
-  --text-body-md--line-height: 1.6;
-  --text-label-md: 14px;
-  --text-label-md--line-height: 1.2;
-  --text-label-md--letter-spacing: 0.05em;
+  --text-headline-md: 26px;
+  --text-headline-md--line-height: 1.25;
+  --text-headline-sm: 20px;
+  --text-headline-sm--line-height: 1.35;
+  --text-body-lg: 17px;
+  --text-body-lg--line-height: 1.65;
+  --text-body-md: 15px;
+  --text-body-md--line-height: 1.65;
+  --text-label-md: 13px;
+  --text-label-md--line-height: 1.3;
+  --text-label-md--letter-spacing: 0.04em;
 
   /* Spacing */
   --spacing-unit: 8px;
@@ -98,24 +98,36 @@
 
 @layer utilities {
   .text-display-lg {
-    font-weight: 600;
-    letter-spacing: -0.02em;
+    font-weight: 500;
+    letter-spacing: -0.025em;
   }
   .text-headline-lg {
     font-weight: 500;
+    letter-spacing: -0.015em;
   }
   .text-headline-lg-mobile {
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
   .text-headline-md {
     font-weight: 500;
+    letter-spacing: -0.01em;
   }
   .text-headline-sm {
     font-weight: 600;
+    letter-spacing: -0.005em;
+  }
+  .text-body-lg {
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+  .text-body-md {
+    font-weight: 400;
+    letter-spacing: 0;
   }
   .text-label-md {
     font-weight: 500;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
   }
 }
 

@@ -26,7 +26,7 @@ export async function GET() {
   const allOrders = allOrdersRes.data || [];
   const products = productsRes.data || [];
 
-  // Revenue by day — last 30 days
+  // Revenue by day - last 30 days
   const last30Days = Array.from({ length: 30 }, (_, i) => {
     const d = new Date();
     d.setDate(d.getDate() - (29 - i));
@@ -47,7 +47,7 @@ export async function GET() {
     statusCounts[o.status] = (statusCounts[o.status] || 0) + 1;
   }
 
-  // Category revenue — parse items JSONB, match product_id → category
+  // Category revenue - parse items JSONB, match product_id → category
   const productMap = Object.fromEntries(products.map((p) => [p.id, p]));
   const categoryRevenue: Record<string, number> = {};
   for (const order of paidOrders) {

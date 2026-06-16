@@ -24,35 +24,35 @@ export default function CollectionsPage() {
   return (
     <>
       <Navbar activePage="shop" />
-      <main className="min-h-screen bg-[#fff9fb]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="text-center mb-12">
-            <h1 className="font-headline-lg text-[40px] sm:text-[52px] text-[#21101a] leading-tight">
+      <main className="min-h-screen bg-surface">
+        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-10 sm:py-16">
+          <div className="text-center mb-10 sm:mb-12">
+            <h1 className="font-headline-lg text-[28px] sm:text-[40px] md:text-[52px] text-on-surface leading-tight">
               Collections
             </h1>
-            <p className="text-[#8c5971] mt-3 text-[16px] max-w-xl mx-auto font-body-md">
-              Curated edits from Tantava — explore each collection to find your perfect piece.
+            <p className="text-on-surface-variant mt-3 text-[15px] max-w-xl mx-auto font-body-md">
+              Curated edits from Tantava - explore each collection to find your perfect piece.
             </p>
           </div>
 
           {loading ? (
             <div className="flex items-center justify-center py-24">
-              <Loader2 size={40} className="text-[#9e3462] animate-spin" />
+              <Loader2 size={40} className="text-primary animate-spin" />
             </div>
           ) : collections.length === 0 ? (
             <div className="text-center py-24">
-              <Layers size={48} className="text-[#eec7dd] mx-auto mb-4" />
-              <p className="text-[#8c5971] text-[16px]">No collections available yet.</p>
+              <Layers size={48} className="text-outline-variant mx-auto mb-4" />
+              <p className="text-on-surface-variant text-[16px]">No collections available yet.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
               {collections.map((col) => (
                 <Link
                   key={col.id}
                   href={`/collections/${col.slug}`}
-                  className="group block bg-white border border-[#eec7dd] rounded-2xl overflow-hidden hover:border-[#9e3462]/40 hover:shadow-lg transition-all duration-300"
+                  className="group block bg-surface-container-lowest border border-outline-variant/40 rounded-2xl overflow-hidden hover:border-primary/40 hover:shadow-lg transition-all duration-300"
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-[#fce8f0]">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-surface-container">
                     {col.cover_image ? (
                       <img
                         src={col.cover_image}
@@ -61,20 +61,20 @@ export default function CollectionsPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <Layers size={48} className="text-[#d9afc0]" />
+                        <Layers size={48} className="text-outline-variant" />
                       </div>
                     )}
                   </div>
-                  <div className="p-5">
-                    <h2 className="font-headline-sm text-[20px] text-[#21101a] group-hover:text-[#9e3462] transition-colors">
+                  <div className="p-4 sm:p-5">
+                    <h2 className="font-headline-sm text-[18px] sm:text-[20px] text-on-surface group-hover:text-primary transition-colors">
                       {col.name}
                     </h2>
                     {col.description && (
-                      <p className="text-[#8c5971] text-[13px] mt-2 font-body-md line-clamp-2">
+                      <p className="text-on-surface-variant text-[13px] mt-2 font-body-md line-clamp-2">
                         {col.description}
                       </p>
                     )}
-                    <p className="mt-3 text-[#9e3462] font-label-md text-[12px] uppercase tracking-wider">
+                    <p className="mt-3 text-primary font-label-md text-[12px] uppercase tracking-wider">
                       Explore →
                     </p>
                   </div>

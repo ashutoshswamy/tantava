@@ -120,7 +120,7 @@ export default function CheckoutPage() {
     return (
       <>
         <Navbar />
-        <main className="min-h-screen pt-32 flex flex-col items-center justify-center gap-6 px-4">
+        <main className="min-h-screen pt-8 sm:pt-12 flex flex-col items-center justify-center gap-6 px-4">
           <ShoppingBag size={72} className="text-outline-variant" />
           <h1 className="font-headline-md text-headline-md text-on-surface">Your bag is empty</h1>
           <Link
@@ -138,7 +138,7 @@ export default function CheckoutPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-32 pb-stack-lg">
+      <main className="pt-8 sm:pt-12 pb-stack-lg">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-8 md:mb-12">Checkout</h1>
 

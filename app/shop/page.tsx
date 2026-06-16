@@ -72,7 +72,7 @@ export default function ShopPage() {
     <>
       <Navbar activePage="shop" />
 
-      <header className="pt-32 pb-12 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <header className="pt-8 sm:pt-12 pb-10 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
           <div>
             <nav className="flex gap-2 mb-4 text-on-surface-variant font-label-md text-label-md">

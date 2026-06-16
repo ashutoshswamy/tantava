@@ -138,3 +138,41 @@ create policy "orders_user_read" on orders
 
 -- Inventory logs: admin only via service role — no client access
 alter table inventory_logs enable row level security;
+
+-- ─────────────────────────────────────────────
+-- FEEDBACKS
+-- ─────────────────────────────────────────────
+create table if not exists feedbacks (
+  id         uuid primary key default uuid_generate_v4(),
+  created_at timestamptz not null default now(),
+  name       text not null,
+  phone      text,
+  email      text,
+  state      text,
+  city       text,
+  about      text not null
+);
+
+create index if not exists feedbacks_created_at_idx on feedbacks (created_at desc);
+
+alter table feedbacks enable row level security;
+create policy "feedbacks_public_insert" on feedbacks
+  for insert with check (true);
+
+-- ─────────────────────────────────────────────
+-- INQUIRIES
+-- ─────────────────────────────────────────────
+create table if not exists inquiries (
+  id         uuid primary key default uuid_generate_v4(),
+  name       text not null,
+  email      text not null,
+  subject    text not null default 'other',
+  message    text not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists inquiries_created_at_idx on inquiries (created_at desc);
+
+alter table inquiries enable row level security;
+create policy "inquiries_public_insert" on inquiries
+  for insert with check (true);

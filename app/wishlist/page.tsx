@@ -40,7 +40,7 @@ export default function WishlistPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-32 pb-stack-lg min-h-screen">
+      <main className="pt-8 sm:pt-12 pb-stack-lg min-h-screen">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
           <div className="mb-10">
             <nav className="flex gap-2 mb-4 text-on-surface-variant font-label-md text-label-md">

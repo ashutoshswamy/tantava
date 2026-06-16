@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { ArrowRight, Truck, Ruler, MessageCircle, Store, Pencil, Zap } from "lucide-react";
+import { ArrowRight, Truck, Ruler, Store, Pencil, Zap } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
 import type { Product } from "@/lib/supabase";
 
 const craftPromises = [
   { icon: <Truck size={20} className="opacity-80" />, label: "Pan India Shipping" },
   { icon: <Ruler size={20} className="opacity-80" />, label: "XS · S · M · L · XL · XXL" },
-  { icon: <MessageCircle size={20} className="opacity-80" />, label: "Order via WhatsApp" },
-  { icon: <Store size={20} className="opacity-80" />, label: "Pune Pop-ups & Exhibitions" },
+  { icon: <FaWhatsapp size={20} className="opacity-80" />, label: "Order via WhatsApp" },
+  { icon: <Store size={20} className="opacity-80" />, label: "Pop-ups & Exhibitions" },
 ];
 
 const craftStory = [
@@ -35,32 +36,52 @@ const craftStory = [
 
 const testimonials = [
   {
-    name: "Priya Sharma",
-    location: "Mumbai",
+    name: "Meenakshi Sundaram",
+    city: "Madurai",
+    state: "Tamil Nadu",
     rating: 5,
     text: "The anarkali I ordered for my sister's wedding was absolutely stunning. The zari work is so intricate and the fabric drapes like a dream. Got endless compliments all evening!",
     tag: "Wedding Guest",
   },
   {
-    name: "Ananya Mehta",
-    location: "Delhi",
+    name: "Jasleen Kaur",
+    city: "Amritsar",
+    state: "Punjab",
     rating: 5,
-    text: "The fit was absolutely perfect the Mul Chanderi kurta feels so lightweight and breathable. Honestly the best ethnic wear I've ever owned. Will be ordering again soon!",
+    text: "The fit was absolutely perfect - the Mul Chanderi kurta feels so lightweight and breathable. Honestly the best ethnic wear I've ever owned. Will be ordering again soon!",
     tag: "Repeat Customer",
   },
   {
-    name: "Kavya Nair",
-    location: "Bangalore",
+    name: "Durga Bhavani",
+    city: "Vijayawada",
+    state: "Andhra Pradesh",
     rating: 5,
-    text: "Ordered via WhatsApp and the process was so smooth. My fusion set arrived beautifully packed with a handwritten note. Such personal attention to detail love this brand!",
+    text: "Ordered via WhatsApp and the process was so smooth. My fusion set arrived beautifully packed with a handwritten note. Such personal attention to detail - love this brand!",
     tag: "WhatsApp Order",
   },
   {
-    name: "Riya Patel",
-    location: "Pune",
+    name: "Chandralekha Devi",
+    city: "Guwahati",
+    state: "Assam",
     rating: 5,
     text: "Visited the pop-up exhibition and was blown away by the quality. The embroidery on the gown is so delicate. Already bought three pieces and planning my next order!",
     tag: "Pop-up Visitor",
+  },
+  {
+    name: "Savitri Nambiar",
+    city: "Thrissur",
+    state: "Kerala",
+    rating: 5,
+    text: "The handloom saree I received exceeded every expectation. The weave is so fine and the colours are exactly as shown. Packaging was beautiful too - felt like a gift to myself!",
+    tag: "First Order",
+  },
+  {
+    name: "Rekha Choudhary",
+    city: "Jodhpur",
+    state: "Rajasthan",
+    rating: 5,
+    text: "Bought the leheriya dupatta set and I keep getting asked where it's from. The block print is crisp and the fabric washes so well. Tantava truly understands Indian craft!",
+    tag: "Gifted a Friend",
   },
 ];
 
@@ -89,7 +110,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* Hero */}
-      <header className="relative min-h-[620px] h-[100svh] flex items-center overflow-hidden">
+      <header className="relative min-h-[520px] h-[calc(100svh-4rem)] md:h-[calc(100svh-5rem)] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div
             className="w-full h-full bg-scroll md:bg-fixed"
@@ -101,8 +122,6 @@ export default function HomePage() {
           />
           {/* Gradient: transparent on left (shows the dress), blush-white on right (text area) */}
           <div className="absolute inset-0 bg-gradient-to-l from-background/90 via-background/40 to-transparent" />
-          {/* Subtle top vignette for navbar legibility */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-transparent" />
         </div>
 
         <div className="relative z-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
@@ -240,7 +259,7 @@ export default function HomePage() {
               Why Tantava
             </span>
             <h2
-              className="text-4xl md:text-5xl font-light text-on-surface leading-tight"
+              className="text-[26px] sm:text-4xl md:text-5xl font-light text-on-surface leading-tight"
               style={{ fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "-0.02em" }}
             >
               Crafted with{" "}
@@ -306,7 +325,7 @@ export default function HomePage() {
                 Customer Love
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-on-surface leading-tight"
+                className="text-[26px] sm:text-4xl md:text-5xl font-light text-on-surface leading-tight"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "-0.02em" }}
               >
                 What Our{" "}
@@ -326,7 +345,7 @@ export default function HomePage() {
           <div className="absolute right-0 top-0 h-full w-24 z-10 pointer-events-none" style={{ background: "linear-gradient(to left, var(--color-surface), transparent)" }} />
 
           <div className="flex gap-5 animate-marquee w-max hover:[animation-play-state:paused]">
-            {[...testimonials, ...testimonials].map(({ name, text }, i) => (
+            {[...testimonials, ...testimonials].map(({ name, city, state, text }, i) => (
               <div
                 key={i}
                 className="w-[260px] sm:w-[320px] shrink-0 flex flex-col justify-between gap-5 p-5 sm:p-7 rounded-2xl border border-primary/10 bg-[#fdf5f8] hover:border-primary/25 transition-colors duration-300"
@@ -347,6 +366,7 @@ export default function HomePage() {
                 </div>
                 <div className="pt-4 border-t border-primary/10">
                   <p className="text-[13px] font-medium text-on-surface">{name}</p>
+                  <p className="text-[11px] text-on-surface-variant mt-0.5">{city}, {state}</p>
                 </div>
               </div>
             ))}
@@ -379,14 +399,14 @@ export default function HomePage() {
                 Personal Styling
               </span>
               <h2
-                className="text-4xl md:text-5xl font-light text-white leading-tight mb-6"
+                className="text-[26px] sm:text-4xl md:text-5xl font-light text-white leading-tight mb-6"
                 style={{ fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "-0.02em" }}
               >
                 Find Your<br />
                 <em style={{ fontStyle: "italic" }}>Perfect Look</em>
               </h2>
               <p className="text-white/60 text-[15px] leading-relaxed mb-10 max-w-sm">
-                Reach out to our team in Pune, or connect with us instantly on WhatsApp.
+                Reach out to our team, or connect with us instantly on WhatsApp.
               </p>
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
@@ -409,7 +429,7 @@ export default function HomePage() {
             {/* Right: feature list */}
             <div className="p-6 sm:p-10 md:p-16 flex flex-col justify-center gap-8 border-t border-white/10 md:border-t-0 md:border-l md:border-white/10">
               {[
-                { num: "01", label: "In-Person Styling", desc: "Visit us at our Pune studio or catch us at pop-up exhibitions." },
+                { num: "01", label: "In-Person Styling", desc: "Visit us at our studio or catch us at pop-up exhibitions." },
                 { num: "02", label: "All Sizes XS – XXL", desc: "Every piece available across the full size range, no exceptions." },
                 { num: "03", label: "Quick WhatsApp Orders", desc: "Browse, ask questions, and place your order directly on WhatsApp." },
               ].map(({ num, label, desc }, i) => (

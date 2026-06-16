@@ -85,7 +85,7 @@ export default function CollectionSlugPage() {
       <>
         <Navbar activePage="shop" />
         <div className="flex items-center justify-center min-h-screen">
-          <Loader2 size={48} className="text-[#9e3462] animate-spin" />
+          <Loader2 size={48} className="text-primary animate-spin" />
         </div>
         <Footer />
       </>
@@ -96,13 +96,13 @@ export default function CollectionSlugPage() {
     return (
       <>
         <Navbar activePage="shop" />
-        <main className="min-h-screen bg-[#fff9fb] flex flex-col items-center justify-center text-center px-4">
+        <main className="min-h-screen bg-surface flex flex-col items-center justify-center text-center px-4">
           <Layers size={48} className="text-[#eec7dd] mb-4" />
-          <h1 className="font-headline-lg text-[32px] text-[#21101a] mb-3">Collection Not Found</h1>
-          <p className="text-[#8c5971] mb-6">This collection doesn't exist or has been removed.</p>
+          <h1 className="font-headline-lg text-[32px] text-on-surface mb-3">Collection Not Found</h1>
+          <p className="text-on-surface-variant mb-6">This collection doesn't exist or has been removed.</p>
           <Link
             href="/collections"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#9e3462] text-white rounded-lg font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-label-md text-[14px] hover:bg-primary-container transition-colors"
           >
             <ArrowLeft size={16} />
             All Collections
@@ -123,7 +123,7 @@ export default function CollectionSlugPage() {
     <>
       <Navbar activePage="shop" />
 
-      <main className="min-h-screen bg-[#fff9fb]">
+      <main className="min-h-screen bg-surface">
         {/* Hero */}
         <div className="relative overflow-hidden">
           {collection.cover_image ? (
@@ -142,7 +142,7 @@ export default function CollectionSlugPage() {
                   <ArrowLeft size={14} />
                   Collections
                 </Link>
-                <h1 className="font-headline-lg text-[36px] sm:text-[48px] leading-tight">
+                <h1 className="font-headline-lg text-[26px] sm:text-[36px] md:text-[48px] leading-tight">
                   {collection.name}
                 </h1>
                 {collection.description && (
@@ -153,19 +153,19 @@ export default function CollectionSlugPage() {
               </div>
             </div>
           ) : (
-            <div className="bg-[#fce8f0] py-12 px-4 text-center">
+            <div className="bg-surface-container py-12 px-4 text-center">
               <Link
                 href="/collections"
-                className="inline-flex items-center gap-1.5 text-[#8c5971] hover:text-[#21101a] text-[13px] font-label-md mb-3 transition-colors"
+                className="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-on-surface text-[13px] font-label-md mb-3 transition-colors"
               >
                 <ArrowLeft size={14} />
                 Collections
               </Link>
-              <h1 className="font-headline-lg text-[36px] sm:text-[48px] text-[#21101a]">
+              <h1 className="font-headline-lg text-[26px] sm:text-[36px] md:text-[48px] text-on-surface">
                 {collection.name}
               </h1>
               {collection.description && (
-                <p className="mt-2 text-[#8c5971] text-[14px] max-w-lg mx-auto font-body-md">
+                <p className="mt-2 text-on-surface-variant text-[14px] max-w-lg mx-auto font-body-md">
                   {collection.description}
                 </p>
               )}
@@ -175,21 +175,21 @@ export default function CollectionSlugPage() {
 
         {/* Products */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <p className="text-[#8c5971] text-[13px] font-label-md mb-8">
+          <p className="text-on-surface-variant text-[13px] font-label-md mb-8">
             {products.length} {products.length === 1 ? "piece" : "pieces"}
           </p>
 
           {products.length === 0 ? (
             <div className="text-center py-20">
               <Layers size={40} className="text-[#eec7dd] mx-auto mb-4" />
-              <p className="text-[#8c5971] text-[16px]">No products in this collection yet.</p>
+              <p className="text-on-surface-variant text-[16px]">No products in this collection yet.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
-                <div key={product.id} className="group relative bg-white border border-[#eec7dd] rounded-2xl overflow-hidden hover:shadow-lg hover:border-[#9e3462]/30 transition-all duration-300">
+                <div key={product.id} className="group relative bg-white border border-outline-variant/40 rounded-2xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all duration-300">
                   <Link href={`/product/${product.id}`} className="block">
-                    <div className="relative aspect-[3/4] overflow-hidden bg-[#fce8f0]">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-surface-container">
                       {product.images[0] ? (
                         <img
                           src={product.images[0]}
@@ -197,10 +197,10 @@ export default function CollectionSlugPage() {
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-[#fce8f0]" />
+                        <div className="w-full h-full bg-surface-container" />
                       )}
                       {product.badge && (
-                        <span className="absolute top-3 left-3 px-2.5 py-1 bg-[#9e3462] text-white text-[10px] font-label-md uppercase tracking-wider rounded-full">
+                        <span className="absolute top-3 left-3 px-2.5 py-1 bg-primary text-white text-[10px] font-label-md uppercase tracking-wider rounded-full">
                           {product.badge}
                         </span>
                       )}
@@ -211,8 +211,8 @@ export default function CollectionSlugPage() {
                     onClick={(e) => toggleWishlist(product, e)}
                     className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-colors ${
                       isWished(product.id)
-                        ? "bg-[#9e3462] text-white"
-                        : "bg-white/80 text-[#8c5971] hover:text-[#9e3462]"
+                        ? "bg-primary text-white"
+                        : "bg-white/80 text-on-surface-variant hover:text-primary"
                     }`}
                   >
                     <Heart size={14} fill={isWished(product.id) ? "currentColor" : "none"} />
@@ -220,20 +220,20 @@ export default function CollectionSlugPage() {
 
                   <div className="p-4">
                     <Link href={`/product/${product.id}`}>
-                      <h3 className="font-label-md text-[14px] text-[#21101a] leading-snug line-clamp-2 hover:text-[#9e3462] transition-colors">
+                      <h3 className="font-label-md text-[14px] text-on-surface leading-snug line-clamp-2 hover:text-primary transition-colors">
                         {product.name}
                       </h3>
                     </Link>
                     {product.fabric && (
-                      <p className="text-[#8c5971] text-[11px] mt-0.5 capitalize">{product.fabric}</p>
+                      <p className="text-on-surface-variant text-[11px] mt-0.5 capitalize">{product.fabric}</p>
                     )}
                     <div className="flex items-center justify-between mt-3">
-                      <span className="font-headline-sm text-[16px] text-[#21101a]">
+                      <span className="font-headline-sm text-[16px] text-on-surface">
                         ₹{(product.price / 100).toLocaleString("en-IN")}
                       </span>
                       <button
                         onClick={() => { setSelectedProduct(product); setSelectedSize(""); }}
-                        className="flex items-center gap-1.5 px-3 py-1.5 bg-[#9e3462] text-white rounded-lg text-[12px] font-label-md hover:bg-[#7d1a48] transition-colors"
+                        className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-[12px] font-label-md hover:bg-primary-container transition-colors"
                       >
                         <ShoppingBag size={12} />
                         Add
@@ -259,18 +259,18 @@ export default function CollectionSlugPage() {
           >
             <div className="flex items-center gap-3">
               {selectedProduct.images[0] && (
-                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-12 h-12 rounded-lg object-cover border border-[#eec7dd]" />
+                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-12 h-12 rounded-lg object-cover border border-outline-variant/40" />
               )}
               <div>
-                <h3 className="font-label-md text-[14px] text-[#21101a] leading-snug">{selectedProduct.name}</h3>
-                <p className="text-[#9e3462] text-[13px] font-headline-sm">₹{(selectedProduct.price / 100).toLocaleString("en-IN")}</p>
+                <h3 className="font-label-md text-[14px] text-on-surface leading-snug">{selectedProduct.name}</h3>
+                <p className="text-primary text-[13px] font-headline-sm">₹{(selectedProduct.price / 100).toLocaleString("en-IN")}</p>
               </div>
             </div>
 
             <div>
-              <p className="text-[#8c5971] font-label-md text-[12px] uppercase tracking-wider mb-2">Select Size</p>
+              <p className="text-on-surface-variant font-label-md text-[12px] uppercase tracking-wider mb-2">Select Size</p>
               {sizesWithStock.length === 0 ? (
-                <p className="text-[#d9afc0] text-[13px]">Out of stock</p>
+                <p className="text-outline-variant text-[13px]">Out of stock</p>
               ) : (
                 <div className="flex flex-wrap gap-2">
                   {sizesWithStock.map((s) => (
@@ -279,8 +279,8 @@ export default function CollectionSlugPage() {
                       onClick={() => setSelectedSize(s)}
                       className={`px-3 py-1.5 rounded-lg border text-[13px] font-label-md transition-all ${
                         selectedSize === s
-                          ? "bg-[#9e3462] text-white border-[#9e3462]"
-                          : "border-[#eec7dd] text-[#21101a] hover:border-[#9e3462]/50"
+                          ? "bg-primary text-white border-[#9e3462]"
+                          : "border-outline-variant/40 text-on-surface hover:border-primary/50"
                       }`}
                     >
                       {s}
@@ -293,7 +293,7 @@ export default function CollectionSlugPage() {
             <button
               disabled={!selectedSize}
               onClick={() => handleAddToCart(selectedProduct)}
-              className="w-full py-3 bg-[#9e3462] text-white rounded-lg font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+              className="w-full py-3 bg-primary text-white rounded-lg font-label-md text-[14px] hover:bg-primary-container transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
             >
               Add to Cart
             </button>

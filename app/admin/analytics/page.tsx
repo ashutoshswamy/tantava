@@ -41,7 +41,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 function MiniBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = max > 0 ? Math.max((value / max) * 100, 1) : 1;
   return (
-    <div className="h-2 w-full bg-[#eec7dd] rounded-full overflow-hidden">
+    <div className="h-2 w-full bg-[#f2cfe3] rounded-full overflow-hidden">
       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, backgroundColor: color }} />
     </div>
   );
@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#9e3462] animate-spin" />
+        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
       </div>
     );
   }
@@ -73,19 +73,19 @@ export default function AnalyticsPage() {
   const totalOrdersCount = Object.values(data.ordersByStatus).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 text-[#21101a] space-y-6 md:space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 text-[#1a0914] space-y-6 md:space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-headline-lg text-[28px] text-[#21101a] mb-1">Analytics</h1>
+        <h1 className="font-headline-lg text-[22px] sm:text-[26px] text-[#1a0914] mb-1">Analytics</h1>
         <p className="text-[#8c5971] font-body-md text-[13px]">Last 90 days • paid orders only</p>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* This month revenue */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-5">
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <IndianRupee size={18} className="text-[#9e3462]" />
+            <IndianRupee size={18} className="text-[#c2477f]" />
             {data.revenueGrowth !== null && (
               <span className={`flex items-center gap-1 text-[11px] font-label-md ${data.revenueGrowth >= 0 ? "text-green-600" : "text-red-500"}`}>
                 {data.revenueGrowth >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -93,40 +93,40 @@ export default function AnalyticsPage() {
               </span>
             )}
           </div>
-          <p className="text-[22px] font-bold text-[#21101a]">{fmt(data.thisMonthRevenue)}</p>
+          <p className="text-[22px] font-bold text-[#1a0914]">{fmt(data.thisMonthRevenue)}</p>
           <p className="text-[#8c5971] text-[11px] mt-1">This month</p>
-          <p className="text-[#d9afc0] text-[10px]">vs {fmt(data.lastMonthRevenue)} last month</p>
+          <p className="text-[#dbb6ca] text-[10px]">vs {fmt(data.lastMonthRevenue)} last month</p>
         </div>
 
         {/* AOV */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-5">
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-5">
           <ShoppingBag size={18} className="text-[#7952a0] mb-3" />
-          <p className="text-[22px] font-bold text-[#21101a]">{fmt(data.avgOrderValue)}</p>
+          <p className="text-[22px] font-bold text-[#1a0914]">{fmt(data.avgOrderValue)}</p>
           <p className="text-[#8c5971] text-[11px] mt-1">Avg order value</p>
-          <p className="text-[#d9afc0] text-[10px]">{totalOrdersCount} total orders</p>
+          <p className="text-[#dbb6ca] text-[10px]">{totalOrdersCount} total orders</p>
         </div>
 
         {/* Customers */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-5">
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-5">
           <Users size={18} className="text-[#3b82f6] mb-3" />
-          <p className="text-[22px] font-bold text-[#21101a]">{data.uniqueCustomers}</p>
+          <p className="text-[22px] font-bold text-[#1a0914]">{data.uniqueCustomers}</p>
           <p className="text-[#8c5971] text-[11px] mt-1">Unique customers</p>
-          <p className="text-[#d9afc0] text-[10px]">All time</p>
+          <p className="text-[#dbb6ca] text-[10px]">All time</p>
         </div>
 
       </div>
 
       {/* Revenue chart */}
-      <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
+      <div className="bg-white border border-[#f2cfe3] rounded-xl p-4 sm:p-6">
         <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center mb-6">
-          <h2 className="text-[#21101a] font-headline-sm text-[16px]">Revenue Over Time</h2>
+          <h2 className="text-[#1a0914] font-headline-sm text-[15px]">Revenue Over Time</h2>
           <div className="flex gap-1">
             {([7, 14, 30] as const).map((r) => (
               <button
                 key={r}
                 onClick={() => setChartRange(r)}
                 className={`px-3 py-1 rounded-lg font-label-md text-[11px] transition-colors ${
-                  chartRange === r ? "bg-[#9e3462]/15 text-[#9e3462]" : "text-[#8c5971] hover:text-[#21101a]"
+                  chartRange === r ? "bg-[#c2477f]/15 text-[#c2477f]" : "text-[#8c5971] hover:text-[#1a0914]"
                 }`}
               >
                 {r}d
@@ -140,7 +140,7 @@ export default function AnalyticsPage() {
           {chartData.map((day) => (
             <div key={day.date} className="flex-1 flex flex-col items-center gap-1 group relative">
               {/* Tooltip */}
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white border border-[#d9afc0] rounded-lg px-2 py-1.5 text-[10px] text-[#21101a] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white border border-[#dbb6ca] rounded-lg px-2 py-1.5 text-[10px] text-[#1a0914] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <p className="font-bold">{fmt(day.revenue)}</p>
                 <p className="text-[#8c5971]">{day.orders} order{day.orders !== 1 ? "s" : ""}</p>
               </div>
@@ -150,13 +150,13 @@ export default function AnalyticsPage() {
                   style={{
                     height: `${Math.max((day.revenue / maxRevenue) * 100, day.revenue > 0 ? 2 : 0)}%`,
                     background: day.revenue > 0
-                      ? "linear-gradient(to top, #9e3462, #f4a8c6)"
-                      : "#eec7dd",
+                      ? "linear-gradient(to top, #c2477f, #fad0e4)"
+                      : "#f2cfe3",
                   }}
                 />
               </div>
               {chartRange <= 14 && (
-                <span className="text-[#d9afc0] font-label-md text-[9px]">
+                <span className="text-[#dbb6ca] font-label-md text-[9px]">
                   {new Date(day.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                 </span>
               )}
@@ -164,7 +164,7 @@ export default function AnalyticsPage() {
           ))}
         </div>
         {chartRange > 14 && (
-          <div className="flex justify-between text-[#d9afc0] font-label-md text-[10px]">
+          <div className="flex justify-between text-[#dbb6ca] font-label-md text-[10px]">
             <span>{new Date(chartData[0]?.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
             <span>{new Date(chartData[chartData.length - 1]?.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
           </div>
@@ -173,8 +173,8 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Orders by status */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#21101a] font-headline-sm text-[16px] mb-5">Orders by Status</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#1a0914] font-headline-sm text-[15px] mb-5">Orders by Status</h2>
           <div className="space-y-3">
             {Object.entries(data.ordersByStatus)
               .sort((a, b) => b[1] - a[1])
@@ -183,13 +183,13 @@ export default function AnalyticsPage() {
                   <div className="flex justify-between items-center mb-1.5">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] ?? "#6b7280" }} />
-                      <span className="text-[#533347] font-label-md text-[12px] capitalize">{status}</span>
+                      <span className="text-[#52304a] font-label-md text-[12px] capitalize">{status}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-[#8c5971] text-[11px]">
                         {totalOrdersCount > 0 ? ((count / totalOrdersCount) * 100).toFixed(0) : 0}%
                       </span>
-                      <span className="text-[#21101a] font-label-md text-[13px] w-6 text-right">{count}</span>
+                      <span className="text-[#1a0914] font-label-md text-[13px] w-6 text-right">{count}</span>
                     </div>
                   </div>
                   <MiniBar value={count} max={totalOrdersCount} color={STATUS_COLORS[status] ?? "#6b7280"} />
@@ -199,22 +199,22 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Revenue by category */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#21101a] font-headline-sm text-[16px] mb-5">Revenue by Category</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#1a0914] font-headline-sm text-[15px] mb-5">Revenue by Category</h2>
           {data.revenueByCategory.length === 0 ? (
             <p className="text-[#8c5971] text-[13px] text-center py-8">No data yet</p>
           ) : (
             <div className="space-y-3">
               {data.revenueByCategory.map(({ category, revenue }, i) => {
                 const maxCat = data.revenueByCategory[0].revenue;
-                const colors = ["#9e3462", "#7952a0", "#3b82f6", "#059669", "#b94f7e"];
+                const colors = ["#c2477f", "#7952a0", "#3b82f6", "#059669", "#b94f7e"];
                 return (
                   <div key={category}>
                     <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-[#533347] font-label-md text-[12px]">
+                      <span className="text-[#52304a] font-label-md text-[12px]">
                         {CATEGORY_LABELS[category] ?? category}
                       </span>
-                      <span className="text-[#21101a] font-label-md text-[12px]">{fmt(revenue)}</span>
+                      <span className="text-[#1a0914] font-label-md text-[12px]">{fmt(revenue)}</span>
                     </div>
                     <MiniBar value={revenue} max={maxCat} color={colors[i % colors.length]} />
                   </div>
@@ -227,20 +227,20 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top products */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#21101a] font-headline-sm text-[16px] mb-5">Top Products</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#1a0914] font-headline-sm text-[15px] mb-5">Top Products</h2>
           {data.topProducts.length === 0 ? (
             <p className="text-[#8c5971] text-[13px] text-center py-8">No sales data yet</p>
           ) : (
             <div className="space-y-4">
               {data.topProducts.map((p, i) => (
                 <div key={p.name} className="flex items-center gap-4">
-                  <span className="text-[#d9afc0] font-bold text-[14px] w-5 shrink-0">#{i + 1}</span>
+                  <span className="text-[#dbb6ca] font-bold text-[14px] w-5 shrink-0">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#21101a] font-label-md text-[13px] truncate">{p.name}</p>
+                    <p className="text-[#1a0914] font-label-md text-[13px] truncate">{p.name}</p>
                     <p className="text-[#8c5971] text-[11px]">{p.units} unit{p.units !== 1 ? "s" : ""} sold</p>
                   </div>
-                  <span className="text-[#9e3462] font-label-md text-[13px] shrink-0">{fmt(p.revenue)}</span>
+                  <span className="text-[#c2477f] font-label-md text-[13px] shrink-0">{fmt(p.revenue)}</span>
                 </div>
               ))}
             </div>
@@ -248,8 +248,8 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Inventory health */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#21101a] font-headline-sm text-[16px] mb-5">Inventory Health</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#1a0914] font-headline-sm text-[15px] mb-5">Inventory Health</h2>
           <div className="space-y-4">
             {[
               { label: "Healthy stock",   value: data.inventoryHealth.healthy,    color: "#22c55e", icon: <Package size={14} /> },
@@ -261,13 +261,13 @@ export default function AnalyticsPage() {
                   {icon}
                 </div>
                 <div className="flex-1">
-                  <p className="text-[#533347] font-label-md text-[12px]">{label}</p>
+                  <p className="text-[#52304a] font-label-md text-[12px]">{label}</p>
                   <MiniBar value={value} max={data.inventoryHealth.total} color={color} />
                 </div>
-                <span className="text-[#21101a] font-bold text-[16px] w-8 text-right">{value}</span>
+                <span className="text-[#1a0914] font-bold text-[16px] w-8 text-right">{value}</span>
               </div>
             ))}
-            <p className="text-[#d9afc0] text-[11px] pt-2 border-t border-[#eec7dd]">
+            <p className="text-[#dbb6ca] text-[11px] pt-2 border-t border-[#f2cfe3]">
               {data.inventoryHealth.total} active products total
             </p>
           </div>

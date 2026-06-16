@@ -31,6 +31,11 @@ export async function POST(req: NextRequest) {
   const { product_id, size, change, reason } = await req.json();
 
   if (!size) return NextResponse.json({ error: "size is required" }, { status: 400 });
+  if (!product_id) return NextResponse.json({ error: "product_id is required" }, { status: 400 });
+  const changeNum = Number(change);
+  if (!Number.isFinite(changeNum) || changeNum === 0) {
+    return NextResponse.json({ error: "change must be a non-zero number" }, { status: 400 });
+  }
 
   const { data: product } = await supabase
     .from("products")
@@ -42,12 +47,12 @@ export async function POST(req: NextRequest) {
 
   const current: Record<string, number> = product.size_inventory || {};
   const currentQty = current[size] ?? 0;
-  const newQty = Math.max(0, currentQty + change);
+  const newQty = Math.max(0, currentQty + changeNum);
   const newInventory = { ...current, [size]: newQty };
 
   const [updateRes] = await Promise.all([
     supabase.from("products").update({ size_inventory: newInventory }).eq("id", product_id),
-    supabase.from("inventory_logs").insert({ product_id, size, change, reason }),
+    supabase.from("inventory_logs").insert({ product_id, size, change: changeNum, reason }),
   ]);
 
   if (updateRes.error) return NextResponse.json({ error: updateRes.error.message }, { status: 500 });

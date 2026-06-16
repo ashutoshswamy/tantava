@@ -49,111 +49,113 @@ export default function AdminCollectionsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={48} className="text-[#9e3462] animate-spin" />
+        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 text-[#21101a]">
-      <div className="flex items-center justify-between mb-8">
+    <div className="p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-headline-lg text-[28px] text-[#21101a]">Collections</h1>
-          <p className="text-[#8c5971] text-[14px] mt-1">{collections.length} collection{collections.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Collections</h1>
+          <p className="text-[#8c5971] text-[13px] mt-0.5">{collections.length} collection{collections.length !== 1 ? "s" : ""}</p>
         </div>
         <Link
           href="/admin/collections/new"
-          className="flex items-center gap-2 px-5 py-3 bg-[#9e3462] text-white rounded-lg font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#c2477f] text-white text-[13px] font-medium rounded-xl hover:bg-[#962259] transition-colors"
         >
-          <Plus size={18} />
+          <Plus size={16} />
           New Collection
         </Link>
       </div>
 
       {collections.length === 0 ? (
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-12 text-center">
-          <Layers size={48} className="text-[#eec7dd] mx-auto mb-4" />
-          <p className="text-[#8c5971] font-body-md text-[16px]">No collections yet</p>
-          <p className="text-[#d9afc0] text-[13px] mt-1">Create your first collection to group products</p>
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-12 text-center">
+          <Layers size={40} className="mx-auto mb-3 text-[#dbb6ca]" />
+          <p className="text-[#8c5971] text-[14px] font-medium">No collections yet</p>
+          <p className="text-[#dbb6ca] text-[12px] mt-1">Create your first collection to group products</p>
           <Link
             href="/admin/collections/new"
-            className="inline-flex items-center gap-2 mt-6 px-5 py-3 bg-[#9e3462] text-white rounded-lg font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors"
+            className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 bg-[#c2477f] text-white text-[13px] font-medium rounded-xl hover:bg-[#962259] transition-colors"
           >
-            <Plus size={18} />
+            <Plus size={16} />
             New Collection
           </Link>
         </div>
       ) : (
-        <div className="bg-white border border-[#eec7dd] rounded-xl overflow-hidden">
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl overflow-hidden">
           <table className="w-full">
             <thead>
-              <tr className="border-b border-[#eec7dd] bg-[#fce8f0]/40">
-                <th className="text-left px-6 py-4 text-[#8c5971] font-label-md text-[11px] uppercase tracking-wider">Collection</th>
-                <th className="text-left px-6 py-4 text-[#8c5971] font-label-md text-[11px] uppercase tracking-wider hidden sm:table-cell">Slug</th>
-                <th className="text-left px-6 py-4 text-[#8c5971] font-label-md text-[11px] uppercase tracking-wider hidden md:table-cell">Products</th>
-                <th className="text-left px-6 py-4 text-[#8c5971] font-label-md text-[11px] uppercase tracking-wider hidden lg:table-cell">Sort</th>
-                <th className="text-left px-6 py-4 text-[#8c5971] font-label-md text-[11px] uppercase tracking-wider">Status</th>
-                <th className="px-6 py-4" />
+              <tr className="border-b border-[#f2cfe3] bg-[#fdeaf2]/40">
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Collection</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden sm:table-cell">Slug</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden md:table-cell">Products</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden lg:table-cell">Sort</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Status</th>
+                <th className="px-5 py-3.5" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#eec7dd]/60">
+            <tbody className="divide-y divide-[#f2cfe3]">
               {collections.map((col) => (
-                <tr key={col.id} className="hover:bg-[#fce8f0]/30 transition-colors">
-                  <td className="px-6 py-4">
+                <tr key={col.id} className="hover:bg-[#fdeaf2]/30 transition-colors">
+                  <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
                       {col.cover_image ? (
                         <img
                           src={col.cover_image}
                           alt={col.name}
-                          className="w-10 h-10 rounded-lg object-cover border border-[#eec7dd]"
+                          className="w-10 h-10 rounded-xl object-cover border border-[#f2cfe3]"
                         />
                       ) : (
-                        <div className="w-10 h-10 rounded-lg bg-[#fce8f0] border border-[#eec7dd] flex items-center justify-center">
-                          <Layers size={16} className="text-[#d9afc0]" />
+                        <div className="w-10 h-10 rounded-xl bg-[#fdeaf2] border border-[#f2cfe3] flex items-center justify-center">
+                          <Layers size={16} className="text-[#dbb6ca]" />
                         </div>
                       )}
                       <div>
-                        <p className="font-label-md text-[14px] text-[#21101a]">{col.name}</p>
+                        <p className="font-medium text-[13px] text-[#1a0914]">{col.name}</p>
                         {col.description && (
-                          <p className="text-[12px] text-[#8c5971] truncate max-w-[200px]">{col.description}</p>
+                          <p className="text-[11px] text-[#8c5971] truncate max-w-[200px] mt-0.5">{col.description}</p>
                         )}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 hidden sm:table-cell">
-                    <span className="font-mono text-[12px] text-[#8c5971] bg-[#fce8f0] px-2 py-1 rounded">{col.slug}</span>
+                  <td className="px-5 py-4 hidden sm:table-cell">
+                    <span className="font-mono text-[12px] text-[#8c5971] bg-[#fdeaf2] px-2 py-1 rounded-lg">{col.slug}</span>
                   </td>
-                  <td className="px-6 py-4 hidden md:table-cell">
-                    <span className="text-[14px] text-[#21101a]">{col.product_count}</span>
+                  <td className="px-5 py-4 hidden md:table-cell">
+                    <span className="text-[13px] text-[#1a0914] font-medium">{col.product_count}</span>
                   </td>
-                  <td className="px-6 py-4 hidden lg:table-cell">
-                    <span className="text-[14px] text-[#21101a]">{col.sort_order}</span>
+                  <td className="px-5 py-4 hidden lg:table-cell">
+                    <span className="text-[13px] text-[#1a0914]">{col.sort_order}</span>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-5 py-4">
                     <span
-                      className={`inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-label-md ${
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium ${
                         col.is_active
-                          ? "bg-green-50 text-green-700 border border-green-200"
-                          : "bg-[#fce8f0] text-[#8c5971] border border-[#eec7dd]"
+                          ? "bg-green-50 text-green-700"
+                          : "bg-[#fdeaf2] text-[#8c5971]"
                       }`}
                     >
                       {col.is_active ? "Active" : "Hidden"}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
-                    <div className="flex items-center gap-2 justify-end">
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-1.5 justify-end">
                       <Link
                         href={`/admin/collections/${col.id}`}
-                        className="p-2 text-[#8c5971] hover:text-[#21101a] hover:bg-[#fce8f0] rounded-lg transition-colors"
+                        className="p-2 text-[#8c5971] hover:text-[#1a0914] hover:bg-[#fdeaf2] rounded-lg transition-colors"
+                        title="Edit collection"
                       >
-                        <Pencil size={16} />
+                        <Pencil size={15} />
                       </Link>
                       <button
                         onClick={() => handleDelete(col.id, col.name)}
                         disabled={deleting === col.id}
                         className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
+                        title="Delete collection"
                       >
-                        {deleting === col.id ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                        {deleting === col.id ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
                       </button>
                     </div>
                   </td>

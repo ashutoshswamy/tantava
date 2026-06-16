@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { MessageCircle, ArrowRight, Camera, MapPin } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { FaWhatsapp, FaInstagram } from "react-icons/fa";
 import { motion } from "framer-motion";
 
 export default function ContactPage() {
@@ -13,17 +14,34 @@ export default function ContactPage() {
     subject: "bespoke",
     message: "",
   });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Thank you for your inquiry. We'll be in touch soon.");
+    setSubmitting(true);
+    setSubmitError("");
+    const res = await fetch("/api/inquiries", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
+    if (res.ok) {
+      setSubmitted(true);
+      setFormData({ name: "", email: "", subject: "bespoke", message: "" });
+    } else {
+      const data = await res.json();
+      setSubmitError(data.error || "Something went wrong. Please try again.");
+    }
+    setSubmitting(false);
   };
 
   return (
     <>
       <Navbar activePage="contact" />
 
-      <main className="pt-32 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+      <main className="pt-8 sm:pt-12 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -120,11 +138,18 @@ export default function ContactPage() {
                 </label>
               </div>
 
+              {submitError && (
+                <p className="text-red-600 text-[13px]">{submitError}</p>
+              )}
+              {submitted && (
+                <p className="text-green-700 text-[13px]">Thank you! We&apos;ll be in touch soon.</p>
+              )}
               <button
                 type="submit"
-                className="w-full py-4 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity active:scale-[0.98]"
+                disabled={submitting || submitted}
+                className="w-full py-4 bg-secondary text-on-secondary rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity active:scale-[0.98] disabled:opacity-60"
               >
-                SUBMIT INQUIRY
+                {submitting ? "SENDING..." : submitted ? "INQUIRY SENT" : "SUBMIT INQUIRY"}
               </button>
             </form>
           </motion.div>
@@ -140,7 +165,7 @@ export default function ContactPage() {
             <div className="bg-primary-container p-6 sm:p-8 rounded-lg flex min-h-[280px] flex-col justify-between items-start shadow-sm">
               <div>
                 <div className="bg-primary/20 p-3 rounded-full mb-6 inline-block">
-                  <MessageCircle size={24} className="text-on-primary-container" />
+                  <FaWhatsapp size={24} className="text-on-primary-container" />
                 </div>
                 <h3 className="font-headline-sm text-headline-sm text-on-primary-container mb-2">
                   Tantava Concierge
@@ -161,39 +186,24 @@ export default function ContactPage() {
               </a>
             </div>
 
-            {/* Instagram & Studio */}
+            {/* Instagram */}
             <div className="bg-surface-container-high p-8 rounded-lg shadow-sm">
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <Camera size={20} className="text-secondary" />
-                  </div>
-                  <div>
-                    <p className="font-label-md text-label-md text-on-surface-variant">
-                      Follow Our Journey
-                    </p>
-                    <a
-                      href="https://instagram.com/_tantava"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-body-lg text-body-lg text-secondary font-bold hover:underline"
-                    >
-                      @_tantava
-                    </a>
-                  </div>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                  <FaInstagram size={20} className="text-secondary" />
                 </div>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
-                    <MapPin size={20} className="text-secondary" />
-                  </div>
-                  <div>
-                    <p className="font-label-md text-label-md text-on-surface-variant">
-                      Studio Location
-                    </p>
-                    <p className="font-body-md text-body-md text-on-surface">
-                      Kothrud, Pune, Maharashtra
-                    </p>
-                  </div>
+                <div>
+                  <p className="font-label-md text-label-md text-on-surface-variant">
+                    Follow Our Journey
+                  </p>
+                  <a
+                    href="https://instagram.com/_tantava"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-body-lg text-body-lg text-secondary font-bold hover:underline"
+                  >
+                    @_tantava
+                  </a>
                 </div>
               </div>
             </div>

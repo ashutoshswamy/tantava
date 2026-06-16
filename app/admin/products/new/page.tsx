@@ -9,7 +9,7 @@ import { ArrowLeft, Plus, Loader2, Upload } from "lucide-react";
 const CATEGORY_SUGGESTIONS = ["sarees", "lehengas", "fusion", "gowns", "jewellery"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
 
-const inputCls = "w-full bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg px-4 py-3 text-[#21101a] placeholder:text-[#d9afc0] font-body-md text-[14px] focus:border-[#9e3462]/50 focus:outline-none transition-colors";
+const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors";
 
 export default function NewProductPage() {
   const router = useRouter();
@@ -92,27 +92,30 @@ export default function NewProductPage() {
   };
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#21101a]">
-      <div className="flex items-center gap-4 mb-8">
-        <Link href="/admin/products" className="text-[#8c5971] hover:text-[#21101a] transition-colors">
-          <ArrowLeft size={20} />
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+      <div className="flex items-center gap-3 mb-8">
+        <Link href="/admin/products" className="p-2 text-[#8c5971] hover:text-[#1a0914] hover:bg-[#fdeaf2] rounded-xl transition-colors">
+          <ArrowLeft size={18} />
         </Link>
-        <h1 className="font-headline-lg text-[28px] text-[#21101a]">Add New Product</h1>
+        <div>
+          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Add New Product</h1>
+          <p className="text-[#8c5971] text-[13px] mt-0.5">Fill in the details below to add a product</p>
+        </div>
       </div>
 
       {error && (
-        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 font-body-md text-[14px]">
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-[13px]">
           {error}
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Basic Info */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6 space-y-5">
-          <h2 className="text-[#8c5971] font-label-md text-[13px] uppercase tracking-wider">Basic Info</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-5">
+          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Basic Info</h2>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Product Name *</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Product Name *</label>
             <input
               required
               value={form.name}
@@ -123,7 +126,7 @@ export default function NewProductPage() {
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Description</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Description</label>
             <textarea
               rows={4}
               value={form.description}
@@ -134,7 +137,7 @@ export default function NewProductPage() {
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Price (₹) *</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Price (₹) *</label>
             <input
               required
               type="number"
@@ -149,7 +152,7 @@ export default function NewProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Category *</label>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Category *</label>
               <input
                 required
                 list="category-suggestions"
@@ -165,7 +168,7 @@ export default function NewProductPage() {
               </datalist>
             </div>
             <div>
-              <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Badge</label>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Badge</label>
               <input
                 value={form.badge}
                 onChange={(e) => setForm({ ...form, badge: e.target.value })}
@@ -177,7 +180,7 @@ export default function NewProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Fabric</label>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Fabric</label>
               <input
                 value={form.fabric}
                 onChange={(e) => setForm({ ...form, fabric: e.target.value })}
@@ -186,7 +189,7 @@ export default function NewProductPage() {
               />
             </div>
             <div>
-              <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">SKU</label>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">SKU</label>
               <input
                 value={form.sku}
                 onChange={(e) => setForm({ ...form, sku: e.target.value })}
@@ -197,7 +200,7 @@ export default function NewProductPage() {
           </div>
 
           <div>
-            <label className="block text-[#8c5971] font-label-md text-[12px] mb-2 uppercase tracking-wider">Collection</label>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Collection</label>
             <select
               value={form.collection_id}
               onChange={(e) => setForm({ ...form, collection_id: e.target.value })}
@@ -212,18 +215,18 @@ export default function NewProductPage() {
         </div>
 
         {/* Stock by Size */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6 space-y-4">
-          <h2 className="text-[#8c5971] font-label-md text-[13px] uppercase tracking-wider">Stock by Size</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
+          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Stock by Size</h2>
+          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
             {SIZES.map((size) => (
-              <div key={size} className="flex flex-col gap-1">
-                <span className="text-[11px] text-[#8c5971] font-label-md text-center">{size}</span>
+              <div key={size} className="flex flex-col gap-1.5">
+                <span className="text-[11px] font-semibold text-[#8c5971] text-center uppercase">{size}</span>
                 <input
                   type="number"
                   min="0"
                   value={form.size_inventory[size]}
                   onChange={(e) => setForm({ ...form, size_inventory: { ...form.size_inventory, [size]: e.target.value } })}
-                  className="w-full bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg px-2 py-2 text-[#21101a] font-body-md text-[14px] text-center focus:border-[#9e3462]/50 focus:outline-none transition-colors"
+                  className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-2 py-2.5 text-[#1a0914] text-[13px] text-center focus:border-[#c2477f]/60 focus:outline-none transition-colors"
                 />
               </div>
             ))}
@@ -231,18 +234,18 @@ export default function NewProductPage() {
         </div>
 
         {/* Images */}
-        <div className="bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6 space-y-4">
-          <h2 className="text-[#8c5971] font-label-md text-[13px] uppercase tracking-wider">Images</h2>
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
+          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Images</h2>
           {form.images.map((img, idx) => (
             <div key={idx} className="space-y-2">
-              <div className="flex gap-3 items-center">
+              <div className="flex gap-2.5 items-center">
                 <input
                   value={img}
                   onChange={(e) => updateImage(idx, e.target.value)}
                   className={inputCls}
                   placeholder="https://..."
                 />
-                <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg text-[#8c5971] hover:text-[#21101a] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap font-label-md text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>
+                <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>
                   {uploadingIdx === idx ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
                   <span className="hidden sm:inline">{uploadingIdx === idx ? "..." : "Upload"}</span>
                   <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(idx, e)} disabled={uploadingIdx !== null} />
@@ -251,30 +254,30 @@ export default function NewProductPage() {
                   <button
                     type="button"
                     onClick={() => setForm({ ...form, images: [...form.images, ""] })}
-                    className="px-3 py-3 bg-[#fce8f0] border border-[#d9afc0]/50 rounded-lg text-[#8c5971] hover:text-[#21101a] hover:bg-[#f8dde9] transition-colors flex-shrink-0"
+                    className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors flex-shrink-0"
                   >
                     <Plus size={16} />
                   </button>
                 )}
               </div>
               {img && (
-                <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-lg border border-[#eec7dd] object-cover" />
+                <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
               )}
             </div>
           ))}
         </div>
 
         {/* Active toggle */}
-        <div className="flex items-center justify-between gap-4 bg-white border border-[#eec7dd] rounded-xl p-4 sm:p-6">
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
           <div>
-            <p className="text-[#21101a] font-label-md text-[14px]">Active / Visible in shop</p>
-            <p className="text-[#8c5971] text-[12px]">Toggle to hide from customers</p>
+            <p className="text-[#1a0914] font-medium text-[14px]">Active / Visible in shop</p>
+            <p className="text-[#8c5971] text-[12px] mt-0.5">Toggle to hide from customers</p>
           </div>
           <button
             type="button"
             onClick={() => setForm({ ...form, is_active: !form.is_active })}
-            className={`w-12 h-6 rounded-full transition-colors relative ${
-              form.is_active ? "bg-[#9e3462]" : "bg-[#eec7dd]"
+            className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
+              form.is_active ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
             }`}
           >
             <div
@@ -285,11 +288,11 @@ export default function NewProductPage() {
           </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 pt-2">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2">
           <button
             type="submit"
             disabled={saving}
-            className="flex-1 py-4 bg-[#9e3462] text-white font-label-md text-[14px] rounded-lg hover:bg-[#7d1a48] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {saving ? (
               <>
@@ -300,7 +303,7 @@ export default function NewProductPage() {
           </button>
           <Link
             href="/admin/products"
-            className="px-6 py-4 border border-[#d9afc0] text-center text-[#8c5971] rounded-lg hover:border-[#9e3462]/40 hover:text-[#21101a] transition-colors font-label-md text-[14px]"
+            className="px-8 py-3.5 border border-[#dbb6ca] text-center text-[#8c5971] rounded-xl hover:border-[#c2477f]/40 hover:text-[#1a0914] transition-colors font-medium text-[14px]"
           >
             Cancel
           </Link>

@@ -25,9 +25,9 @@ export default function Navbar({ activePage }: NavbarProps) {
     () => true,
     () => false
   );
-  const { isSignedIn, user }        = useUser();
-  const itemCount                   = useCart((s) => s.itemCount)();
-  const wishlistCount               = useWishlist((s) => s.itemCount)();
+  const { isSignedIn, user } = useUser();
+  const itemCount            = useCart((s) => s.itemCount)();
+  const wishlistCount        = useWishlist((s) => s.itemCount)();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -45,12 +45,13 @@ export default function Navbar({ activePage }: NavbarProps) {
 
   return (
     <>
+      {/* Fixed navbar - h-16 mobile / h-20 desktop */}
       <nav
-        className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-          scrolled ? "bg-surface/95 shadow-md" : "bg-surface/90"
+        className={`fixed top-0 left-0 right-0 z-50 h-16 md:h-20 flex flex-col justify-center transition-all duration-300 ${
+          scrolled ? "bg-surface/95 shadow-sm" : "bg-surface/90"
         } frosted-nav`}
       >
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center px-4 py-3 sm:px-6 md:px-margin-desktop md:py-4 max-w-container-max mx-auto">
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center h-full px-4 sm:px-6 md:px-margin-desktop max-w-container-max mx-auto w-full">
           {/* Left: nav links */}
           <div className="hidden md:flex items-center gap-6">
             <Link href="/shop"    className={linkClass("shop") + " whitespace-nowrap"}>Shop</Link>
@@ -66,20 +67,25 @@ export default function Navbar({ activePage }: NavbarProps) {
           </div>
           <div className="md:hidden" />
 
-          {/* Center: logo + brand name */}
+          {/* Center: logo */}
           <Link
             href="/"
-            className="flex flex-col items-center justify-center hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 justify-center hover:opacity-80 transition-opacity"
           >
-            <Image src="/logo.png" alt="Tantava" width={56} height={56} className="h-10 w-10 object-contain sm:h-12 sm:w-12 md:h-14 md:w-14" />
-            <span className="text-base sm:text-lg md:text-xl font-bold text-primary tracking-widest leading-tight uppercase">
+            <Image
+              src="/logo.png"
+              alt="Tantava"
+              width={40}
+              height={40}
+              className="h-14 w-14 md:h-20 md:w-20 object-contain"
+            />
+            <span className="text-xl md:text-3xl font-bold text-primary tracking-widest uppercase">
               Tantava
             </span>
           </Link>
 
           {/* Right: icons */}
           <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-5">
-            {/* Search */}
             <button
               onClick={() => setSearchOpen(true)}
               className="text-on-surface-variant hover:text-primary transition-all duration-300"
@@ -88,7 +94,6 @@ export default function Navbar({ activePage }: NavbarProps) {
               <Search size={20} />
             </button>
 
-            {/* Wishlist */}
             <Link
               href="/wishlist"
               className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
@@ -102,7 +107,6 @@ export default function Navbar({ activePage }: NavbarProps) {
               )}
             </Link>
 
-            {/* Cart */}
             <button
               onClick={() => setCartOpen(true)}
               className="relative text-on-surface-variant hover:text-primary transition-all duration-300"
@@ -116,13 +120,12 @@ export default function Navbar({ activePage }: NavbarProps) {
               )}
             </button>
 
-            {/* Account */}
             {isSignedIn ? (
               <>
                 <Link href="/account" className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300">
                   <User size={20} />
                 </Link>
-                <UserButton appearance={{ elements: { avatarBox: "w-8 h-8" } }} />
+                <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
               </>
             ) : (
               <SignInButton mode="modal">
@@ -152,7 +155,7 @@ export default function Navbar({ activePage }: NavbarProps) {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-6 flex flex-col gap-5 overflow-hidden"
+              className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-6 flex flex-col gap-5 overflow-hidden absolute top-full left-0 right-0"
             >
               {[
                 { href: "/shop",     label: "Shop" },
@@ -191,6 +194,9 @@ export default function Navbar({ activePage }: NavbarProps) {
           )}
         </AnimatePresence>
       </nav>
+
+      {/* Spacer - same height as navbar so content is never hidden behind it */}
+      <div className="h-16 md:h-20 shrink-0" />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />

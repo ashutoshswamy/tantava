@@ -38,7 +38,7 @@ export default function AccountPage() {
   return (
     <>
       <Navbar />
-      <main className="pt-32 pb-stack-lg min-h-screen">
+      <main className="pt-8 sm:pt-12 pb-stack-lg min-h-screen">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop space-y-12">
 
           {/* Header */}
