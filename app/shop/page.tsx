@@ -13,6 +13,11 @@ import { useWishlist } from "@/store/wishlist";
 import { AnimatePresence, motion } from "framer-motion";
 
 const SORT_OPTIONS = ["Newest", "Price: Low to High", "Price: High to Low"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+
+function firstAvailableSize(product: Product): string {
+  return SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || SIZES[0];
+}
 
 const CATEGORY_LABELS: Record<string, string> = {
   fusion: "Kurta & Suit Sets",
@@ -29,7 +34,7 @@ export default function ShopPage() {
   const [sort, setSort] = useState("Newest");
   const [searchQuery, setSearchQuery] = useState("");
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
-  const [selectedSize, setSelectedSize] = useState("XS");
+  const [selectedSize, setSelectedSize] = useState("");
   const { addItem } = useCart();
   const { toggleItem, isWished } = useWishlist();
 
@@ -217,7 +222,7 @@ export default function ShopPage() {
                         <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
                           <button
-                            onClick={() => { setModalProduct(product); setSelectedSize("XS"); }}
+                            onClick={() => { setModalProduct(product); setSelectedSize(firstAvailableSize(product)); }}
                             className="flex-1 bg-surface text-primary font-label-md text-label-md px-4 py-3 shadow-lg text-[12px] tracking-widest hover:bg-primary hover:text-on-primary transition-colors"
                           >
                             QUICK VIEW

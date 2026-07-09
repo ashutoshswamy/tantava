@@ -15,6 +15,11 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const DEFAULT_CARE = "Dry Clean Only. Store in muslin cloth away from direct sunlight.";
 const DEFAULT_DELIVERY_RETURNS = "Complimentary shipping across India. 14–21 working days. Returns within 7 days for standard sizes.";
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+
+function firstAvailableSize(product: Product): string {
+  return SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || SIZES[0];
+}
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -22,7 +27,7 @@ export default function ProductDetailPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [settings, setSettings] = useState<StoreSettings | null>(null);
   const [loading, setLoading] = useState(true);
-  const [selectedSize, setSelectedSize] = useState("XS");
+  const [selectedSize, setSelectedSize] = useState("");
   const [selectedImg, setSelectedImg] = useState(0);
   const [openAccordion, setOpenAccordion] = useState(0);
   const [added, setAdded] = useState(false);
@@ -34,7 +39,7 @@ export default function ProductDetailPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) router.push("/shop");
-        else { setProduct(data); setLoading(false); }
+        else { setProduct(data); setSelectedSize(firstAvailableSize(data)); setLoading(false); }
       });
     fetch("/api/settings")
       .then((r) => r.json())
