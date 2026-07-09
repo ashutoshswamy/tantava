@@ -69,9 +69,14 @@ export default function Footer() {
         <p className="font-label-md text-label-md text-on-surface-variant">
           © {new Date().getFullYear()} Tantava. India · Pan India Shipping.
         </p>
-        <p className="font-label-md text-label-md text-on-surface-variant opacity-50">
+        <a
+          href="https://anahat-entertainment.vercel.app"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-label-md text-label-md text-on-surface-variant opacity-50 hover:opacity-100 transition-all"
+        >
           Made by Anahat Entertainment
-        </p>
+        </a>
       </div>
     </footer>
   );
