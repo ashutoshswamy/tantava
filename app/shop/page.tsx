@@ -309,7 +309,7 @@ export default function ShopPage() {
                     )}
                   </div>
                   {modalProduct.description && (
-                    <p className="font-body-md text-body-md text-on-surface-variant">{modalProduct.description}</p>
+                    <p className="font-body-md text-body-md text-on-surface-variant whitespace-pre-wrap">{modalProduct.description}</p>
                   )}
                   <div className="space-y-4 pt-4 border-t border-outline-variant">
                     <div>

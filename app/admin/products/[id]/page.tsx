@@ -31,6 +31,7 @@ export default function EditProductPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [categories, setCategories] = useState<string[]>(CATEGORY_SUGGESTIONS);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
   const [deletingIdx, setDeletingIdx] = useState<number | null>(null);
   const [imageSizes, setImageSizes] = useState<(number | null)[]>([null]);
@@ -54,15 +55,21 @@ export default function EditProductPage() {
 
   useEffect(() => {
     const load = async () => {
-      const [prodRes, colRes] = await Promise.all([
+      const [prodRes, colRes, allProdsRes] = await Promise.all([
         fetch(`/api/products/${params.id}`),
         fetch("/api/collections"),
+        fetch("/api/products?active=all"),
       ]);
 
       const data: Product = await prodRes.json();
       const cols = await colRes.json();
+      const allProds = await allProdsRes.json();
 
       if (Array.isArray(cols)) setCollections(cols);
+      if (Array.isArray(allProds)) {
+        const existing = allProds.map((p) => p.category).filter(Boolean);
+        setCategories(Array.from(new Set([...CATEGORY_SUGGESTIONS, ...existing])).sort());
+      }
 
       const inv = data.size_inventory || {};
 
@@ -287,7 +294,7 @@ export default function EditProductPage() {
                 placeholder="e.g. sarees"
               />
               <datalist id="category-suggestions-edit">
-                {CATEGORY_SUGGESTIONS.map((c) => (
+                {categories.map((c) => (
                   <option key={c} value={c} />
                 ))}
               </datalist>

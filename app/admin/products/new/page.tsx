@@ -29,6 +29,7 @@ export default function NewProductPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [categories, setCategories] = useState<string[]>(CATEGORY_SUGGESTIONS);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
   const [deletingIdx, setDeletingIdx] = useState<number | null>(null);
   const [imageSizes, setImageSizes] = useState<(number | null)[]>([null]);
@@ -54,6 +55,13 @@ export default function NewProductPage() {
     fetch("/api/collections")
       .then((r) => r.json())
       .then((data) => { if (Array.isArray(data)) setCollections(data); });
+    fetch("/api/products?active=all")
+      .then((r) => r.json())
+      .then((data) => {
+        if (!Array.isArray(data)) return;
+        const existing = data.map((p) => p.category).filter(Boolean);
+        setCategories(Array.from(new Set([...CATEGORY_SUGGESTIONS, ...existing])).sort());
+      });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -250,7 +258,7 @@ export default function NewProductPage() {
                 placeholder="e.g. sarees"
               />
               <datalist id="category-suggestions">
-                {CATEGORY_SUGGESTIONS.map((c) => (
+                {categories.map((c) => (
                   <option key={c} value={c} />
                 ))}
               </datalist>

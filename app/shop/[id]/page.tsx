@@ -262,7 +262,7 @@ export default function ProductDetailPage() {
                       />
                     </button>
                     <div className="accordion-content pt-2">
-                      <p className="font-body-md text-body-md text-on-surface-variant">
+                      <p className="font-body-md text-body-md text-on-surface-variant whitespace-pre-wrap">
                         {item.content}
                       </p>
                     </div>
