@@ -117,7 +117,7 @@ export default function ProductDetailPage() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                     src={product.images[selectedImg] || product.images[0]}
                   />
                 </AnimatePresence>
@@ -144,7 +144,7 @@ export default function ProductDetailPage() {
                       onClick={() => setSelectedImg(i)}
                       className={`flex-shrink-0 w-20 h-24 bg-surface-container rounded-sm overflow-hidden p-0.5 transition-opacity ${i === selectedImg ? "product-thumbnail-active" : "opacity-60 hover:opacity-100"}`}
                     >
-                      <img alt={`Thumbnail ${i + 1}`} className="w-full h-full object-cover rounded-sm" src={img} />
+                      <img alt={`Thumbnail ${i + 1}`} className="w-full h-full object-contain rounded-sm" src={img} />
                     </button>
                   ))}
                 </div>

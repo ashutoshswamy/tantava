@@ -108,7 +108,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                       <img
                         src={p.images[0] || ""}
                         alt={p.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </div>
                     <div className="min-w-0">

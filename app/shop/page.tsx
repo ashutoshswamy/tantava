@@ -228,7 +228,7 @@ export default function ShopPage() {
                         )}
                         <img
                           alt={product.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                           src={product.images[0] || ""}
                         />
                         <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -307,7 +307,7 @@ export default function ShopPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.7, ease: "easeInOut" }}
-                      className="absolute inset-0 w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-contain"
                       src={modalProduct.images[modalImg] || modalProduct.images[0] || ""}
                     />
                   </AnimatePresence>

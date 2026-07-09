@@ -138,7 +138,7 @@ export default function AccountPage() {
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                         />
                       </Link>
                       <div className="p-4 space-y-3">

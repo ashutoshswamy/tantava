@@ -160,46 +160,53 @@ export default function EditProductPage() {
   };
 
   const handleImageUpload = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    const validationError = await validateImageFile(file);
-    if (validationError) {
-      setError(validationError);
-      e.target.value = "";
-      return;
-    }
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
 
-    setUploadingIdx(idx);
+      const validationError = await validateImageFile(file);
+      if (validationError) {
+        setError(validationError);
+        continue;
+      }
 
-    const urlRes = await fetch("/api/upload-url", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filename: file.name }),
-    });
+      setUploadingIdx(idx + i);
 
-    if (!urlRes.ok) {
-      const data = await urlRes.json();
-      setError(data.error || "Failed to prepare upload");
-      setUploadingIdx(null);
-      e.target.value = "";
-      return;
-    }
-
-    const { path, token, publicUrl } = await urlRes.json();
-    const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .uploadToSignedUrl(path, token, file);
-
-    if (uploadError) {
-      setError(uploadError.message || "Failed to upload image");
-    } else {
-      updateImage(idx, publicUrl);
-      setImageMeta((prev) => {
-        const next = [...prev];
-        next[idx] = { name: file.name, size: file.size };
-        return next;
+      const urlRes = await fetch("/api/upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name }),
       });
+
+      if (!urlRes.ok) {
+        const data = await urlRes.json();
+        setError(data.error || "Failed to prepare upload");
+        continue;
+      }
+
+      const { path, token, publicUrl } = await urlRes.json();
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .uploadToSignedUrl(path, token, file);
+
+      if (uploadError) {
+        setError(uploadError.message || "Failed to upload image");
+        continue;
+      }
+
+      if (i === 0) {
+        updateImage(idx, publicUrl);
+        setImageMeta((prev) => {
+          const next = [...prev];
+          next[idx] = { name: file.name, size: file.size };
+          return next;
+        });
+      } else {
+        setForm((prev) => ({ ...prev, images: [...prev.images, publicUrl] }));
+        setImageMeta((prev) => [...prev, { name: file.name, size: file.size }]);
+      }
     }
     setUploadingIdx(null);
     e.target.value = "";
@@ -432,7 +439,7 @@ export default function EditProductPage() {
                 <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>
                   {uploadingIdx === idx ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
                   <span className="hidden sm:inline">{uploadingIdx === idx ? "..." : "Upload"}</span>
-                  <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(idx, e)} disabled={uploadingIdx !== null} />
+                  <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleImageUpload(idx, e)} disabled={uploadingIdx !== null} />
                 </label>
                 <button
                   type="button"

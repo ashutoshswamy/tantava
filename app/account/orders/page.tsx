@@ -446,7 +446,7 @@ export default function OrdersPage() {
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="w-9 h-11 object-cover rounded-lg"
+                            className="w-9 h-11 object-contain rounded-lg bg-surface-container"
                           />
                           <div>
                             <p className="font-label-md text-[12px] text-on-surface leading-tight max-w-[120px] line-clamp-1">
