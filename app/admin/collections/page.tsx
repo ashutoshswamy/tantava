@@ -13,7 +13,6 @@ export default function AdminCollectionsPage() {
   const [deleting, setDeleting] = useState<string | null>(null);
 
   const load = async () => {
-    setLoading(true);
     try {
       const res = await fetch("/api/collections?all=true");
       const data: Collection[] = await res.json();

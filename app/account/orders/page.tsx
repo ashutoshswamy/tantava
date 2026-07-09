@@ -388,7 +388,7 @@ export default function OrdersPage() {
               </div>
               <p className="font-headline-sm text-headline-sm text-on-surface mb-2">No orders yet</p>
               <p className="font-body-md text-body-md text-on-surface-variant mb-8">
-                When you place an order, it'll show up here.
+                When you place an order, it&apos;ll show up here.
               </p>
               <Link
                 href="/shop"

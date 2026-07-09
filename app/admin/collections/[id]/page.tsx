@@ -288,7 +288,7 @@ export default function EditCollectionPage() {
         </div>
 
         {collectionProducts.length === 0 && !showAddProduct && (
-          <p className="text-[#dbb6ca] text-[13px]">No products assigned yet. Click "Assign Products" to add some.</p>
+          <p className="text-[#dbb6ca] text-[13px]">No products assigned yet. Click &quot;Assign Products&quot; to add some.</p>
         )}
 
         {collectionProducts.length > 0 && (

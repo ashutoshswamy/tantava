@@ -99,7 +99,7 @@ export default function CollectionSlugPage() {
         <main className="min-h-screen bg-surface flex flex-col items-center justify-center text-center px-4">
           <Layers size={48} className="text-[#eec7dd] mb-4" />
           <h1 className="font-headline-lg text-[32px] text-on-surface mb-3">Collection Not Found</h1>
-          <p className="text-on-surface-variant mb-6">This collection doesn't exist or has been removed.</p>
+          <p className="text-on-surface-variant mb-6">This collection doesn&apos;t exist or has been removed.</p>
           <Link
             href="/collections"
             className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-label-md text-[14px] hover:bg-primary-container transition-colors"

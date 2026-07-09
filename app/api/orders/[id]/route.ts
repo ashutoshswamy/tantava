@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { auth } from "@clerk/nextjs/server";
-import { requireAdmin } from "@/lib/auth";
+import { isAdmin, requireAdmin } from "@/lib/auth";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -11,6 +11,11 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const supabase = createServerSupabase();
   const { data, error } = await supabase.from("orders").select("*").eq("id", id).single();
   if (error) return NextResponse.json({ error: error.message }, { status: 404 });
+
+  if (data.user_id !== userId && !(await isAdmin())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
   return NextResponse.json(data);
 }
 
