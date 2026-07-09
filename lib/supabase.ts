@@ -48,6 +48,12 @@ export type Order = {
   razorpay_signature: string | null;
   shipping_address: ShippingAddress | null;
   admin_notes: string | null;
+  // Shiprocket integration
+  shiprocket_order_id: string | null;
+  shiprocket_shipment_id: string | null;
+  shiprocket_awb_code: string | null;
+  shiprocket_status: string | null;
+  shiprocket_synced_at: string | null;
   created_at: string;
   updated_at: string;
 };

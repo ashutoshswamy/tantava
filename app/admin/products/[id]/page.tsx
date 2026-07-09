@@ -3,8 +3,21 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import type { Product, Collection } from "@/lib/supabase";
-import { ArrowLeft, Plus, Loader2, Upload } from "lucide-react";
+import { supabase, type Product, type Collection } from "@/lib/supabase";
+import { validateImageFile } from "@/lib/image-validation";
+import { ArrowLeft, Plus, Loader2, Upload, Trash2 } from "lucide-react";
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+function storagePathFromUrl(url: string): string | null {
+  const marker = "/product-images/";
+  const idx = url.indexOf(marker);
+  return idx === -1 ? null : url.slice(idx + marker.length);
+}
 
 const CATEGORY_SUGGESTIONS = ["sarees", "lehengas", "fusion", "gowns", "jewellery"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
@@ -19,6 +32,8 @@ export default function EditProductPage() {
   const [error, setError] = useState("");
   const [collections, setCollections] = useState<Collection[]>([]);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
+  const [deletingIdx, setDeletingIdx] = useState<number | null>(null);
+  const [imageSizes, setImageSizes] = useState<(number | null)[]>([null]);
 
   const [form, setForm] = useState({
     name: "",
@@ -61,6 +76,7 @@ export default function EditProductPage() {
         is_active: data.is_active,
         collection_id: data.collection_id || "",
       });
+      setImageSizes((data.images.length > 0 ? data.images : [""]).map(() => null));
       setLoading(false);
     };
     load();
@@ -107,16 +123,70 @@ export default function EditProductPage() {
   const handleImageUpload = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const validationError = await validateImageFile(file);
+    if (validationError) {
+      setError(validationError);
+      e.target.value = "";
+      return;
+    }
+
     setUploadingIdx(idx);
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    if (res.ok) {
-      const { url } = await res.json();
-      updateImage(idx, url);
+
+    const urlRes = await fetch("/api/upload-url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filename: file.name }),
+    });
+
+    if (!urlRes.ok) {
+      const data = await urlRes.json();
+      setError(data.error || "Failed to prepare upload");
+      setUploadingIdx(null);
+      e.target.value = "";
+      return;
+    }
+
+    const { path, token, publicUrl } = await urlRes.json();
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .uploadToSignedUrl(path, token, file);
+
+    if (uploadError) {
+      setError(uploadError.message || "Failed to upload image");
+    } else {
+      updateImage(idx, publicUrl);
+      setImageSizes((prev) => {
+        const next = [...prev];
+        next[idx] = file.size;
+        return next;
+      });
     }
     setUploadingIdx(null);
     e.target.value = "";
+  };
+
+  const handleImageDelete = async (idx: number) => {
+    const img = form.images[idx];
+    const path = img ? storagePathFromUrl(img) : null;
+
+    setDeletingIdx(idx);
+    if (path) {
+      await fetch("/api/upload-url", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+    }
+    setDeletingIdx(null);
+
+    if (form.images.length === 1) {
+      setForm({ ...form, images: [""] });
+      setImageSizes([null]);
+    } else {
+      setForm({ ...form, images: form.images.filter((_, i) => i !== idx) });
+      setImageSizes((prev) => prev.filter((_, i) => i !== idx));
+    }
   };
 
   if (loading) {
@@ -281,10 +351,18 @@ export default function EditProductPage() {
                   <span className="hidden sm:inline">{uploadingIdx === idx ? "..." : "Upload"}</span>
                   <input type="file" accept="image/*" className="hidden" onChange={(e) => handleImageUpload(idx, e)} disabled={uploadingIdx !== null} />
                 </label>
+                <button
+                  type="button"
+                  onClick={() => handleImageDelete(idx)}
+                  disabled={deletingIdx !== null}
+                  className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0 disabled:opacity-60"
+                >
+                  {deletingIdx === idx ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
+                </button>
                 {idx === form.images.length - 1 && (
                   <button
                     type="button"
-                    onClick={() => setForm({ ...form, images: [...form.images, ""] })}
+                    onClick={() => { setForm({ ...form, images: [...form.images, ""] }); setImageSizes((prev) => [...prev, null]); }}
                     className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors flex-shrink-0"
                   >
                     <Plus size={16} />
@@ -292,7 +370,12 @@ export default function EditProductPage() {
                 )}
               </div>
               {img && (
-                <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
+                <div className="flex items-center gap-2">
+                  <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
+                  {imageSizes[idx] != null && (
+                    <span className="text-[11px] text-[#8c5971]">{formatBytes(imageSizes[idx]!)}</span>
+                  )}
+                </div>
               )}
             </div>
           ))}

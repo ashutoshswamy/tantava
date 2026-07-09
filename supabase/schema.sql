@@ -73,24 +73,31 @@ create or replace trigger products_updated_at
 -- user_id: Clerk user ID
 -- items JSONB: [{product_id, name, price, quantity, size, image}]
 -- shipping_address JSONB: {name, phone, line1, line2?, city, state, pincode}
+-- Shiprocket columns added in migration 20260622000001_shiprocket_columns
 -- ─────────────────────────────────────────────
 create table if not exists orders (
-  id                   uuid primary key default uuid_generate_v4(),
-  user_id              text not null,
-  user_email           text,
-  user_name            text,
-  items                jsonb not null default '[]',
-  subtotal             integer not null default 0 check (subtotal >= 0),
-  total                integer not null check (total >= 0),
-  status               text not null default 'pending'
-                         check (status in ('pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled')),
-  shipping_address     jsonb,
-  razorpay_order_id    text unique,
-  razorpay_payment_id  text unique,
-  razorpay_signature   text,
-  admin_notes          text,
-  created_at           timestamptz not null default now(),
-  updated_at           timestamptz not null default now()
+  id                      uuid primary key default uuid_generate_v4(),
+  user_id                 text not null,
+  user_email              text,
+  user_name               text,
+  items                   jsonb not null default '[]',
+  subtotal                integer not null default 0 check (subtotal >= 0),
+  total                   integer not null check (total >= 0),
+  status                  text not null default 'pending'
+                            check (status in ('pending', 'paid', 'processing', 'shipped', 'delivered', 'cancelled')),
+  shipping_address        jsonb,
+  razorpay_order_id       text unique,
+  razorpay_payment_id     text unique,
+  razorpay_signature      text,
+  admin_notes             text,
+  -- Shiprocket integration
+  shiprocket_order_id     text unique,   -- numeric order ID from Shiprocket
+  shiprocket_shipment_id  text unique,   -- assigned once courier is allocated
+  shiprocket_awb_code     text,          -- Air Waybill number for tracking
+  shiprocket_status       text,          -- last known Shiprocket status string
+  shiprocket_synced_at    timestamptz,   -- timestamp of last successful sync
+  created_at              timestamptz not null default now(),
+  updated_at              timestamptz not null default now()
 );
 
 create index if not exists orders_user_id_idx    on orders (user_id);
@@ -176,3 +183,27 @@ create index if not exists inquiries_created_at_idx on inquiries (created_at des
 alter table inquiries enable row level security;
 create policy "inquiries_public_insert" on inquiries
   for insert with check (true);
+
+-- ─────────────────────────────────────────────
+-- RATE LIMITS (fixed-window counters for API abuse protection)
+-- ─────────────────────────────────────────────
+create table if not exists rate_limits (
+  key        text primary key,
+  count      int not null default 1,
+  expires_at timestamptz not null
+);
+
+create index if not exists rate_limits_expires_at_idx on rate_limits (expires_at);
+
+-- ─────────────────────────────────────────────
+-- STORAGE (product images)
+-- ─────────────────────────────────────────────
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('product-images', 'product-images', true, 26214400, array['image/png','image/jpeg','image/webp','image/gif','image/avif'])
+on conflict (id) do nothing;
+
+create policy "product_images_public_read" on storage.objects
+  for select using (bucket_id = 'product-images');
+
+create policy "product_images_service_write" on storage.objects
+  for all using (bucket_id = 'product-images' and auth.role() = 'service_role');
