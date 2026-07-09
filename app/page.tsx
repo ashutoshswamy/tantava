@@ -11,7 +11,7 @@ import type { Product } from "@/lib/supabase";
 
 const craftPromises = [
   { icon: <Truck size={20} className="opacity-80" />, label: "Pan India Shipping" },
-  { icon: <Ruler size={20} className="opacity-80" />, label: "XS · S · M · L · XL · XXL" },
+  { icon: <Ruler size={20} className="opacity-80" />, label: "XS · S · M · L · XL · XXL · XXXL" },
   { icon: <FaWhatsapp size={20} className="opacity-80" />, label: "Order via WhatsApp" },
   { icon: <Store size={20} className="opacity-80" />, label: "Pop-ups & Exhibitions" },
 ];
@@ -30,7 +30,7 @@ const craftStory = [
   {
     icon: <Ruler size={24} className="text-primary" />,
     title: "Inclusive Sizing",
-    desc: "All styles available in XS, S, M, L, XL, and XXL because every body deserves a perfect fit.",
+    desc: "All styles available in XS, S, M, L, XL, XXL, and XXXL because every body deserves a perfect fit.",
   },
 ];
 
@@ -430,7 +430,7 @@ export default function HomePage() {
             <div className="p-6 sm:p-10 md:p-16 flex flex-col justify-center gap-8 border-t border-white/10 md:border-t-0 md:border-l md:border-white/10">
               {[
                 { num: "01", label: "In-Person Styling", desc: "Visit us at our studio or catch us at pop-up exhibitions." },
-                { num: "02", label: "All Sizes XS – XXL", desc: "Every piece available across the full size range, no exceptions." },
+                { num: "02", label: "All Sizes XS – XXXL", desc: "Every piece available across the full size range, no exceptions." },
                 { num: "03", label: "Quick WhatsApp Orders", desc: "Browse, ask questions, and place your order directly on WhatsApp." },
               ].map(({ num, label, desc }, i) => (
                 <motion.div

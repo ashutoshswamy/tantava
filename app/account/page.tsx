@@ -10,7 +10,7 @@ import { useCart } from "@/store/cart";
 import { User, Package, ShoppingBag, Headphones, Heart, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 const quickLinks = [
   { href: "/account/orders", icon: <Package size={28} />,     title: "My Orders",         desc: "Track and manage your orders" },

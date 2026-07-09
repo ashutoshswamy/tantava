@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { supabase, type Collection } from "@/lib/supabase";
 import { validateImageFile } from "@/lib/image-validation";
-import { ArrowLeft, Plus, Loader2, Upload, Trash2 } from "lucide-react";
+import { ArrowLeft, Plus, Loader2, Upload, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 
 function formatBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
@@ -19,8 +19,18 @@ function storagePathFromUrl(url: string): string | null {
   return idx === -1 ? null : url.slice(idx + marker.length);
 }
 
+function filenameFromUrl(url: string): string {
+  try {
+    return decodeURIComponent(new URL(url).pathname.split("/").pop() || url);
+  } catch {
+    return url;
+  }
+}
+
+type ImageMeta = { name: string; size: number } | null;
+
 const CATEGORY_SUGGESTIONS = ["sarees", "lehengas", "fusion", "gowns", "jewellery"];
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors";
 
@@ -32,7 +42,7 @@ export default function NewProductPage() {
   const [categories, setCategories] = useState<string[]>(CATEGORY_SUGGESTIONS);
   const [uploadingIdx, setUploadingIdx] = useState<number | null>(null);
   const [deletingIdx, setDeletingIdx] = useState<number | null>(null);
-  const [imageSizes, setImageSizes] = useState<(number | null)[]>([null]);
+  const [imageMeta, setImageMeta] = useState<ImageMeta[]>([null]);
 
   const [form, setForm] = useState({
     name: "",
@@ -44,7 +54,7 @@ export default function NewProductPage() {
     care: "",
     free_delivery: false,
     images: [""],
-    size_inventory: { XS: "0", S: "0", M: "10", L: "0", XL: "0", XXL: "0" } as Record<string, string>,
+    size_inventory: { XS: "0", S: "0", M: "10", L: "0", XL: "0", XXL: "0", XXXL: "0" } as Record<string, string>,
     sku: "",
     badge: "",
     is_active: true,
@@ -104,6 +114,19 @@ export default function NewProductPage() {
     setForm({ ...form, images: imgs });
   };
 
+  const moveImage = (idx: number, dir: -1 | 1) => {
+    const target = idx + dir;
+    if (target < 0 || target >= form.images.length) return;
+    const imgs = [...form.images];
+    [imgs[idx], imgs[target]] = [imgs[target], imgs[idx]];
+    setForm({ ...form, images: imgs });
+    setImageMeta((prev) => {
+      const next = [...prev];
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
+  };
+
   const handleImageUpload = async (idx: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -140,9 +163,9 @@ export default function NewProductPage() {
       setError(uploadError.message || "Failed to upload image");
     } else {
       updateImage(idx, publicUrl);
-      setImageSizes((prev) => {
+      setImageMeta((prev) => {
         const next = [...prev];
-        next[idx] = file.size;
+        next[idx] = { name: file.name, size: file.size };
         return next;
       });
     }
@@ -166,10 +189,10 @@ export default function NewProductPage() {
 
     if (form.images.length === 1) {
       setForm({ ...form, images: [""] });
-      setImageSizes([null]);
+      setImageMeta([null]);
     } else {
       setForm({ ...form, images: form.images.filter((_, i) => i !== idx) });
-      setImageSizes((prev) => prev.filter((_, i) => i !== idx));
+      setImageMeta((prev) => prev.filter((_, i) => i !== idx));
     }
   };
 
@@ -324,7 +347,7 @@ export default function NewProductPage() {
         {/* Stock by Size */}
         <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
           <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Stock by Size</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-6 gap-3">
+          <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
             {SIZES.map((size) => (
               <div key={size} className="flex flex-col gap-1.5">
                 <span className="text-[11px] font-semibold text-[#8c5971] text-center uppercase">{size}</span>
@@ -343,9 +366,28 @@ export default function NewProductPage() {
         {/* Images */}
         <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
           <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Images</h2>
+          <p className="text-[11px] text-[#8c5971] -mt-2">First image is the product cover. Use the arrows to reorder.</p>
           {form.images.map((img, idx) => (
             <div key={idx} className="space-y-2">
               <div className="flex gap-2.5 items-center">
+                <div className="flex flex-col gap-0.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => moveImage(idx, -1)}
+                    disabled={idx === 0}
+                    className="px-1.5 py-1 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-lg text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    <ChevronUp size={12} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveImage(idx, 1)}
+                    disabled={idx === form.images.length - 1}
+                    className="px-1.5 py-1 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-lg text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                  >
+                    <ChevronDown size={12} />
+                  </button>
+                </div>
                 <input
                   value={img}
                   onChange={(e) => updateImage(idx, e.target.value)}
@@ -368,7 +410,7 @@ export default function NewProductPage() {
                 {idx === form.images.length - 1 && (
                   <button
                     type="button"
-                    onClick={() => { setForm({ ...form, images: [...form.images, ""] }); setImageSizes((prev) => [...prev, null]); }}
+                    onClick={() => { setForm({ ...form, images: [...form.images, ""] }); setImageMeta((prev) => [...prev, null]); }}
                     className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors flex-shrink-0"
                   >
                     <Plus size={16} />
@@ -378,9 +420,10 @@ export default function NewProductPage() {
               {img && (
                 <div className="flex items-center gap-2">
                   <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
-                  {imageSizes[idx] != null && (
-                    <span className="text-[11px] text-[#8c5971]">{formatBytes(imageSizes[idx]!)}</span>
-                  )}
+                  <span className="text-[11px] text-[#8c5971] truncate max-w-[220px]">
+                    {imageMeta[idx] ? imageMeta[idx]!.name : filenameFromUrl(img)}
+                    {imageMeta[idx] && ` (${formatBytes(imageMeta[idx]!.size)})`}
+                  </span>
                 </div>
               )}
             </div>

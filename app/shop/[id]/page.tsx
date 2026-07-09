@@ -15,7 +15,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const DEFAULT_CARE = "Dry Clean Only. Store in muslin cloth away from direct sunlight.";
 const DEFAULT_DELIVERY_RETURNS = "Complimentary shipping across India. 14–21 working days. Returns within 7 days for standard sizes.";
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 function firstAvailableSize(product: Product): string {
   return SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || SIZES[0];
@@ -39,12 +39,20 @@ export default function ProductDetailPage() {
       .then((r) => r.json())
       .then((data) => {
         if (data.error) router.push("/shop");
-        else { setProduct(data); setSelectedSize(firstAvailableSize(data)); setLoading(false); }
+        else { setProduct(data); setSelectedSize(firstAvailableSize(data)); setSelectedImg(0); setLoading(false); }
       });
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data) => { if (!data.error) setSettings(data); });
   }, [params.id, router]);
+
+  useEffect(() => {
+    if (!product || product.images.length <= 1) return;
+    const timer = setInterval(() => {
+      setSelectedImg((i) => (i + 1) % product.images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [product]);
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
@@ -101,11 +109,18 @@ export default function ProductDetailPage() {
           >
             <div className="lg:col-span-7 flex flex-col sm:flex-row-reverse gap-4">
               <div className="relative w-full aspect-[1/1.2] bg-surface-container overflow-hidden rounded-lg group">
-                <img
-                  alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                  src={product.images[selectedImg] || product.images[0]}
-                />
+                <AnimatePresence mode="sync">
+                  <motion.img
+                    key={selectedImg}
+                    alt={product.name}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.7, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    src={product.images[selectedImg] || product.images[0]}
+                  />
+                </AnimatePresence>
                 {product.badge && (
                   <div className="absolute top-4 left-4 bg-secondary text-on-secondary px-3 py-1 rounded-sm flex items-center gap-2 border border-primary-container">
                     <Award size={14} />
@@ -169,8 +184,8 @@ export default function ProductDetailPage() {
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-label-md text-label-md uppercase tracking-wider">Select Size</span>
                   </div>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    {["XS", "S", "M", "L", "XL", "XXL"].map((size) => {
+                  <div className="grid grid-cols-4 sm:grid-cols-7 gap-2">
+                    {SIZES.map((size) => {
                       const qty = product.size_inventory?.[size] ?? 0;
                       const outOfStock = qty === 0;
                       return (

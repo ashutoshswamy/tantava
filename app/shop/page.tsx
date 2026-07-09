@@ -13,7 +13,7 @@ import { useWishlist } from "@/store/wishlist";
 import { AnimatePresence, motion } from "framer-motion";
 
 const SORT_OPTIONS = ["Newest", "Price: Low to High", "Price: High to Low"];
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 function firstAvailableSize(product: Product): string {
   return SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || SIZES[0];
@@ -34,6 +34,7 @@ export default function ShopPage() {
   const [sort, setSort] = useState("Newest");
   const [searchQuery, setSearchQuery] = useState("");
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
+  const [modalImg, setModalImg] = useState(0);
   const [selectedSize, setSelectedSize] = useState("");
   const { addItem } = useCart();
   const { toggleItem, isWished } = useWishlist();
@@ -43,6 +44,14 @@ export default function ShopPage() {
       .then((r) => r.json())
       .then((data) => { setProducts(Array.isArray(data) ? data : []); setLoading(false); });
   }, []);
+
+  useEffect(() => {
+    if (!modalProduct || modalProduct.images.length <= 1) return;
+    const timer = setInterval(() => {
+      setModalImg((i) => (i + 1) % modalProduct.images.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [modalProduct]);
 
   const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
 
@@ -222,7 +231,7 @@ export default function ShopPage() {
                         <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
                           <button
-                            onClick={() => { setModalProduct(product); setSelectedSize(firstAvailableSize(product)); }}
+                            onClick={() => { setModalProduct(product); setSelectedSize(firstAvailableSize(product)); setModalImg(0); }}
                             className="flex-1 bg-surface text-primary font-label-md text-label-md px-4 py-3 shadow-lg text-[12px] tracking-widest hover:bg-primary hover:text-on-primary transition-colors"
                           >
                             QUICK VIEW
@@ -286,12 +295,30 @@ export default function ShopPage() {
                 <X size={20} />
               </button>
               <div className="flex flex-col md:flex-row">
-                <div className="w-full md:w-1/2 aspect-[0.73] bg-surface-container">
-                  <img
-                    alt={modalProduct.name}
-                    className="w-full h-full object-cover"
-                    src={modalProduct.images[0] || ""}
-                  />
+                <div className="relative w-full md:w-1/2 aspect-[0.73] bg-surface-container overflow-hidden">
+                  <AnimatePresence mode="sync">
+                    <motion.img
+                      key={modalImg}
+                      alt={modalProduct.name}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="absolute inset-0 w-full h-full object-cover"
+                      src={modalProduct.images[modalImg] || modalProduct.images[0] || ""}
+                    />
+                  </AnimatePresence>
+                  {modalProduct.images.length > 1 && (
+                    <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5">
+                      {modalProduct.images.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setModalImg(i)}
+                          className={`h-1.5 rounded-full transition-all ${i === modalImg ? "w-5 bg-primary" : "w-1.5 bg-surface/80"}`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-12 space-y-6">
                   <div>
@@ -320,7 +347,7 @@ export default function ShopPage() {
                     <div>
                       <span className="font-label-md text-label-md block mb-2">Select Size</span>
                       <div className="flex flex-wrap gap-2">
-                        {["XS", "S", "M", "L", "XL", "XXL"].map((size) => {
+                        {SIZES.map((size) => {
                           const qty = modalProduct.size_inventory?.[size] ?? 0;
                           const outOfStock = qty === 0;
                           return (

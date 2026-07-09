@@ -9,7 +9,7 @@ import { Heart, ShoppingBag, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 export default function WishlistPage() {
   const { items, removeItem } = useWishlist();

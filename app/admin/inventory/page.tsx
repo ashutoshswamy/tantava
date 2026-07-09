@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Loader2, Ban, AlertTriangle, Plus, Minus } from "lucide-react";
 
-const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 type InventoryProduct = {
   id: string;
@@ -269,7 +269,7 @@ export default function AdminInventoryPage() {
             <p className="text-[#8c5971] text-[13px] mb-5">{adjustModal.name}</p>
 
             {/* Per-size current stock */}
-            <div className="mb-5 grid grid-cols-6 gap-2">
+            <div className="mb-5 grid grid-cols-7 gap-2">
               {SIZES.map((size) => {
                 const qty = adjustModal.size_inventory[size] ?? 0;
                 return (
@@ -284,7 +284,7 @@ export default function AdminInventoryPage() {
             <form onSubmit={handleAdjust} className="space-y-4">
               <div>
                 <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-2 block">Size</label>
-                <div className="grid grid-cols-6 gap-2">
+                <div className="grid grid-cols-7 gap-2">
                   {SIZES.map((size) => (
                     <button
                       key={size}

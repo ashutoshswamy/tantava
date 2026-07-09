@@ -251,7 +251,7 @@ export default function CollectionSlugPage() {
                       <button
                         onClick={() => {
                           setSelectedProduct(product);
-                          const SIZES = ["XS", "S", "M", "L", "XL", "XXL"];
+                          const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
                           setSelectedSize(SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || "");
                         }}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-[12px] font-label-md hover:bg-primary-container transition-colors"
