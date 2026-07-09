@@ -9,7 +9,7 @@ import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
 import type { Product } from "@/lib/supabase";
 import {
-  Loader2, Award, Ruler, Check, Heart, ChevronDown,
+  Loader2, Award, Check, Heart, ChevronDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -136,10 +136,6 @@ export default function ProductDetailPage() {
                 <div>
                   <div className="flex justify-between items-center mb-4">
                     <span className="font-label-md text-label-md uppercase tracking-wider">Select Size</span>
-                    <button className="text-primary font-label-md text-label-md underline underline-offset-4 hover:opacity-80 transition-opacity flex items-center gap-1">
-                      <Ruler size={16} />
-                      Size Guide
-                    </button>
                   </div>
                   <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
                     {["XS", "S", "M", "L", "XL", "XXL"].map((size) => {
