@@ -8,6 +8,7 @@ drop policy if exists "inquiries_public_insert"  on inquiries;
 drop policy if exists "feedbacks_public_insert"  on feedbacks;
 drop policy if exists "orders_user_read"         on orders;
 drop policy if exists "products_public_read"     on products;
+drop policy if exists "store_settings_public_read" on store_settings;
 drop policy if exists "collections_public_read"  on collections;
 drop policy if exists "product_images_public_read"  on storage.objects;
 drop policy if exists "product_images_service_write" on storage.objects;
@@ -18,6 +19,7 @@ drop policy if exists "product_images_service_write" on storage.objects;
 drop trigger if exists orders_updated_at     on orders;
 drop trigger if exists products_updated_at   on products;
 drop trigger if exists collections_updated_at on collections;
+drop trigger if exists store_settings_updated_at on store_settings;
 
 -- ─────────────────────────────────────────────
 -- DROP INDEXES
@@ -46,6 +48,7 @@ drop table if exists feedbacks      cascade;
 drop table if exists inventory_logs cascade;
 drop table if exists orders         cascade;
 drop table if exists products       cascade;
+drop table if exists store_settings cascade;
 drop table if exists collections    cascade;
 
 -- ─────────────────────────────────────────────

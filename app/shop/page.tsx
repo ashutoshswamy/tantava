@@ -56,11 +56,14 @@ export default function ShopPage() {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     });
 
+  const effectivePrice = (product: Product) =>
+    product.discount_price != null && product.discount_price < product.price ? product.discount_price : product.price;
+
   const handleAddToCart = (product: Product) => {
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: effectivePrice(product),
       image: product.images[0] || "",
       size: selectedSize,
       quantity: 1,
@@ -232,7 +235,15 @@ export default function ShopPage() {
                           {product.name}
                         </h3>
                         <p className="font-label-md text-label-md text-on-surface-variant capitalize">
-                          {product.category} • {formatPrice(product.price)}
+                          {product.category} •{" "}
+                          {product.discount_price != null && product.discount_price < product.price ? (
+                            <>
+                              <span className="text-primary">{formatPrice(product.discount_price)}</span>{" "}
+                              <span className="line-through">{formatPrice(product.price)}</span>
+                            </>
+                          ) : (
+                            formatPrice(product.price)
+                          )}
                         </p>
                       </Link>
                     </motion.div>
@@ -283,9 +294,19 @@ export default function ShopPage() {
                       {modalProduct.category}
                     </span>
                     <h2 className="font-headline-md text-headline-md text-primary mt-2">{modalProduct.name}</h2>
-                    <p className="font-headline-sm text-[20px] text-on-surface mt-1">
-                      {formatPrice(modalProduct.price)}
-                    </p>
+                    {modalProduct.discount_price != null && modalProduct.discount_price < modalProduct.price ? (
+                      <p className="font-headline-sm text-[20px] text-on-surface mt-1 flex items-center gap-2">
+                        <span className="text-primary">{formatPrice(modalProduct.discount_price)}</span>
+                        <span className="text-on-surface-variant text-[15px] line-through">{formatPrice(modalProduct.price)}</span>
+                      </p>
+                    ) : (
+                      <p className="font-headline-sm text-[20px] text-on-surface mt-1">
+                        {formatPrice(modalProduct.price)}
+                      </p>
+                    )}
+                    {modalProduct.free_delivery && (
+                      <p className="font-label-md text-[11px] text-primary uppercase tracking-wider mt-1">Free Delivery</p>
+                    )}
                   </div>
                   {modalProduct.description && (
                     <p className="font-body-md text-body-md text-on-surface-variant">{modalProduct.description}</p>

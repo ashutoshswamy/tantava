@@ -37,8 +37,11 @@ export default function NewProductPage() {
     name: "",
     description: "",
     price: "",
+    discount_price: "",
     category: "sarees",
     fabric: "",
+    care: "",
+    free_delivery: false,
     images: [""],
     size_inventory: { XS: "0", S: "0", M: "10", L: "0", XL: "0", XXL: "0" } as Record<string, string>,
     sku: "",
@@ -61,12 +64,14 @@ export default function NewProductPage() {
     const payload = {
       ...form,
       price: Math.round(parseFloat(form.price) * 100),
+      discount_price: form.discount_price ? Math.round(parseFloat(form.discount_price) * 100) : null,
       size_inventory: Object.fromEntries(
         SIZES.map((s) => [s, parseInt(form.size_inventory[s] || "0") || 0])
       ),
       images: form.images.filter(Boolean),
       badge: form.badge || null,
       sku: form.sku || null,
+      care: form.care || null,
       collection_id: form.collection_id || null,
     };
 
@@ -205,18 +210,32 @@ export default function NewProductPage() {
             />
           </div>
 
-          <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Price (₹) *</label>
-            <input
-              required
-              type="number"
-              step="0.01"
-              min="0"
-              value={form.price}
-              onChange={(e) => setForm({ ...form, price: e.target.value })}
-              className={inputCls}
-              placeholder="e.g. 85000"
-            />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Price (₹) *</label>
+              <input
+                required
+                type="number"
+                step="0.01"
+                min="0"
+                value={form.price}
+                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                className={inputCls}
+                placeholder="e.g. 85000"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Discounted Price (₹)</label>
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                value={form.discount_price}
+                onChange={(e) => setForm({ ...form, discount_price: e.target.value })}
+                className={inputCls}
+                placeholder="leave blank if no discount"
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -266,6 +285,17 @@ export default function NewProductPage() {
                 placeholder="e.g. SKU-007"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Care Instructions</label>
+            <textarea
+              rows={2}
+              value={form.care}
+              onChange={(e) => setForm({ ...form, care: e.target.value })}
+              className={`${inputCls} resize-none`}
+              placeholder="e.g. Dry Clean Only. Store in muslin cloth away from direct sunlight."
+            />
           </div>
 
           <div>
@@ -365,6 +395,27 @@ export default function NewProductPage() {
             <div
               className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${
                 form.is_active ? "left-7" : "left-1"
+              }`}
+            />
+          </button>
+        </div>
+
+        {/* Free delivery toggle */}
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
+          <div>
+            <p className="text-[#1a0914] font-medium text-[14px]">Free Delivery</p>
+            <p className="text-[#8c5971] text-[12px] mt-0.5">Show a free delivery badge on this product</p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setForm({ ...form, free_delivery: !form.free_delivery })}
+            className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
+              form.free_delivery ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
+            }`}
+          >
+            <div
+              className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-all ${
+                form.free_delivery ? "left-7" : "left-1"
               }`}
             />
           </button>

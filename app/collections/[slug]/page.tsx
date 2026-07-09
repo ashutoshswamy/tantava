@@ -55,12 +55,15 @@ export default function CollectionSlugPage() {
     load();
   }, [slug]);
 
+  const effectivePrice = (product: Product) =>
+    product.discount_price != null && product.discount_price < product.price ? product.discount_price : product.price;
+
   const handleAddToCart = (product: Product) => {
     if (!selectedSize) return;
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: effectivePrice(product),
       image: product.images[0] || "",
       size: selectedSize,
       quantity: 1,
@@ -227,10 +230,24 @@ export default function CollectionSlugPage() {
                     {product.fabric && (
                       <p className="text-on-surface-variant text-[11px] mt-0.5 capitalize">{product.fabric}</p>
                     )}
+                    {product.free_delivery && (
+                      <p className="text-primary text-[10px] uppercase tracking-wider mt-1">Free Delivery</p>
+                    )}
                     <div className="flex items-center justify-between mt-3">
-                      <span className="font-headline-sm text-[16px] text-on-surface">
-                        ₹{(product.price / 100).toLocaleString("en-IN")}
-                      </span>
+                      {product.discount_price != null && product.discount_price < product.price ? (
+                        <span className="flex items-center gap-1.5">
+                          <span className="font-headline-sm text-[16px] text-on-surface">
+                            ₹{(product.discount_price / 100).toLocaleString("en-IN")}
+                          </span>
+                          <span className="text-[12px] text-on-surface-variant line-through">
+                            ₹{(product.price / 100).toLocaleString("en-IN")}
+                          </span>
+                        </span>
+                      ) : (
+                        <span className="font-headline-sm text-[16px] text-on-surface">
+                          ₹{(product.price / 100).toLocaleString("en-IN")}
+                        </span>
+                      )}
                       <button
                         onClick={() => { setSelectedProduct(product); setSelectedSize(""); }}
                         className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white rounded-lg text-[12px] font-label-md hover:bg-primary-container transition-colors"
@@ -263,7 +280,7 @@ export default function CollectionSlugPage() {
               )}
               <div>
                 <h3 className="font-label-md text-[14px] text-on-surface leading-snug">{selectedProduct.name}</h3>
-                <p className="text-primary text-[13px] font-headline-sm">₹{(selectedProduct.price / 100).toLocaleString("en-IN")}</p>
+                <p className="text-primary text-[13px] font-headline-sm">₹{(effectivePrice(selectedProduct) / 100).toLocaleString("en-IN")}</p>
               </div>
             </div>
 

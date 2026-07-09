@@ -22,8 +22,11 @@ export type Product = {
   name: string;
   description: string | null;
   price: number;
+  discount_price: number | null;
   category: string;
   fabric: string | null;
+  care: string | null;
+  free_delivery: boolean;
   images: string[];
   size_inventory: Record<string, number>;
   sku: string | null;
@@ -31,6 +34,12 @@ export type Product = {
   is_active: boolean;
   collection_id: string | null;
   created_at: string;
+  updated_at: string;
+};
+
+export type StoreSettings = {
+  delivery_info: string | null;
+  returns_info: string | null;
   updated_at: string;
 };
 

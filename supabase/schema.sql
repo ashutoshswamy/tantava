@@ -49,8 +49,11 @@ create table if not exists products (
   name            text not null,
   description     text,
   price           integer not null check (price >= 0),
+  discount_price  integer check (discount_price >= 0),
   category        text not null,
   fabric          text,
+  care            text,
+  free_delivery   boolean not null default false,
   images          text[] not null default '{}',
   size_inventory  jsonb not null default '{}',
   sku             text unique,
@@ -66,6 +69,23 @@ create index if not exists products_is_active_idx on products (is_active);
 
 create or replace trigger products_updated_at
   before update on products
+  for each row execute function set_updated_at();
+
+-- ─────────────────────────────────────────────
+-- STORE SETTINGS
+-- singleton row (site-wide delivery & returns copy, set by admin)
+-- ─────────────────────────────────────────────
+create table if not exists store_settings (
+  id             boolean primary key default true check (id),
+  delivery_info  text,
+  returns_info   text,
+  updated_at     timestamptz not null default now()
+);
+
+insert into store_settings (id) values (true) on conflict (id) do nothing;
+
+create or replace trigger store_settings_updated_at
+  before update on store_settings
   for each row execute function set_updated_at();
 
 -- ─────────────────────────────────────────────
@@ -137,6 +157,11 @@ create policy "collections_public_read" on collections
 alter table products enable row level security;
 create policy "products_public_read" on products
   for select using (is_active = true);
+
+-- Store settings: public read (delivery & returns copy); writes via service role only
+alter table store_settings enable row level security;
+create policy "store_settings_public_read" on store_settings
+  for select using (true);
 
 -- Orders: users read their own; inserts/updates via service role only
 alter table orders enable row level security;

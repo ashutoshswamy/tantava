@@ -7,22 +7,20 @@ import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
-import type { Product } from "@/lib/supabase";
+import type { Product, StoreSettings } from "@/lib/supabase";
 import {
-  Loader2, Award, Check, Heart, ChevronDown,
+  Loader2, Award, Check, Heart, ChevronDown, Truck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const accordionItems = [
-  { title: "Product Description", key: "description" },
-  { title: "Fabric & Care", content: "Dry Clean Only. Store in muslin cloth away from direct sunlight." },
-  { title: "Delivery & Returns", content: "Complimentary shipping across India. 14–21 working days. Returns within 7 days for standard sizes." },
-];
+const DEFAULT_CARE = "Dry Clean Only. Store in muslin cloth away from direct sunlight.";
+const DEFAULT_DELIVERY_RETURNS = "Complimentary shipping across India. 14–21 working days. Returns within 7 days for standard sizes.";
 
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [product, setProduct] = useState<Product | null>(null);
+  const [settings, setSettings] = useState<StoreSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedSize, setSelectedSize] = useState("XS");
   const [selectedImg, setSelectedImg] = useState(0);
@@ -38,16 +36,29 @@ export default function ProductDetailPage() {
         if (data.error) router.push("/shop");
         else { setProduct(data); setLoading(false); }
       });
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((data) => { if (!data.error) setSettings(data); });
   }, [params.id, router]);
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
+  const accordionItems = product ? [
+    { title: "Product Description", content: product.description },
+    { title: "Fabric & Care", content: product.care || DEFAULT_CARE },
+    {
+      title: "Delivery & Returns",
+      content: [settings?.delivery_info, settings?.returns_info].filter(Boolean).join(" ") || DEFAULT_DELIVERY_RETURNS,
+    },
+  ] : [];
+
   const handleAddToCart = () => {
     if (!product) return;
+    const effectivePrice = product.discount_price != null && product.discount_price < product.price ? product.discount_price : product.price;
     addItem({
       productId: product.id,
       name: product.name,
-      price: product.price,
+      price: effectivePrice,
       image: product.images[0] || "",
       size: selectedSize,
       quantity: 1,
@@ -123,12 +134,28 @@ export default function ProductDetailPage() {
             <div className="lg:col-span-5 flex flex-col gap-stack-md">
               <div>
                 <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">{product.name}</h1>
-                <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.price)}</p>
+                {product.discount_price != null && product.discount_price < product.price ? (
+                  <div className="flex items-center gap-3">
+                    <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.discount_price)}</p>
+                    <p className="font-label-md text-label-md text-on-surface-variant line-through">{formatPrice(product.price)}</p>
+                    <span className="font-label-md text-[12px] text-error">
+                      {Math.round((1 - product.discount_price / product.price) * 100)}% OFF
+                    </span>
+                  </div>
+                ) : (
+                  <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.price)}</p>
+                )}
                 <p className="text-on-surface-variant font-label-md text-label-md mt-1">MRP incl. of all taxes</p>
                 {product.fabric && (
                   <p className="font-label-md text-[12px] text-on-surface-variant mt-1 uppercase tracking-wider">
                     {product.fabric}
                   </p>
+                )}
+                {product.free_delivery && (
+                  <div className="flex items-center gap-1.5 mt-2 text-primary">
+                    <Truck size={14} />
+                    <span className="font-label-md text-[12px] uppercase tracking-wider">Free Delivery</span>
+                  </div>
                 )}
               </div>
 
@@ -236,7 +263,7 @@ export default function ProductDetailPage() {
                     </button>
                     <div className="accordion-content pt-2">
                       <p className="font-body-md text-body-md text-on-surface-variant">
-                        {item.key === "description" ? product.description : item.content}
+                        {item.content}
                       </p>
                     </div>
                   </div>
