@@ -57,7 +57,16 @@ Route handlers accept the request body largely as-is and pass it to Supabase (no
 
 1. **`POST /api/razorpay/create-order`** — signed-in user, rate-limited (10 / 10 min). Validates amount (100–100,000,000 paise) and currency (`INR`), creates a Razorpay order.
 2. Client completes payment via Razorpay Checkout (client-side SDK).
-3. **`POST /api/razorpay/verify`** — signed-in user, rate-limited. Recomputes the HMAC-SHA256 signature of `order_id|payment_id` using `RAZORPAY_KEY_SECRET` and compares it with `crypto.timingSafeEqual`. Re-fetches the order from Razorpay's API and cross-checks the paid amount against a server-side recalculation of the cart total from the current `products` table (client-submitted prices are never trusted). On success: inserts the `orders` row, decrements `size_inventory` per line item, and fires a non-blocking Shiprocket order creation (a Shiprocket failure is logged but does not fail the checkout).
+3. **`POST /api/razorpay/verify`** — signed-in user, rate-limited. Recomputes the HMAC-SHA256 signature of `order_id|payment_id` using `RAZORPAY_KEY_SECRET` and compares it with `crypto.timingSafeEqual`. Re-fetches the order from Razorpay's API and cross-checks the paid amount against a server-side recalculation of the cart total from the current `products` table (client-submitted prices are never trusted). On success: inserts the `orders` row, decrements `size_inventory` per line item, sends an order confirmation email (`lib/email.ts`, via Resend), and fires a non-blocking Shiprocket order creation (a Shiprocket failure is logged but does not fail the checkout).
+
+## Email notifications (`lib/email.ts`)
+
+Resend sends two kinds of order emails, both best-effort (log and continue on failure, never throw into the calling route):
+
+- **Order confirmation** — sent from `POST /api/razorpay/verify` right after the order row is inserted.
+- **Order status update** — sent from `PUT /api/orders/[id]` whenever an admin sets a new `status`. Only `processing`, `shipped`, `delivered`, `cancelled` trigger an email (see `STATUS_COPY` in `lib/email.ts`) — `pending`/`paid` are skipped since the confirmation email already covers that moment.
+
+If `RESEND_API_KEY` is not set, both functions no-op silently — safe for local dev without Resend configured.
 
 ## Admin panel (`app/admin/`)
 

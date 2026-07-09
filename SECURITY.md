@@ -41,7 +41,7 @@ Expired rows are pruned probabilistically (5% chance per call) rather than via a
 
 ## Secrets
 
-Required secrets (see README.md for the full list): `SUPABASE_SERVICE_ROLE_KEY`, `CLERK_SECRET_KEY`, `RAZORPAY_KEY_SECRET`, `SHIPROCKET_PASSWORD`. None of these should ever be prefixed `NEXT_PUBLIC_` or referenced from client components — grep for `NEXT_PUBLIC_` before adding any new env var to confirm it's meant to be public.
+Required secrets (see README.md for the full list): `SUPABASE_SERVICE_ROLE_KEY`, `CLERK_SECRET_KEY`, `RAZORPAY_KEY_SECRET`, `SHIPROCKET_PASSWORD`, `RESEND_API_KEY`. None of these should ever be prefixed `NEXT_PUBLIC_` or referenced from client components — grep for `NEXT_PUBLIC_` before adding any new env var to confirm it's meant to be public.
 
 ## Known gaps / accepted risk
 

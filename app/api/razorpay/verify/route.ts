@@ -4,6 +4,7 @@ import Razorpay from "razorpay";
 import { auth } from "@clerk/nextjs/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { createShiprocketOrder } from "@/lib/shiprocket";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const razorpay = new Razorpay({
@@ -115,6 +116,14 @@ export async function POST(req: NextRequest) {
         .eq("id", item.product_id);
     }
   }
+
+  // Send order confirmation email — internally best-effort, never throws
+  await sendOrderConfirmationEmail({
+    to: orderData.user_email,
+    orderId: data.id,
+    items: verifiedItems,
+    total: recomputedTotal,
+  });
 
   // Fire Shiprocket order — non-blocking, failure doesn't break checkout
   try {

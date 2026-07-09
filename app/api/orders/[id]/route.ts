@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { auth } from "@clerk/nextjs/server";
 import { isAdmin, requireAdmin } from "@/lib/auth";
+import { sendOrderStatusEmail } from "@/lib/email";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,5 +34,10 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     .select()
     .single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+
+  if (body.status && data.user_email) {
+    await sendOrderStatusEmail({ to: data.user_email, orderId: data.id, status: data.status });
+  }
+
   return NextResponse.json(data);
 }

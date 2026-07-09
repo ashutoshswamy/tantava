@@ -57,7 +57,10 @@ export default function ProductDetailPage() {
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   const accordionItems = product ? [
-    { title: "Product Description", content: product.description },
+    {
+      title: "Product Description",
+      content: [product.fabric, product.description].filter(Boolean).join(". "),
+    },
     { title: "Fabric & Care", content: product.care || DEFAULT_CARE },
     {
       title: "Delivery & Returns",
@@ -117,7 +120,7 @@ export default function ProductDetailPage() {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
+                    className="absolute inset-0 w-full h-full object-contain"
                     src={product.images[selectedImg] || product.images[0]}
                   />
                 </AnimatePresence>
@@ -166,11 +169,6 @@ export default function ProductDetailPage() {
                   <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.price)}</p>
                 )}
                 <p className="text-on-surface-variant font-label-md text-label-md mt-1">MRP incl. of all taxes</p>
-                {product.fabric && (
-                  <p className="font-label-md text-[12px] text-on-surface-variant mt-1 uppercase tracking-wider">
-                    {product.fabric}
-                  </p>
-                )}
                 {product.free_delivery && (
                   <div className="flex items-center gap-1.5 mt-2 text-primary">
                     <Truck size={14} />
