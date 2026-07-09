@@ -53,7 +53,10 @@ export default function ShopPage() {
     return () => clearInterval(timer);
   }, [modalProduct]);
 
-  const categories = ["All", ...Array.from(new Set(products.map((p) => p.category)))];
+  const categories = [
+    "All",
+    ...Array.from(new Map(products.map((p) => [p.category.toLowerCase(), p.category])).values()),
+  ];
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 

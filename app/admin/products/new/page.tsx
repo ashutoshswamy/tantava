@@ -70,7 +70,8 @@ export default function NewProductPage() {
       .then((data) => {
         if (!Array.isArray(data)) return;
         const existing = data.map((p) => p.category).filter(Boolean);
-        setCategories(Array.from(new Set([...CATEGORY_SUGGESTIONS, ...existing])).sort());
+        const merged = new Map([...CATEGORY_SUGGESTIONS, ...existing].map((c) => [c.toLowerCase(), c]));
+        setCategories(Array.from(merged.values()).sort());
       });
   }, []);
 

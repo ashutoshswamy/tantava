@@ -78,7 +78,8 @@ export default function EditProductPage() {
       if (Array.isArray(cols)) setCollections(cols);
       if (Array.isArray(allProds)) {
         const existing = allProds.map((p) => p.category).filter(Boolean);
-        setCategories(Array.from(new Set([...CATEGORY_SUGGESTIONS, ...existing])).sort());
+        const merged = new Map([...CATEGORY_SUGGESTIONS, ...existing].map((c) => [c.toLowerCase(), c]));
+        setCategories(Array.from(merged.values()).sort());
       }
 
       const inv = data.size_inventory || {};
