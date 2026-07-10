@@ -32,7 +32,8 @@ Expired rows are pruned probabilistically (5% chance per call) rather than via a
 ## Input validation
 
 - `lib/validate.ts` provides `isValidEmail` / `isValidLength`, used by the public `feedback` and `inquiries` endpoints.
-- Admin-write API routes (`products`, `collections`, `settings`, `inventory`, `orders`) do **not** run application-level schema validation — the request body is passed close to as-is to Supabase, relying on Postgres `not null` / `check` constraints (e.g. `price >= 0`, `status in (...)`) as the backstop. This is acceptable because these routes are admin-only (`requireAdmin`), not public input surfaces — if any of them are ever opened to non-admin callers, add explicit validation first.
+- `products` and `settings` admin-write routes validate the body via `lib/api-utils.ts` (`validateProductInput`, `validateSettingsInput`) before it reaches Supabase — type/range checks, rejects with 400 on bad input.
+- Remaining admin-write routes (`collections`, `inventory`, `orders`) do **not** run application-level schema validation — the request body is passed close to as-is to Supabase, relying on Postgres `not null` / `check` constraints (e.g. `status in (...)`) as the backstop. This is acceptable because these routes are admin-only (`requireAdmin`), not public input surfaces — if any of them are ever opened to non-admin callers, add explicit validation first.
 
 ## File uploads
 
@@ -46,7 +47,7 @@ Required secrets (see README.md for the full list): `SUPABASE_SERVICE_ROLE_KEY`,
 ## Known gaps / accepted risk
 
 - No CSP or custom security headers are configured in `next.config.ts` or `proxy.ts` — relies on Next.js/Vercel defaults.
-- No application-level schema validation (e.g. zod) on admin write routes — see "Input validation" above.
+- No application-level schema validation on `collections`, `inventory`, `orders` admin write routes (`products`/`settings` now validate) — see "Input validation" above.
 - `rate_limits` cleanup is probabilistic, not scheduled.
 
 If you're changing auth, payment verification, or RLS policies, treat those as high-risk changes — get a second review before merging.

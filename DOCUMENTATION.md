@@ -23,8 +23,8 @@ All money fields are integers in **paise** (₹1 = 100 paise).
 | Table | Purpose |
 |---|---|
 | `collections` | Curated product groupings (name, slug, cover image, active flag, sort order) |
-| `products` | Catalog: name, description, `price`, `discount_price`, category, `fabric`, `care`, `free_delivery`, `images[]`, `size_inventory` (JSON: `{"XS":0,...,"XXXL":0}`), `sku`, `badge`, `is_active`, `collection_id` |
-| `store_settings` | Singleton row (`id boolean primary key default true`) holding site-wide `delivery_info` / `returns_info` copy shown on every PDP |
+| `products` | Catalog: name, description, `price`, `discount_price`, category, `fabric`, `care`, `free_delivery`, `images[]`, `size_inventory` (JSON: `{"XS":0,...,"XXXL":0}`), `sku`, `badge`, `is_active`, `collection_id`, `sort_order` (manual display order, admin-editable) |
+| `store_settings` | Singleton row (`id boolean primary key default true`) holding site-wide `delivery_info` / `returns_info` copy and `checkout_mode` / `whatsapp_number` (see Checkout flow below) |
 | `orders` | Customer orders — `items` JSON snapshot, `subtotal`/`total`, `status` enum, `shipping_address` JSON, Razorpay IDs, Shiprocket tracking fields, `admin_notes` |
 | `inventory_logs` | Append-only audit trail of stock changes (`change` can be +/-, `reason` free text) |
 | `feedbacks` | Public feedback form submissions |
@@ -51,21 +51,27 @@ RLS is enabled on every table. Public (anon key) read policies exist for `produc
 | `razorpay/verify` | signed-in user, rate-limited, HMAC-verified |
 | `shiprocket/track/[orderId]` | signed-in user, scoped to their own order |
 
-Route handlers accept the request body largely as-is and pass it to Supabase (no schema/zod validation layer) — the DB's `not null`/`check` constraints are the backstop for admin-only writes. Public-facing routes (`feedback`, `inquiries`, checkout) validate input via `lib/validate.ts` and are rate-limited.
+`products` (`app/api/products/route.ts`) and `settings` (`app/api/settings/route.ts`) validate the request body via `lib/api-utils.ts` (`validateProductInput`, `validateSettingsInput`) before hitting Supabase — type-checks fields and rejects unknown shapes with a 400, on top of the DB's `not null`/`check` constraints. Other admin-write routes (`collections`, `inventory`, `orders`) still pass the body close to as-is, relying on Postgres constraints as the backstop. Public-facing routes (`feedback`, `inquiries`, checkout) validate input via `lib/validate.ts` and are rate-limited.
 
 ## Checkout / payment flow
 
-1. **`POST /api/razorpay/create-order`** — signed-in user, rate-limited (10 / 10 min). Validates amount (100–100,000,000 paise) and currency (`INR`), creates a Razorpay order.
-2. Client completes payment via Razorpay Checkout (client-side SDK).
-3. **`POST /api/razorpay/verify`** — signed-in user, rate-limited. Recomputes the HMAC-SHA256 signature of `order_id|payment_id` using `RAZORPAY_KEY_SECRET` and compares it with `crypto.timingSafeEqual`. Re-fetches the order from Razorpay's API and cross-checks the paid amount against a server-side recalculation of the cart total from the current `products` table (client-submitted prices are never trusted). On success: inserts the `orders` row, decrements `size_inventory` per line item, and fires a non-blocking Shiprocket order creation (a Shiprocket failure is logged but does not fail the checkout).
+`store_settings.checkout_mode` (`"razorpay"` | `"whatsapp"`, admin-configurable at `/admin/checkout-settings`) picks the flow:
+
+- **`razorpay`** (default):
+  1. **`POST /api/razorpay/create-order`** — signed-in user, rate-limited (10 / 10 min). Validates amount (100–100,000,000 paise) and currency (`INR`), creates a Razorpay order.
+  2. Client completes payment via Razorpay Checkout (client-side SDK).
+  3. **`POST /api/razorpay/verify`** — signed-in user, rate-limited. Recomputes the HMAC-SHA256 signature of `order_id|payment_id` using `RAZORPAY_KEY_SECRET` and compares it with `crypto.timingSafeEqual`. Re-fetches the order from Razorpay's API and cross-checks the paid amount against a server-side recalculation of the cart total from the current `products` table (client-submitted prices are never trusted). On success: inserts the `orders` row, decrements `size_inventory` per line item, and fires a non-blocking Shiprocket order creation (a Shiprocket failure is logged but does not fail the checkout).
+- **`whatsapp`**: no on-site payment. `lib/whatsapp.ts` (`buildWhatsAppCheckoutUrl`) builds a `wa.me/<whatsapp_number>?text=...` link listing cart items and total, and the checkout page sends the buyer there instead of invoking Razorpay. No `orders` row is created — the order is negotiated over chat.
 
 ## Admin panel (`app/admin/`)
 
-Client-rendered pages under `/admin`, gated by `proxy.ts`. Sections: Dashboard, Analytics, Products (list/new/edit), Collections, Inventory, Orders, Delivery & Returns (site-wide copy editor), Feedback, Inquiries.
+Client-rendered pages under `/admin`, gated by `proxy.ts`. Sections: Dashboard, Analytics, Products (list/new/edit), Collections, Inventory, Orders, Delivery & Returns (site-wide copy editor), Checkout Settings (payment mode toggle), Feedback, Inquiries.
 
-**Product form** (`admin/products/new`, `admin/products/[id]`): name, description, price, discount price (optional — shown alongside the original price on the storefront when lower), category (free-text input backed by a `<datalist>` populated from every category already used across existing products, so admins can reuse one or type a new one), badge, fabric, care instructions (free text, shown in the "Fabric & Care" PDP accordion), SKU, collection, per-size stock (`XS`–`XXXL`), image upload (validated client-side, uploaded to Supabase Storage via signed URL), active toggle, free-delivery toggle.
+**Product form** (`admin/products/new`, `admin/products/[id]`): name, description, price, discount price (optional — shown alongside the original price on the storefront when lower), category (free-text input backed by a `<datalist>` populated from every category already used across existing products, so admins can reuse one or type a new one), badge, fabric, care instructions (free text, shown in the "Fabric & Care" PDP accordion), SKU, collection, per-size stock (`XS`–`XXXL`), image upload (validated client-side, uploaded to Supabase Storage via signed URL), active toggle, free-delivery toggle. The product list (`admin/products`) lets admins reorder products, persisted to `sort_order` and reflected in storefront listing order.
 
 **Delivery & Returns** (`admin/delivery-returns`): edits the singleton `store_settings` row. This copy is fetched by every PDP and rendered in the "Delivery & Returns" accordion, replacing what used to be hardcoded text.
+
+**Checkout Settings** (`admin/checkout-settings`): toggles `store_settings.checkout_mode` between `razorpay` and `whatsapp`, and sets the `whatsapp_number` used when in WhatsApp mode. Also edits the singleton `store_settings` row via `PUT /api/settings`.
 
 ## Storefront behavior notes
 
