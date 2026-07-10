@@ -109,8 +109,29 @@ export default function HomePage() {
     <>
       <Navbar />
 
+      {/* Sale Ticker */}
+      <div
+        className="relative z-30 overflow-hidden py-2"
+        style={{ background: "linear-gradient(90deg, #6b1e40, #9e3462, #6b1e40)" }}
+      >
+        <div className="flex gap-10 animate-marquee-fast w-max whitespace-nowrap">
+          {Array(2).fill(null).map((_, i) => (
+            <div key={i} className="flex gap-10">
+              {Array(6).fill(null).map((_, j) => (
+                <span
+                  key={j}
+                  className="font-label-md text-[11px] tracking-[0.3em] uppercase text-white/90 flex items-center gap-3"
+                >
+                  The Sale Is On <span className="text-white/40">✦</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Hero */}
-      <header className="relative min-h-[520px] h-[calc(100svh-4rem)] md:h-[calc(100svh-5rem)] flex items-center overflow-hidden">
+      <header className="relative min-h-[500px] h-[calc(100svh-6.5rem)] md:h-[calc(100svh-7.5rem)] flex items-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <div
             className="w-full h-full bg-scroll md:bg-fixed"
@@ -126,14 +147,14 @@ export default function HomePage() {
 
         <div className="relative z-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
           {/* Text pushed to the right half */}
-          <div className="mx-auto sm:ml-auto sm:mr-0 w-full max-w-lg text-left sm:text-right">
+          <div className="relative mx-auto sm:ml-auto sm:mr-0 w-full max-w-lg text-left sm:text-right">
             <motion.span
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
               className="font-label-md text-label-md text-primary/70 tracking-[0.25em] uppercase mb-4 block"
             >
-              Threads of Tradition and Trends
+              For a Limited Time
             </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -141,7 +162,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, delay: 0.4 }}
               className="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface mb-6 leading-tight"
             >
-              Ethnic &amp; Indo-Western Wear for Every Occasion
+              Festive Favourites, Now On Sale
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -149,7 +170,7 @@ export default function HomePage() {
               transition={{ duration: 0.7, delay: 0.6 }}
               className="font-body-lg text-body-lg text-on-surface-variant mb-8"
             >
-              Curated kurtas, anarkalis, and fusion sets for office, festive celebrations, and everyday elegance.
+              Curated kurtas, anarkalis, and fusion sets at special sale prices — while stocks last.
             </motion.p>
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -161,7 +182,7 @@ export default function HomePage() {
                   href="/shop"
                   className="w-full sm:w-auto bg-primary text-on-primary px-10 py-4 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity duration-300 text-center shadow-md"
                 >
-                  Shop the Collection
+                  Shop the Sale
                 </Link>
                 <Link
                   href="/contact"
@@ -416,7 +437,7 @@ export default function HomePage() {
                   Get in Touch
                 </Link>
                 <a
-                  href="https://wa.me/919999999999"
+                  href="https://wa.me/917558786317"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block border border-white/25 text-white px-8 py-4 rounded-xl font-label-md text-label-md hover:bg-white/10 transition-colors text-center"

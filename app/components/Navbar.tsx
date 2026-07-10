@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { useUser, SignInButton, UserButton } from "@clerk/nextjs";
 import { useCart } from "@/store/cart";
@@ -70,15 +69,8 @@ export default function Navbar({ activePage }: NavbarProps) {
           {/* Center: logo */}
           <Link
             href="/"
-            className="flex items-center gap-2 justify-center hover:opacity-80 transition-opacity"
+            className="flex items-center justify-center hover:opacity-80 transition-opacity"
           >
-            <Image
-              src="/logo.png"
-              alt="Tantava"
-              width={40}
-              height={40}
-              className="h-14 w-14 md:h-20 md:w-20 object-contain"
-            />
             <span className="text-xl md:text-3xl font-bold text-primary tracking-widest uppercase">
               Tantava
             </span>
@@ -88,7 +80,7 @@ export default function Navbar({ activePage }: NavbarProps) {
           <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-5">
             <button
               onClick={() => setSearchOpen(true)}
-              className="text-on-surface-variant hover:text-primary transition-all duration-300"
+              className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
               aria-label="Search"
             >
               <Search size={20} />
@@ -109,7 +101,7 @@ export default function Navbar({ activePage }: NavbarProps) {
 
             <button
               onClick={() => setCartOpen(true)}
-              className="relative text-on-surface-variant hover:text-primary transition-all duration-300"
+              className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
               aria-label="Cart"
             >
               <ShoppingBag size={20} />
@@ -125,12 +117,14 @@ export default function Navbar({ activePage }: NavbarProps) {
                 <Link href="/account" className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300">
                   <User size={20} />
                 </Link>
-                <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
+                <div className="hidden md:block">
+                  <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
+                </div>
               </>
             ) : (
               <SignInButton mode="modal">
                 <button
-                  className="text-on-surface-variant hover:text-primary transition-all duration-300"
+                  className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
                   aria-label="Sign in"
                 >
                   <User size={20} />
@@ -157,10 +151,16 @@ export default function Navbar({ activePage }: NavbarProps) {
               transition={{ duration: 0.25, ease: "easeInOut" }}
               className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-6 flex flex-col gap-5 overflow-hidden absolute top-full left-0 right-0"
             >
+              <button
+                onClick={() => { setSearchOpen(true); setMobileOpen(false); }}
+                className="flex items-center gap-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+              >
+                <Search size={18} /> Search
+              </button>
+
               {[
                 { href: "/shop",     label: "Shop" },
                 { href: "/contact",  label: "Contact" },
-                { href: "/wishlist", label: "Wishlist" },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -171,6 +171,32 @@ export default function Navbar({ activePage }: NavbarProps) {
                   {label}
                 </Link>
               ))}
+
+              <Link
+                href="/wishlist"
+                className="flex items-center gap-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+                onClick={() => setMobileOpen(false)}
+              >
+                <Heart size={18} /> Wishlist
+                {mounted && wishlistCount > 0 && (
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
+                    {wishlistCount}
+                  </span>
+                )}
+              </Link>
+
+              <button
+                onClick={() => { setCartOpen(true); setMobileOpen(false); }}
+                className="flex items-center gap-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+              >
+                <ShoppingBag size={18} /> Cart
+                {mounted && itemCount > 0 && (
+                  <span className="flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
+                    {itemCount}
+                  </span>
+                )}
+              </button>
+
               {isAdmin && (
                 <Link
                   href="/admin"
@@ -180,7 +206,19 @@ export default function Navbar({ activePage }: NavbarProps) {
                   Admin Dashboard
                 </Link>
               )}
-              {!isSignedIn && (
+
+              {isSignedIn ? (
+                <div className="flex items-center gap-3">
+                  <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
+                  <Link
+                    href="/account"
+                    className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    My Account
+                  </Link>
+                </div>
+              ) : (
                 <SignInButton mode="modal">
                   <button
                     className="font-label-md text-label-md text-primary text-left"

@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Product } from "@/lib/supabase";
-import { Plus, Search, Loader2, Pencil, Trash2, Package } from "lucide-react";
+import { Plus, Search, Loader2, Pencil, Trash2, Package, ArrowUp, ArrowDown } from "lucide-react";
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const [sortMode, setSortMode] = useState<"custom" | "newest" | "oldest">("custom");
 
   useEffect(() => {
     fetch("/api/products?active=all")
@@ -38,15 +39,39 @@ export default function AdminProductsPage() {
     setDeleting(null);
   };
 
+  const moveProduct = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= products.length) return;
+
+    const reordered = [...products];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setProducts(reordered);
+
+    fetch("/api/products/reorder", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: reordered.map((p) => p.id) }),
+    });
+  };
+
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
+  const formatDate = (d: string) => new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   const totalStock = (inv: Record<string, number>) => Object.values(inv || {}).reduce((s, v) => s + v, 0);
 
-  const filtered = products.filter(
+  const sorted = [...products].sort((a, b) => {
+    if (sortMode === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    if (sortMode === "oldest") return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+    return 0; // custom: already in sort_order from the API
+  });
+
+  const filtered = sorted.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.toLowerCase().includes(search.toLowerCase()) ||
       p.sku?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const canReorder = sortMode === "custom" && !search;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 text-[#1a0914]">
@@ -64,8 +89,8 @@ export default function AdminProductsPage() {
         </Link>
       </div>
 
-      <div className="mb-6">
-        <div className="relative max-w-sm">
+      <div className="mb-6 flex flex-col sm:flex-row gap-3">
+        <div className="relative max-w-sm w-full">
           <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8c5971]" />
           <input
             type="text"
@@ -75,6 +100,15 @@ export default function AdminProductsPage() {
             className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl pl-10 pr-4 py-3 text-[#1a0914] placeholder:text-[#dbb6ca] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
           />
         </div>
+        <select
+          value={sortMode}
+          onChange={(e) => setSortMode(e.target.value as "custom" | "newest" | "oldest")}
+          className="bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[#1a0914] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+        >
+          <option value="custom">Custom Order</option>
+          <option value="newest">Add Date: Newest First</option>
+          <option value="oldest">Add Date: Oldest First</option>
+        </select>
       </div>
 
       {loading ? (
@@ -85,9 +119,27 @@ export default function AdminProductsPage() {
         <>
           {/* Mobile cards */}
           <div className="grid gap-3 sm:hidden">
-            {filtered.map((product) => (
+            {filtered.map((product, i) => (
               <div key={product.id} className="bg-white border border-[#f2cfe3] rounded-2xl p-4">
                 <div className="flex items-start gap-3">
+                  <div className="flex flex-col gap-1 pt-0.5">
+                    <button
+                      onClick={() => moveProduct(i, -1)}
+                      disabled={!canReorder || i === 0}
+                      className="p-1 text-[#8c5971] disabled:opacity-20"
+                      title="Move up"
+                    >
+                      <ArrowUp size={14} />
+                    </button>
+                    <button
+                      onClick={() => moveProduct(i, 1)}
+                      disabled={!canReorder || i === filtered.length - 1}
+                      className="p-1 text-[#8c5971] disabled:opacity-20"
+                      title="Move down"
+                    >
+                      <ArrowDown size={14} />
+                    </button>
+                  </div>
                   {product.images[0] && (
                     <img
                       src={product.images[0]}
@@ -104,6 +156,7 @@ export default function AdminProductsPage() {
                     <p className="text-[12px] text-[#8c5971] capitalize mt-0.5">
                       {product.category} · Stock {totalStock(product.size_inventory)}
                     </p>
+                    <p className="text-[11px] text-[#dbb6ca] mt-0.5">Added {formatDate(product.created_at)}</p>
                   </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between gap-3">
@@ -149,17 +202,39 @@ export default function AdminProductsPage() {
             <table className="w-full min-w-[640px]">
               <thead>
                 <tr className="border-b border-[#f2cfe3] bg-[#fdeaf2]/40">
+                  <th className="px-5 py-3.5 w-16"></th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Product</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden md:table-cell">Category</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Price</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Stock</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden lg:table-cell">Added</th>
                   <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider hidden sm:table-cell">Status</th>
                   <th className="px-5 py-3.5"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f2cfe3]">
-                {filtered.map((product) => (
+                {filtered.map((product, i) => (
                   <tr key={product.id} className="hover:bg-[#fdeaf2]/30 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="flex flex-col gap-1">
+                        <button
+                          onClick={() => moveProduct(i, -1)}
+                          disabled={!canReorder || i === 0}
+                          className="p-1 text-[#8c5971] hover:text-[#1a0914] disabled:opacity-20 disabled:hover:text-[#8c5971]"
+                          title="Move up"
+                        >
+                          <ArrowUp size={14} />
+                        </button>
+                        <button
+                          onClick={() => moveProduct(i, 1)}
+                          disabled={!canReorder || i === filtered.length - 1}
+                          className="p-1 text-[#8c5971] hover:text-[#1a0914] disabled:opacity-20 disabled:hover:text-[#8c5971]"
+                          title="Move down"
+                        >
+                          <ArrowDown size={14} />
+                        </button>
+                      </div>
+                    </td>
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         {product.images[0] && (
@@ -194,6 +269,9 @@ export default function AdminProductsPage() {
                           </span>
                         );
                       })()}
+                    </td>
+                    <td className="px-5 py-4 hidden lg:table-cell text-[13px] text-[#8c5971]">
+                      {formatDate(product.created_at)}
                     </td>
                     <td className="px-5 py-4 hidden sm:table-cell">
                       <button

@@ -10,7 +10,11 @@ export async function GET(req: NextRequest) {
   const collectionId = searchParams.get("collection_id");
   const limit = searchParams.get("limit");
 
-  let query = supabase.from("products").select("*").order("created_at", { ascending: false });
+  let query = supabase
+    .from("products")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("created_at", { ascending: false });
 
   if (category) query = query.eq("category", category);
   if (active !== "all") query = query.eq("is_active", true);
@@ -28,6 +32,16 @@ export async function POST(req: NextRequest) {
 
   const supabase = createServerSupabase();
   const body = await req.json();
+
+  if (body.sort_order === undefined) {
+    const { data: last } = await supabase
+      .from("products")
+      .select("sort_order")
+      .order("sort_order", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    body.sort_order = last ? last.sort_order + 1 : 0;
+  }
 
   const { data, error } = await supabase.from("products").insert(body).select().single();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });

@@ -83,8 +83,8 @@ export default function AdminCollectionsPage() {
           </Link>
         </div>
       ) : (
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl overflow-hidden">
-          <table className="w-full">
+        <div className="bg-white border border-[#f2cfe3] rounded-2xl overflow-x-auto">
+          <table className="w-full min-w-[560px]">
             <thead>
               <tr className="border-b border-[#f2cfe3] bg-[#fdeaf2]/40">
                 <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Collection</th>

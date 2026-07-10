@@ -377,7 +377,7 @@ export default function NewProductPage() {
           <p className="text-[11px] text-[#8c5971] -mt-2">First image is the product cover. Use the arrows to reorder.</p>
           {form.images.map((img, idx) => (
             <div key={idx} className="space-y-2">
-              <div className="flex gap-2.5 items-center">
+              <div className="flex flex-wrap gap-2.5 items-center">
                 <div className="flex flex-col gap-0.5 flex-shrink-0">
                   <button
                     type="button"
@@ -399,7 +399,7 @@ export default function NewProductPage() {
                 <input
                   value={img}
                   onChange={(e) => updateImage(idx, e.target.value)}
-                  className={inputCls}
+                  className={`${inputCls} min-w-[140px] flex-1`}
                   placeholder="https://..."
                 />
                 <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>

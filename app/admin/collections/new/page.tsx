@@ -136,11 +136,11 @@ export default function NewCollectionPage() {
 
           <div>
             <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Cover Image</label>
-            <div className="flex gap-2.5">
+            <div className="flex flex-wrap gap-2.5">
               <input
                 value={form.cover_image}
                 onChange={(e) => setForm({ ...form, cover_image: e.target.value })}
-                className={inputCls}
+                className={`${inputCls} min-w-[140px] flex-1`}
                 placeholder="https://... or upload below"
               />
               <label className={`flex items-center gap-2 px-4 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[13px] flex-shrink-0 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>

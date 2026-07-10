@@ -176,7 +176,7 @@ export default function ContactPage() {
                 </p>
               </div>
               <a
-                href="https://wa.me/910000000000"
+                href="https://wa.me/917558786317"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 font-label-md text-label-md text-on-primary-container group"

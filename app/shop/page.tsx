@@ -12,26 +12,17 @@ import {
 import { useWishlist } from "@/store/wishlist";
 import { AnimatePresence, motion } from "framer-motion";
 
-const SORT_OPTIONS = ["Newest", "Price: Low to High", "Price: High to Low"];
+const SORT_OPTIONS = ["Featured", "Price: Low to High", "Price: High to Low"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 function firstAvailableSize(product: Product): string {
   return SIZES.find((s) => (product.size_inventory?.[s] ?? 0) > 0) || SIZES[0];
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  fusion: "Kurta & Suit Sets",
-  sarees: "Sarees",
-  lehengas: "Lehengas",
-  gowns: "Gowns",
-  jewellery: "Jewellery",
-};
-
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [sort, setSort] = useState("Newest");
+  const [sort, setSort] = useState("Featured");
   const [searchQuery, setSearchQuery] = useState("");
   const [modalProduct, setModalProduct] = useState<Product | null>(null);
   const [modalImg, setModalImg] = useState(0);
@@ -53,24 +44,17 @@ export default function ShopPage() {
     return () => clearInterval(timer);
   }, [modalProduct]);
 
-  const categories = [
-    "All",
-    ...Array.from(new Map(products.map((p) => [p.category.toLowerCase(), p.category])).values()),
-  ];
-
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   const filtered = products
     .filter((p) => {
-      const matchCat = selectedCategory === "All" || p.category.toLowerCase() === selectedCategory.toLowerCase();
       const q = searchQuery.trim().toLowerCase();
-      const matchSearch = !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
-      return matchCat && matchSearch;
+      return !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
     })
     .sort((a, b) => {
       if (sort === "Price: Low to High") return a.price - b.price;
       if (sort === "Price: High to Low") return b.price - a.price;
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      return 0; // Featured: keep the site-wide order set in the admin panel
     });
 
   const effectivePrice = (product: Product) =>
@@ -140,31 +124,6 @@ export default function ShopPage() {
 
       <main className="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto mb-stack-lg">
         <div className="flex flex-col lg:flex-row gap-gutter">
-          {/* Sidebar */}
-          <aside className="w-full lg:w-64 flex-shrink-0 space-y-8">
-            <div>
-              <h3 className="font-label-md text-label-md text-primary mb-4 uppercase tracking-wider">
-                Category
-              </h3>
-              <div className="space-y-2">
-                {categories.map((cat) => (
-                  <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
-                    className={`block w-full text-left px-4 py-2 rounded-lg font-body-md text-body-md transition-all ${
-                      selectedCategory === cat
-                        ? "bg-primary text-on-primary"
-                        : "text-on-surface-variant hover:text-primary hover:bg-surface-container"
-                    }`}
-                  >
-                    {cat === "All" ? "All Styles" : (CATEGORY_LABELS[cat.toLowerCase()] ?? cat)}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-          </aside>
-
           {/* Product Grid */}
           <div className="flex-1">
             {loading ? (

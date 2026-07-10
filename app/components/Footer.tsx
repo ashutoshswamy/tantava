@@ -16,7 +16,7 @@ export default function Footer() {
             <a href="https://instagram.com/_tantava" className="text-on-surface-variant hover:text-primary transition-all" aria-label="Instagram">
               <FaInstagram size={24} />
             </a>
-            <a href="https://wa.me/919999999999" className="text-on-surface-variant hover:text-primary transition-all" aria-label="WhatsApp">
+            <a href="https://wa.me/917558786317" className="text-on-surface-variant hover:text-primary transition-all" aria-label="WhatsApp">
               <FaWhatsapp size={24} />
             </a>
           </div>
