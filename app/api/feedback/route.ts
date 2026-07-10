@@ -3,6 +3,7 @@ import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { isValidEmail, isValidLength } from "@/lib/validate";
+import { apiError } from "@/lib/api-utils";
 
 export async function POST(req: NextRequest) {
   const ip = getClientIp(req);
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("feedback.POST", error);
   return NextResponse.json(data, { status: 201 });
 }
 
@@ -54,6 +55,6 @@ export async function GET() {
     .select("*")
     .order("created_at", { ascending: false });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("feedback.GET", error);
   return NextResponse.json(data);
 }

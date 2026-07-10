@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { auth } from "@clerk/nextjs/server";
 import { isAdmin, requireAdmin } from "@/lib/auth";
+import { apiError, validateOrderCreateInput, ValidationError } from "@/lib/api-utils";
 
 export async function GET(req: NextRequest) {
   const { userId } = await auth();
@@ -20,7 +21,7 @@ export async function GET(req: NextRequest) {
   if (status) query = query.eq("status", status);
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("orders.GET", error);
   return NextResponse.json(data);
 }
 
@@ -32,22 +33,21 @@ export async function POST(req: NextRequest) {
   if (!userId || !authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerSupabase();
-  const body = await req.json();
+  const rawBody = await req.json();
+
+  let order: ReturnType<typeof validateOrderCreateInput>;
+  try {
+    order = validateOrderCreateInput(rawBody);
+  } catch (e) {
+    if (e instanceof ValidationError) return NextResponse.json({ error: e.message }, { status: 400 });
+    throw e;
+  }
 
   const { data, error } = await supabase
     .from("orders")
-    .insert({
-      user_id: body.user_id ?? userId,
-      user_email: body.user_email,
-      user_name: body.user_name,
-      shipping_address: body.shipping_address,
-      items: body.items,
-      subtotal: body.subtotal,
-      total: body.total,
-      status: body.status ?? "pending",
-    })
+    .insert({ ...order, user_id: order.user_id ?? userId })
     .select()
     .single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("orders.POST", error);
   return NextResponse.json(data, { status: 201 });
 }

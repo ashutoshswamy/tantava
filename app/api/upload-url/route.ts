@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { apiError } from "@/lib/api-utils";
 
 export async function POST(req: NextRequest) {
   const { userId, authorized } = await requireAdmin();
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     .createSignedUploadUrl(path);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiError("upload-url.POST", error);
   }
 
   const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/product-images/${path}`;
@@ -56,7 +57,7 @@ export async function DELETE(req: NextRequest) {
   const { error } = await supabase.storage.from("product-images").remove([path]);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return apiError("upload-url.DELETE", error);
   }
 
   return NextResponse.json({ ok: true });

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { trackShipment } from "@/lib/shiprocket";
+import { apiError } from "@/lib/api-utils";
 
 const IS_TEST_MODE = process.env.SHIPROCKET_TEST_MODE === "true";
 
@@ -93,10 +94,11 @@ export async function GET(
       },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Unknown error";
-    return NextResponse.json(
-      { error: "Failed to fetch tracking info", detail: message },
-      { status: 500 }
+    return apiError(
+      "shiprocket.track.GET",
+      err,
+      500,
+      "Failed to fetch tracking info"
     );
   }
 }

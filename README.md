@@ -13,7 +13,6 @@ For architecture, data model, and API details see [DOCUMENTATION.md](./DOCUMENTA
 - **Database**: Supabase Postgres, accessed directly via `@supabase/supabase-js` (no ORM), Row Level Security enabled
 - **Payments**: Razorpay
 - **Shipping**: Shiprocket (custom integration, no SDK)
-- **Email**: Resend — order confirmation and order status update emails
 - **State**: Zustand (cart, wishlist)
 - **Animation**: Framer Motion
 
@@ -49,13 +48,7 @@ SHIPROCKET_EMAIL=
 SHIPROCKET_PASSWORD=
 SHIPROCKET_PICKUP_LOCATION=
 SHIPROCKET_TEST_MODE=true
-
-# Resend (order emails)
-RESEND_API_KEY=
-RESEND_FROM_EMAIL="Tantava <orders@yourdomain.com>"
 ```
-
-`RESEND_FROM_EMAIL` must be an address on a domain verified in Resend. If `RESEND_API_KEY` is unset, order emails are silently skipped (safe for local dev).
 
 ### 3. Set up the database
 

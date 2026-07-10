@@ -10,7 +10,7 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
   const [search, setSearch] = useState("");
-  const [sortMode, setSortMode] = useState<"custom" | "newest" | "oldest">("custom");
+  const [applying, setApplying] = useState(false);
 
   useEffect(() => {
     fetch("/api/products?active=all")
@@ -39,14 +39,8 @@ export default function AdminProductsPage() {
     setDeleting(null);
   };
 
-  const moveProduct = (index: number, direction: -1 | 1) => {
-    const target = index + direction;
-    if (target < 0 || target >= products.length) return;
-
-    const reordered = [...products];
-    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+  const saveOrder = (reordered: Product[]) => {
     setProducts(reordered);
-
     fetch("/api/products/reorder", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -54,24 +48,43 @@ export default function AdminProductsPage() {
     });
   };
 
+  const moveProduct = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= products.length) return;
+
+    const reordered = [...products];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    saveOrder(reordered);
+  };
+
+  const applyDateSort = async (direction: "newest" | "oldest") => {
+    const reordered = [...products].sort((a, b) =>
+      direction === "newest"
+        ? new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        : new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+    );
+    setApplying(true);
+    await fetch("/api/products/reorder", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ids: reordered.map((p) => p.id) }),
+    });
+    setProducts(reordered);
+    setApplying(false);
+  };
+
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
   const formatDate = (d: string) => new Date(d).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
   const totalStock = (inv: Record<string, number>) => Object.values(inv || {}).reduce((s, v) => s + v, 0);
 
-  const sorted = [...products].sort((a, b) => {
-    if (sortMode === "newest") return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    if (sortMode === "oldest") return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
-    return 0; // custom: already in sort_order from the API
-  });
-
-  const filtered = sorted.filter(
+  const filtered = products.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.category.toLowerCase().includes(search.toLowerCase()) ||
       p.sku?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const canReorder = sortMode === "custom" && !search;
+  const canReorder = !search;
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 text-[#1a0914]">
@@ -101,15 +114,23 @@ export default function AdminProductsPage() {
           />
         </div>
         <select
-          value={sortMode}
-          onChange={(e) => setSortMode(e.target.value as "custom" | "newest" | "oldest")}
-          className="bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[#1a0914] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+          disabled={applying}
+          defaultValue=""
+          onChange={(e) => {
+            const v = e.target.value;
+            if (v === "newest" || v === "oldest") applyDateSort(v);
+            e.target.value = "";
+          }}
+          className="bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[#1a0914] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors disabled:opacity-50"
         >
-          <option value="custom">Custom Order</option>
-          <option value="newest">Add Date: Newest First</option>
-          <option value="oldest">Add Date: Oldest First</option>
+          <option value="" disabled>{applying ? "Applying…" : "Sort by add date…"}</option>
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
         </select>
       </div>
+      <p className="text-[11px] text-[#8c5971] -mt-3 mb-6">
+        This sets the order shown on the storefront. Use the arrows below for manual fine-tuning.
+      </p>
 
       {loading ? (
         <div className="flex justify-center py-20">

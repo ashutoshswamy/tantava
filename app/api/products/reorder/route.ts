@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
+import { apiError } from "@/lib/api-utils";
 
 export async function PATCH(req: NextRequest) {
   const { userId, authorized } = await requireAdmin();
@@ -19,7 +20,7 @@ export async function PATCH(req: NextRequest) {
   );
 
   const failed = results.find((r) => r.error);
-  if (failed?.error) return NextResponse.json({ error: failed.error.message }, { status: 500 });
+  if (failed?.error) return apiError("products.reorder.PATCH", failed.error);
 
   return NextResponse.json({ success: true });
 }

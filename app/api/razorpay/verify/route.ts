@@ -3,8 +3,8 @@ import crypto from "crypto";
 import Razorpay from "razorpay";
 import { auth } from "@clerk/nextjs/server";
 import { createServerSupabase } from "@/lib/supabase-server";
+import { apiError } from "@/lib/api-utils";
 import { createShiprocketOrder } from "@/lib/shiprocket";
-import { sendOrderConfirmationEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const razorpay = new Razorpay({
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
     .from("products")
     .select("id, name, price, images, size_inventory")
     .in("id", productIds);
-  if (productsError) return NextResponse.json({ error: productsError.message }, { status: 500 });
+  if (productsError) return apiError("razorpay.verify.products", productsError);
 
   const productById = new Map((products ?? []).map((p) => [p.id, p]));
   let recomputedTotal = 0;
@@ -102,7 +102,7 @@ export async function POST(req: NextRequest) {
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("razorpay.verify.POST", error);
 
   for (const item of verifiedItems) {
     const prod = productById.get(item.product_id)!;
@@ -116,14 +116,6 @@ export async function POST(req: NextRequest) {
         .eq("id", item.product_id);
     }
   }
-
-  // Send order confirmation email — internally best-effort, never throws
-  await sendOrderConfirmationEmail({
-    to: orderData.user_email,
-    orderId: data.id,
-    items: verifiedItems,
-    total: recomputedTotal,
-  });
 
   // Fire Shiprocket order — non-blocking, failure doesn't break checkout
   try {

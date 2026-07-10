@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
+import { apiError } from "@/lib/api-utils";
 
 export async function GET() {
   const { userId, authorized } = await requireAdmin();
@@ -12,7 +13,7 @@ export async function GET() {
     .select("id, name, sku, category, size_inventory, is_active")
     .order("name", { ascending: true });
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("inventory.GET", error);
 
   const { data: logs } = await supabase
     .from("inventory_logs")
@@ -55,7 +56,7 @@ export async function POST(req: NextRequest) {
     supabase.from("inventory_logs").insert({ product_id, size, change: changeNum, reason }),
   ]);
 
-  if (updateRes.error) return NextResponse.json({ error: updateRes.error.message }, { status: 500 });
+  if (updateRes.error) return apiError("inventory.POST", updateRes.error);
 
   return NextResponse.json({ success: true, size, new_quantity: newQty });
 }

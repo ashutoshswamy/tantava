@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
+import { apiError, validateCollectionInput, ValidationError } from "@/lib/api-utils";
 
 export async function GET(
   _req: NextRequest,
@@ -14,7 +15,7 @@ export async function GET(
     .eq("id", id)
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 404 });
+  if (error) return apiError("collections.[id].GET", error, 404, "Not found");
   return NextResponse.json(data);
 }
 
@@ -29,7 +30,15 @@ export async function PUT(
 
   const { id } = await params;
   const supabase = createServerSupabase();
-  const body = await req.json();
+  const rawBody = await req.json();
+
+  let body: Record<string, unknown>;
+  try {
+    body = validateCollectionInput(rawBody, true);
+  } catch (e) {
+    if (e instanceof ValidationError) return NextResponse.json({ error: e.message }, { status: 400 });
+    throw e;
+  }
 
   const { data, error } = await supabase
     .from("collections")
@@ -38,7 +47,7 @@ export async function PUT(
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("collections.[id].PUT", error);
   return NextResponse.json(data);
 }
 
@@ -59,6 +68,6 @@ export async function DELETE(
     .delete()
     .eq("id", id);
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("collections.[id].DELETE", error);
   return NextResponse.json({ success: true });
 }

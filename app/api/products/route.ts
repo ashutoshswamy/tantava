@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
+import { apiError, validateProductInput, ValidationError } from "@/lib/api-utils";
 
 export async function GET(req: NextRequest) {
   const supabase = createServerSupabase();
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
   if (limit) query = query.limit(parseInt(limit, 10));
 
   const { data, error } = await query;
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("products.GET", error);
   return NextResponse.json(data);
 }
 
@@ -31,9 +32,17 @@ export async function POST(req: NextRequest) {
   if (!userId || !authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerSupabase();
-  const body = await req.json();
+  const rawBody = await req.json();
 
-  if (body.sort_order === undefined) {
+  let body: Record<string, unknown>;
+  try {
+    body = validateProductInput(rawBody, false);
+  } catch (e) {
+    if (e instanceof ValidationError) return NextResponse.json({ error: e.message }, { status: 400 });
+    throw e;
+  }
+
+  if (rawBody.sort_order === undefined) {
     const { data: last } = await supabase
       .from("products")
       .select("sort_order")
@@ -44,6 +53,6 @@ export async function POST(req: NextRequest) {
   }
 
   const { data, error } = await supabase.from("products").insert(body).select().single();
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return apiError("products.POST", error);
   return NextResponse.json(data, { status: 201 });
 }
