@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useCart } from "@/store/cart";
-import { X, ShoppingBag, Minus, Plus, Trash2 } from "lucide-react";
+import { X, ShoppingBag, Minus, Plus, Trash2, MessageCircle } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import type { StoreSettings } from "@/lib/supabase";
+import { buildWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 
 interface CartDrawerProps {
   open: boolean;
@@ -13,11 +15,21 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ open, onClose }: CartDrawerProps) {
   const { items, removeItem, updateQuantity, total } = useCart();
+  const [settings, setSettings] = useState<StoreSettings | null>(null);
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [open]);
+
+  useEffect(() => {
+    if (!open || settings) return;
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((data) => { if (!data.error) setSettings(data); });
+  }, [open, settings]);
+
+  const isWhatsAppCheckout = settings?.checkout_mode === "whatsapp" && settings.whatsapp_number;
 
   const formatPrice = (paise: number) =>
     `₹${(paise / 100).toLocaleString("en-IN")}`;
@@ -147,13 +159,26 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                 <p className="font-label-md text-[11px] text-on-surface-variant opacity-70">
                   Taxes and shipping calculated at checkout
                 </p>
-                <Link
-                  href="/checkout"
-                  onClick={onClose}
-                  className="block w-full bg-primary text-on-primary text-center py-4 rounded-lg font-label-md text-label-md tracking-widest hover:opacity-90 transition-opacity shadow-md"
-                >
-                  PROCEED TO CHECKOUT
-                </Link>
+                {isWhatsAppCheckout ? (
+                  <a
+                    href={buildWhatsAppCheckoutUrl(settings!.whatsapp_number!, items, total())}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={onClose}
+                    className="w-full bg-primary text-on-primary text-center py-4 rounded-lg font-label-md text-label-md tracking-widest hover:opacity-90 transition-opacity shadow-md flex items-center justify-center gap-2"
+                  >
+                    <MessageCircle size={18} />
+                    CHECKOUT ON WHATSAPP
+                  </a>
+                ) : (
+                  <Link
+                    href="/checkout"
+                    onClick={onClose}
+                    className="block w-full bg-primary text-on-primary text-center py-4 rounded-lg font-label-md text-label-md tracking-widest hover:opacity-90 transition-opacity shadow-md"
+                  >
+                    PROCEED TO CHECKOUT
+                  </Link>
+                )}
                 <button
                   onClick={onClose}
                   className="block w-full text-center py-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"

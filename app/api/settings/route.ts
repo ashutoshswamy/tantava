@@ -15,11 +15,11 @@ export async function PUT(req: NextRequest) {
 
   const supabase = createServerSupabase();
   const body = await req.json();
-  const { delivery_info, returns_info } = body;
+  const { delivery_info, returns_info, checkout_mode, whatsapp_number } = body;
 
   const { data, error } = await supabase
     .from("store_settings")
-    .update({ delivery_info, returns_info, updated_at: new Date().toISOString() })
+    .update({ delivery_info, returns_info, checkout_mode, whatsapp_number, updated_at: new Date().toISOString() })
     .eq("id", true)
     .select()
     .single();

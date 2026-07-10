@@ -76,10 +76,12 @@ create or replace trigger products_updated_at
 -- singleton row (site-wide delivery & returns copy, set by admin)
 -- ─────────────────────────────────────────────
 create table if not exists store_settings (
-  id             boolean primary key default true check (id),
-  delivery_info  text,
-  returns_info   text,
-  updated_at     timestamptz not null default now()
+  id              boolean primary key default true check (id),
+  delivery_info   text,
+  returns_info    text,
+  checkout_mode   text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),
+  whatsapp_number text,
+  updated_at      timestamptz not null default now()
 );
 
 insert into store_settings (id) values (true) on conflict (id) do nothing;

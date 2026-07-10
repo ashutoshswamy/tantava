@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useCart } from "@/store/cart";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-import { ShoppingBag, Loader2, Lock, ShieldCheck } from "lucide-react";
+import { ShoppingBag, Loader2, Lock, ShieldCheck, MessageCircle } from "lucide-react";
+import type { StoreSettings } from "@/lib/supabase";
+import { buildWhatsAppCheckoutUrl } from "@/lib/whatsapp";
 
 declare global {
   interface Window {
@@ -20,6 +22,7 @@ export default function CheckoutPage() {
   const { user } = useUser();
   const { items, total, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
+  const [settings, setSettings] = useState<StoreSettings | null>(null);
   const [form, setForm] = useState({
     name: user?.fullName || "",
     phone: "",
@@ -29,6 +32,14 @@ export default function CheckoutPage() {
     state: "",
     pincode: "",
   });
+
+  useEffect(() => {
+    fetch("/api/settings")
+      .then((r) => r.json())
+      .then((data) => { if (!data.error) setSettings(data); });
+  }, []);
+
+  const isWhatsAppCheckout = settings?.checkout_mode === "whatsapp" && settings.whatsapp_number;
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
@@ -234,30 +245,45 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-5 bg-primary text-on-primary font-label-md text-label-md tracking-widest rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center justify-center gap-3 shadow-lg mt-4"
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 size={18} className="animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <Lock size={18} />
-                      PAY SECURELY {formatPrice(total())}
-                    </>
-                  )}
-                </button>
+                {isWhatsAppCheckout ? (
+                  <a
+                    href={buildWhatsAppCheckoutUrl(settings!.whatsapp_number!, items, total())}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => clearCart()}
+                    className="w-full py-5 bg-primary text-on-primary font-label-md text-label-md tracking-widest rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-3 shadow-lg mt-4"
+                  >
+                    <MessageCircle size={18} />
+                    CHECKOUT ON WHATSAPP
+                  </a>
+                ) : (
+                  <>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full py-5 bg-primary text-on-primary font-label-md text-label-md tracking-widest rounded-lg hover:opacity-90 transition-opacity disabled:opacity-60 flex items-center justify-center gap-3 shadow-lg mt-4"
+                    >
+                      {loading ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <Lock size={18} />
+                          PAY SECURELY {formatPrice(total())}
+                        </>
+                      )}
+                    </button>
 
-                <div className="flex items-center justify-center gap-2 text-on-surface-variant">
-                  <ShieldCheck size={16} />
-                  <span className="font-label-md text-[12px]">
-                    Secured by Razorpay • SSL Encrypted
-                  </span>
-                </div>
+                    <div className="flex items-center justify-center gap-2 text-on-surface-variant">
+                      <ShieldCheck size={16} />
+                      <span className="font-label-md text-[12px]">
+                        Secured by Razorpay • SSL Encrypted
+                      </span>
+                    </div>
+                  </>
+                )}
               </form>
             </div>
 

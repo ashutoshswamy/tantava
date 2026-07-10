@@ -40,6 +40,8 @@ export type Product = {
 export type StoreSettings = {
   delivery_info: string | null;
   returns_info: string | null;
+  checkout_mode: "razorpay" | "whatsapp";
+  whatsapp_number: string | null;
   updated_at: string;
 };
 
