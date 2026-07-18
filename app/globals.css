@@ -50,7 +50,12 @@
   --color-error-container: #ffdad6;
   --color-on-error-container: #93000a;
 
+  /* Brand name red + sale-drop green — distinct from the blush-pink primary */
+  --color-brand-red: #a3122e;
+  --color-sale-green: #157a4a;
+
   /* Font families */
+  --font-display-brand: var(--font-playfair), serif;
   --font-display-lg: var(--font-cormorant), serif;
   --font-headline-lg: var(--font-cormorant), serif;
   --font-headline-lg-mobile: var(--font-cormorant), serif;

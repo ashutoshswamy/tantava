@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Nunito } from "next/font/google";
+import { Cormorant_Garamond, Nunito, Playfair_Display } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
@@ -15,6 +15,12 @@ const nunito = Nunito({
   variable: "--font-nunito",
 });
 
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--font-playfair",
+});
+
 export const metadata: Metadata = {
   title: "Tantava | Threads of Tradition and Trends",
   description:
@@ -28,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className={`${cormorant.variable} ${nunito.variable}`}>
+      <html lang="en" className={`${cormorant.variable} ${nunito.variable} ${playfair.variable}`}>
         <head />
         <body className="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
           {children}

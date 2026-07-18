@@ -4,34 +4,18 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { ArrowRight, Truck, Ruler, Store, Pencil, Zap } from "lucide-react";
+import { ArrowRight, Truck, Ruler, Store, Layers } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion } from "framer-motion";
-import type { Product } from "@/lib/supabase";
+import type { Product, Collection } from "@/lib/supabase";
+
+const bentoSpan = ["col-span-2 row-span-2", "col-span-2 row-span-1", "col-span-1 row-span-1", "col-span-1 row-span-1"];
 
 const craftPromises = [
   { icon: <Truck size={20} className="opacity-80" />, label: "Pan India Shipping" },
   { icon: <Ruler size={20} className="opacity-80" />, label: "XS · S · M · L · XL · XXL · XXXL" },
   { icon: <FaWhatsapp size={20} className="opacity-80" />, label: "Order via WhatsApp" },
   { icon: <Store size={20} className="opacity-80" />, label: "Pop-ups & Exhibitions" },
-];
-
-const craftStory = [
-  {
-    icon: <Pencil size={24} className="text-primary" />,
-    title: "Zari, Moti & Sequin Work",
-    desc: "From rich zardozi to delicate moti and sequin detailing our pieces carry the mark of skilled craft on every inch of fabric.",
-  },
-  {
-    icon: <Zap size={24} className="text-primary" />,
-    title: "Mul Chanderi & Tissue Fabrics",
-    desc: "We work with Mul Chanderi, tissue fabric, and fine silks lightweight, breathable materials with a subtle shine that drapes beautifully.",
-  },
-  {
-    icon: <Ruler size={24} className="text-primary" />,
-    title: "Inclusive Sizing",
-    desc: "All styles available in XS, S, M, L, XL, XXL, and XXXL because every body deserves a perfect fit.",
-  },
 ];
 
 const testimonials = [
@@ -96,11 +80,19 @@ const fadeUp = {
 
 export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
 
   useEffect(() => {
     fetch("/api/products?active=true&limit=4")
       .then((r) => r.json())
       .then((data) => setNewArrivals(Array.isArray(data) ? data : []));
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/collections")
+      .then((r) => r.json())
+      .then((data) => Array.isArray(data) && setCollections(data))
+      .catch(() => {});
   }, []);
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
@@ -195,6 +187,51 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* Collections Bento Grid */}
+      {collections.length > 0 && (
+        <section className="py-stack-lg bg-surface">
+          <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+            <div className="mb-10 md:mb-12">
+              <h2 className="font-headline-md text-headline-md text-on-surface mb-2">Shop by Collection</h2>
+              <p className="font-body-md text-body-md text-on-surface-variant">
+                Curated edits, each with its own story.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[160px] sm:auto-rows-[220px] gap-4">
+              {collections.map((col, i) => (
+                <Link
+                  key={col.id}
+                  href={`/collections/${col.slug}`}
+                  className={`group relative rounded-2xl overflow-hidden bg-surface-container ${bentoSpan[i % 4]}`}
+                >
+                  {col.cover_image ? (
+                    <img
+                      src={col.cover_image}
+                      alt={col.name}
+                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Layers size={40} className="text-outline-variant" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-on-surface/10 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                    <h3 className="font-headline-sm text-[16px] sm:text-[20px] text-white leading-snug">
+                      {col.name}
+                    </h3>
+                    <span className="inline-flex items-center gap-1 text-white/80 font-label-md text-[11px] uppercase tracking-wider mt-1 group-hover:gap-2 transition-all duration-300">
+                      Explore <ArrowRight size={13} />
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Craft Promise Strip */}
       <section className="bg-secondary py-5">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
@@ -256,75 +293,6 @@ export default function HomePage() {
                     View Details
                   </div>
                 </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Craft Story */}
-      <section className="py-24 relative overflow-hidden bg-[#fdf5f8]">
-        <div className="absolute inset-0 pointer-events-none" style={{
-          background: "radial-gradient(ellipse 70% 50% at 50% 0%, #f5dce8 0%, transparent 70%)",
-        }} />
-
-        <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.3 }}
-            transition={{ duration: 0.8 }}
-              className="mb-16 md:mb-20"
-            >
-            <span className="text-[10px] tracking-[0.5em] uppercase text-primary/50 block mb-4">
-              Why Tantava
-            </span>
-            <h2
-              className="text-[26px] sm:text-4xl md:text-5xl font-light text-on-surface leading-tight"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif", letterSpacing: "-0.02em" }}
-            >
-              Crafted with{" "}
-              <em className="text-primary" style={{ fontStyle: "italic" }}>Intention</em>
-            </h2>
-          </motion.div>
-
-          <div className="divide-y divide-primary/10">
-            {craftStory.map(({ title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.7, delay: i * 0.12, ease: [0.25, 0.1, 0.25, 1] }}
-                className="py-10 md:py-12 grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-3 items-start md:items-center group"
-              >
-                <div className="md:col-span-2">
-                  <span
-                    className="text-[3.25rem] sm:text-[4.5rem] md:text-[6.5rem] font-bold leading-none select-none text-primary/[0.07] group-hover:text-primary/[0.13] transition-colors duration-700"
-                    style={{ fontFamily: "Georgia, serif" }}
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </div>
-
-                <div className="hidden md:flex md:col-span-1 justify-center">
-                  <div className="w-5 h-px bg-primary/25 group-hover:w-10 group-hover:bg-primary/60 transition-all duration-500" />
-                </div>
-
-                <div className="md:col-span-4">
-                  <h3
-                    className="text-lg md:text-2xl text-on-surface font-light leading-snug"
-                    style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-                  >
-                    {title}
-                  </h3>
-                </div>
-
-                <div className="md:col-span-5 md:text-right">
-                  <p className="text-on-surface-variant text-[14px] md:text-[15px] leading-relaxed">
-                    {desc}
-                  </p>
-                </div>
               </motion.div>
             ))}
           </div>

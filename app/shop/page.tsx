@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 import { useCart } from "@/store/cart";
 import type { Product } from "@/lib/supabase";
 import {
-  SlidersHorizontal, Loader2, ExternalLink, X, Heart, Search,
+  SlidersHorizontal, Loader2, ExternalLink, X, Heart, Search, ArrowDown,
 } from "lucide-react";
 import { useWishlist } from "@/store/wishlist";
 import { AnimatePresence, motion } from "framer-motion";
@@ -214,7 +214,10 @@ export default function ShopPage() {
                           {product.category} •{" "}
                           {product.discount_price != null && product.discount_price < product.price ? (
                             <>
-                              <span className="text-primary">{formatPrice(product.discount_price)}</span>{" "}
+                              <span className="text-sale-green inline-flex items-center gap-0.5">
+                                <ArrowDown size={12} strokeWidth={2.5} />
+                                {formatPrice(product.discount_price)}
+                              </span>{" "}
                               <span className="line-through">{formatPrice(product.price)}</span>
                             </>
                           ) : (
@@ -289,9 +292,15 @@ export default function ShopPage() {
                     </span>
                     <h2 className="font-headline-md text-headline-md text-primary mt-2">{modalProduct.name}</h2>
                     {modalProduct.discount_price != null && modalProduct.discount_price < modalProduct.price ? (
-                      <p className="font-headline-sm text-[20px] text-on-surface mt-1 flex items-center gap-2">
-                        <span className="text-primary">{formatPrice(modalProduct.discount_price)}</span>
+                      <p className="font-headline-sm text-[20px] text-on-surface mt-1 flex items-center gap-2 flex-wrap">
+                        <span className="text-sale-green flex items-center gap-1">
+                          <ArrowDown size={16} strokeWidth={2.5} />
+                          {formatPrice(modalProduct.discount_price)}
+                        </span>
                         <span className="text-on-surface-variant text-[15px] line-through">{formatPrice(modalProduct.price)}</span>
+                        <span className="text-sale-green text-[12px] font-label-md">
+                          {Math.round((1 - modalProduct.discount_price / modalProduct.price) * 100)}% OFF
+                        </span>
                       </p>
                     ) : (
                       <p className="font-headline-sm text-[20px] text-on-surface mt-1">

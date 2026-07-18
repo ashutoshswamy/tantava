@@ -9,7 +9,7 @@ import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
 import type { Product, StoreSettings } from "@/lib/supabase";
 import {
-  Loader2, Award, Check, Heart, ChevronDown, Truck,
+  Loader2, Award, Check, Heart, ChevronDown, Truck, ArrowDown,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -158,10 +158,13 @@ export default function ProductDetailPage() {
               <div>
                 <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">{product.name}</h1>
                 {product.discount_price != null && product.discount_price < product.price ? (
-                  <div className="flex items-center gap-3">
-                    <p className="font-headline-sm text-headline-sm text-primary">{formatPrice(product.discount_price)}</p>
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <p className="font-headline-sm text-headline-sm text-sale-green flex items-center gap-1">
+                      <ArrowDown size={18} strokeWidth={2.5} />
+                      {formatPrice(product.discount_price)}
+                    </p>
                     <p className="font-label-md text-label-md text-on-surface-variant line-through">{formatPrice(product.price)}</p>
-                    <span className="font-label-md text-[12px] text-error">
+                    <span className="font-label-md text-[12px] text-sale-green">
                       {Math.round((1 - product.discount_price / product.price) * 100)}% OFF
                     </span>
                   </div>

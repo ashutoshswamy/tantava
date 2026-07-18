@@ -8,7 +8,7 @@ import Footer from "../../components/Footer";
 import type { Collection, Product } from "@/lib/supabase";
 import { useCart } from "@/store/cart";
 import { useWishlist } from "@/store/wishlist";
-import { Loader2, Heart, ShoppingBag, Layers, ArrowLeft } from "lucide-react";
+import { Loader2, Heart, ShoppingBag, Layers, ArrowLeft, ArrowDown } from "lucide-react";
 
 export default function CollectionSlugPage() {
   const params = useParams();
@@ -236,7 +236,8 @@ export default function CollectionSlugPage() {
                     <div className="flex items-center justify-between mt-3">
                       {product.discount_price != null && product.discount_price < product.price ? (
                         <span className="flex items-center gap-1.5">
-                          <span className="font-headline-sm text-[16px] text-on-surface">
+                          <span className="font-headline-sm text-[16px] text-sale-green flex items-center gap-0.5">
+                            <ArrowDown size={14} strokeWidth={2.5} />
                             ₹{(product.discount_price / 100).toLocaleString("en-IN")}
                           </span>
                           <span className="text-[12px] text-on-surface-variant line-through">
