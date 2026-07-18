@@ -58,21 +58,21 @@ export default function FeedbackPage() {
   };
 
   const inputClass =
-    "w-full bg-[#fdf5f8] border border-[#eec7dd] rounded-xl px-4 py-3 text-[14px] text-[#21101a] placeholder:text-[#d9afc0] focus:outline-none focus:border-[#9e3462]/50 focus:ring-2 focus:ring-[#9e3462]/10 transition-all";
-  const labelClass = "block font-label-md text-[12px] text-[#8c5971] mb-1.5 uppercase tracking-wide";
+    "w-full bg-[#fff7f7] border border-[#eec3c3] rounded-xl px-4 py-3 text-[14px] text-[#241012] placeholder:text-[#d9b0b0] focus:outline-none focus:border-[#c8102e]/50 focus:ring-2 focus:ring-[#c8102e]/10 transition-all";
+  const labelClass = "block font-label-md text-[12px] text-[#8c4f52] mb-1.5 uppercase tracking-wide";
 
   if (done) {
     return (
-      <div className="min-h-screen bg-[#fffafc] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-[#fffafa] flex items-center justify-center px-4">
         <div className="max-w-md w-full text-center">
-          <CheckCircle2 size={56} className="mx-auto text-[#9e3462] mb-6" />
-          <h2 className="font-headline-md text-[26px] text-[#21101a] mb-3">Thank you!</h2>
-          <p className="text-[#8c5971] text-[14px] leading-relaxed mb-8">
+          <CheckCircle2 size={56} className="mx-auto text-[#c8102e] mb-6" />
+          <h2 className="font-headline-md text-[26px] text-[#241012] mb-3">Thank you!</h2>
+          <p className="text-[#8c4f52] text-[14px] leading-relaxed mb-8">
             Your feedback means a lot to us. We&apos;ll review it and your kind words might even appear in our testimonials!
           </p>
           <Link
             href="/"
-            className="inline-block bg-[#9e3462] text-white px-8 py-3 rounded-xl font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors"
+            className="inline-block bg-[#c8102e] text-white px-8 py-3 rounded-xl font-label-md text-[14px] hover:bg-[#7a0f24] transition-colors"
           >
             Back to Home
           </Link>
@@ -82,23 +82,23 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fffafc] px-4 py-16 sm:py-24">
+    <div className="min-h-screen bg-[#fffafa] px-4 py-16 sm:py-24">
       <div className="max-w-xl mx-auto">
         <div className="mb-10">
-          <Link href="/" className="text-[#9e3462] font-label-md text-[13px] hover:underline">
+          <Link href="/" className="text-[#c8102e] font-label-md text-[13px] hover:underline">
             ← Back to Home
           </Link>
-          <h1 className="font-headline-lg text-[32px] sm:text-[38px] text-[#21101a] mt-6 mb-3">
+          <h1 className="font-headline-lg text-[32px] sm:text-[38px] text-[#241012] mt-6 mb-3">
             Share Your Experience
           </h1>
-          <p className="text-[#8c5971] text-[15px] leading-relaxed">
+          <p className="text-[#8c4f52] text-[15px] leading-relaxed">
             We love hearing from you. Your feedback helps us improve - and your kind words might even feature in our testimonials!
           </p>
 
           {/* Testimonial notice */}
-          <div className="mt-5 bg-[#fce8f0] border border-[#eec7dd] rounded-xl px-4 py-3 flex gap-3 items-start">
+          <div className="mt-5 bg-[#fbe6e6] border border-[#eec3c3] rounded-xl px-4 py-3 flex gap-3 items-start">
             <span className="text-[20px] mt-0.5">✨</span>
-            <p className="text-[#7d3055] text-[13px] leading-relaxed">
+            <p className="text-[#7a2530] text-[13px] leading-relaxed">
               Loved something? Your feedback could appear as a testimonial on our website - celebrating real women from across India.
             </p>
           </div>
@@ -189,7 +189,7 @@ export default function FeedbackPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#9e3462] text-white py-3.5 rounded-xl font-label-md text-[14px] hover:bg-[#7d1a48] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            className="w-full bg-[#c8102e] text-white py-3.5 rounded-xl font-label-md text-[14px] hover:bg-[#7a0f24] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {loading && <Loader2 size={16} className="animate-spin" />}
             {loading ? "Submitting…" : "Submit Feedback"}

@@ -104,7 +104,7 @@ export default function HomePage() {
       {/* Sale Ticker */}
       <div
         className="relative z-30 overflow-hidden py-2"
-        style={{ background: "linear-gradient(90deg, #6b1e40, #9e3462, #6b1e40)" }}
+        style={{ background: "linear-gradient(90deg, #7a0f24, #c8102e, #7a0f24)" }}
       >
         <div className="flex gap-10 animate-marquee-fast w-max whitespace-nowrap">
           {Array(2).fill(null).map((_, i) => (
@@ -337,7 +337,7 @@ export default function HomePage() {
             {[...testimonials, ...testimonials].map(({ name, city, state, text }, i) => (
               <div
                 key={i}
-                className="w-[260px] sm:w-[320px] shrink-0 flex flex-col justify-between gap-5 p-5 sm:p-7 rounded-2xl border border-primary/10 bg-[#fdf5f8] hover:border-primary/25 transition-colors duration-300"
+                className="w-[260px] sm:w-[320px] shrink-0 flex flex-col justify-between gap-5 p-5 sm:p-7 rounded-2xl border border-primary/10 bg-[#fff7f7] hover:border-primary/25 transition-colors duration-300"
               >
                 <div>
                   <span
@@ -371,11 +371,11 @@ export default function HomePage() {
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8 }}
           className="max-w-container-max mx-auto relative overflow-hidden rounded-3xl"
-          style={{ background: "linear-gradient(135deg, #9e3462 0%, #6b1e40 60%, #3d0e24 100%)" }}
+          style={{ background: "linear-gradient(135deg, #c8102e 0%, #7a0f24 60%, #2b0810 100%)" }}
         >
           {/* Decorative circles */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #f5c0d8, transparent 70%)" }} />
-          <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #f5c0d8, transparent 70%)" }} />
+          <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #f6b3b3, transparent 70%)" }} />
+          <div className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full opacity-10" style={{ background: "radial-gradient(circle, #f6b3b3, transparent 70%)" }} />
           <div className="absolute top-0 left-0 w-full h-full opacity-[0.03]" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='1' fill='white'/%3E%3C/svg%3E")`,
             backgroundSize: "60px 60px",

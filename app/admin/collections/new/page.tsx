@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Upload } from "lucide-react";
 
-const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors";
+const inputCls = "w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[13px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:border-[#c8102e]/60 focus:outline-none transition-colors";
 
 function toSlug(name: string): string {
   return name
@@ -79,14 +79,14 @@ export default function NewCollectionPage() {
   };
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#200a0c]">
       <div className="flex items-center gap-3 mb-8">
-        <Link href="/admin/collections" className="p-2 text-[#8c5971] hover:text-[#1a0914] hover:bg-[#fdeaf2] rounded-xl transition-colors">
+        <Link href="/admin/collections" className="p-2 text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#fbe9e9] rounded-xl transition-colors">
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">New Collection</h1>
-          <p className="text-[#8c5971] text-[13px] mt-0.5">Create a new collection to group products</p>
+          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">New Collection</h1>
+          <p className="text-[#8c4f52] text-[13px] mt-0.5">Create a new collection to group products</p>
         </div>
       </div>
 
@@ -97,11 +97,11 @@ export default function NewCollectionPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-5">
-          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Collection Details</h2>
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-5">
+          <h2 className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Collection Details</h2>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Name *</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Name *</label>
             <input
               required
               value={form.name}
@@ -112,7 +112,7 @@ export default function NewCollectionPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Slug *</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Slug *</label>
             <input
               required
               value={form.slug}
@@ -120,11 +120,11 @@ export default function NewCollectionPage() {
               className={inputCls}
               placeholder="e.g. bridal-collection"
             />
-            <p className="text-[#dbb6ca] text-[11px] mt-1">Used in the URL: /collections/{form.slug || "..."}</p>
+            <p className="text-[#dbb0b0] text-[11px] mt-1">Used in the URL: /collections/{form.slug || "..."}</p>
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Description</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Description</label>
             <textarea
               rows={3}
               value={form.description}
@@ -135,7 +135,7 @@ export default function NewCollectionPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Cover Image</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Cover Image</label>
             <div className="flex flex-wrap gap-2.5">
               <input
                 value={form.cover_image}
@@ -143,7 +143,7 @@ export default function NewCollectionPage() {
                 className={`${inputCls} min-w-[140px] flex-1`}
                 placeholder="https://... or upload below"
               />
-              <label className={`flex items-center gap-2 px-4 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[13px] flex-shrink-0 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              <label className={`flex items-center gap-2 px-4 py-3 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#f6d9d9] transition-colors cursor-pointer whitespace-nowrap text-[13px] flex-shrink-0 ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
                 {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
                 {uploading ? "Uploading..." : "Upload"}
                 <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
@@ -151,14 +151,14 @@ export default function NewCollectionPage() {
             </div>
             {form.cover_image && (
               <div className="mt-3">
-                <img src={form.cover_image} alt="Cover preview" className="h-24 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
+                <img src={form.cover_image} alt="Cover preview" className="h-24 w-auto rounded-xl border border-[#f0c7c7] object-cover" />
               </div>
             )}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Sort Order</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Sort Order</label>
               <input
                 type="number"
                 min="0"
@@ -167,21 +167,21 @@ export default function NewCollectionPage() {
                 className={inputCls}
                 placeholder="0"
               />
-              <p className="text-[#dbb6ca] text-[11px] mt-1">Lower numbers appear first</p>
+              <p className="text-[#dbb0b0] text-[11px] mt-1">Lower numbers appear first</p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6">
           <div>
-            <p className="text-[#1a0914] font-medium text-[14px]">Active / Visible on site</p>
-            <p className="text-[#8c5971] text-[12px] mt-0.5">Toggle to hide from public pages</p>
+            <p className="text-[#200a0c] font-medium text-[14px]">Active / Visible on site</p>
+            <p className="text-[#8c4f52] text-[12px] mt-0.5">Toggle to hide from public pages</p>
           </div>
           <button
             type="button"
             onClick={() => setForm({ ...form, is_active: !form.is_active })}
             className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
-              form.is_active ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
+              form.is_active ? "bg-[#c8102e]" : "bg-[#f0c7c7]"
             }`}
           >
             <div
@@ -196,7 +196,7 @@ export default function NewCollectionPage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex-1 py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 px-8 bg-[#c8102e] text-white rounded-xl font-medium text-[14px] hover:bg-[#96182a] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {saving ? (
               <>
@@ -207,7 +207,7 @@ export default function NewCollectionPage() {
           </button>
           <Link
             href="/admin/collections"
-            className="px-8 py-3.5 border border-[#dbb6ca] text-center text-[#8c5971] rounded-xl hover:border-[#c2477f]/40 hover:text-[#1a0914] transition-colors font-medium text-[14px]"
+            className="px-8 py-3.5 border border-[#dbb0b0] text-center text-[#8c4f52] rounded-xl hover:border-[#c8102e]/40 hover:text-[#200a0c] transition-colors font-medium text-[14px]"
           >
             Cancel
           </Link>

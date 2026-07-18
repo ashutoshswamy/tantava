@@ -73,7 +73,7 @@ export default function AdminInventoryPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
+        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
       </div>
     );
   }
@@ -92,11 +92,11 @@ export default function AdminInventoryPage() {
     qty === 0 ? "text-red-500" : qty < 3 ? "text-yellow-600" : "text-green-600";
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+    <div className="p-4 sm:p-6 lg:p-8 text-[#200a0c]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Inventory</h1>
-          <p className="text-[#8c5971] text-[13px] mt-0.5">{products.length} total products</p>
+          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Inventory</h1>
+          <p className="text-[#8c4f52] text-[13px] mt-0.5">{products.length} total products</p>
         </div>
       </div>
 
@@ -134,17 +134,17 @@ export default function AdminInventoryPage() {
             {products.map((product) => {
               const total = totalStock(product.size_inventory);
               return (
-                <div key={product.id} className="bg-white border border-[#f2cfe3] rounded-2xl p-4">
+                <div key={product.id} className="bg-white border border-[#f0c7c7] rounded-2xl p-4">
                   <div className="flex items-start justify-between gap-3 mb-3">
                     <div className="min-w-0">
-                      <p className="text-[#1a0914] font-medium text-[13px]">{product.name}</p>
-                      <p className="text-[#dbb6ca] text-[11px] capitalize mt-0.5">
+                      <p className="text-[#200a0c] font-medium text-[13px]">{product.name}</p>
+                      <p className="text-[#dbb0b0] text-[11px] capitalize mt-0.5">
                         {product.category}{product.sku ? ` · ${product.sku}` : ""}
                       </p>
                     </div>
                     <button
                       onClick={() => { setAdjustModal(product); setAdjustment({ size: "M", change: "", reason: "" }); }}
-                      className="px-3 py-1.5 bg-[#c2477f]/10 text-[#c2477f] border border-[#c2477f]/30 rounded-xl text-[12px] font-medium hover:bg-[#c2477f]/20 transition-colors flex-shrink-0"
+                      className="px-3 py-1.5 bg-[#c8102e]/10 text-[#c8102e] border border-[#c8102e]/30 rounded-xl text-[12px] font-medium hover:bg-[#c8102e]/20 transition-colors flex-shrink-0"
                     >
                       Adjust
                     </button>
@@ -173,26 +173,26 @@ export default function AdminInventoryPage() {
           </div>
 
           {/* Desktop table */}
-          <div className="hidden sm:block bg-white border border-[#f2cfe3] rounded-2xl overflow-x-auto">
+          <div className="hidden sm:block bg-white border border-[#f0c7c7] rounded-2xl overflow-x-auto">
             <table className="w-full min-w-[720px]">
               <thead>
-                <tr className="border-b border-[#f2cfe3] bg-[#fdeaf2]/40">
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Product</th>
+                <tr className="border-b border-[#f0c7c7] bg-[#fbe9e9]/40">
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Product</th>
                   {SIZES.map((s) => (
-                    <th key={s} className="text-center px-3 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">{s}</th>
+                    <th key={s} className="text-center px-3 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">{s}</th>
                   ))}
-                  <th className="text-left px-4 py-3.5 text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Status</th>
+                  <th className="text-left px-4 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Status</th>
                   <th className="px-4 py-3.5"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#f2cfe3]">
+              <tbody className="divide-y divide-[#f0c7c7]">
                 {products.map((product) => {
                   const total = totalStock(product.size_inventory);
                   return (
-                    <tr key={product.id} className="hover:bg-[#fdeaf2]/30 transition-colors">
+                    <tr key={product.id} className="hover:bg-[#fbe9e9]/30 transition-colors">
                       <td className="px-5 py-4">
-                        <p className="text-[#1a0914] font-medium text-[13px]">{product.name}</p>
-                        <p className="text-[#dbb6ca] text-[11px] capitalize mt-0.5">{product.category}{product.sku ? ` · ${product.sku}` : ""}</p>
+                        <p className="text-[#200a0c] font-medium text-[13px]">{product.name}</p>
+                        <p className="text-[#dbb0b0] text-[11px] capitalize mt-0.5">{product.category}{product.sku ? ` · ${product.sku}` : ""}</p>
                       </td>
                       {SIZES.map((size) => {
                         const qty = product.size_inventory[size] ?? 0;
@@ -212,7 +212,7 @@ export default function AdminInventoryPage() {
                       <td className="px-4 py-4">
                         <button
                           onClick={() => { setAdjustModal(product); setAdjustment({ size: "M", change: "", reason: "" }); }}
-                          className="px-3 py-1.5 bg-[#c2477f]/10 text-[#c2477f] border border-[#c2477f]/30 rounded-xl text-[12px] font-medium hover:bg-[#c2477f]/20 transition-colors"
+                          className="px-3 py-1.5 bg-[#c8102e]/10 text-[#c8102e] border border-[#c8102e]/30 rounded-xl text-[12px] font-medium hover:bg-[#c8102e]/20 transition-colors"
                         >
                           Adjust
                         </button>
@@ -226,29 +226,29 @@ export default function AdminInventoryPage() {
         </div>
 
         {/* Recent Logs */}
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
-          <h2 className="text-[#1a0914] font-semibold text-[15px] mb-4">Recent Activity</h2>
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6">
+          <h2 className="text-[#200a0c] font-semibold text-[15px] mb-4">Recent Activity</h2>
           <div className="space-y-3 max-h-[500px] overflow-y-auto">
             {logs.length === 0 ? (
               <div className="text-center py-10">
-                <p className="text-[#8c5971] text-[13px]">No activity yet</p>
+                <p className="text-[#8c4f52] text-[13px]">No activity yet</p>
               </div>
             ) : (
               logs.map((log) => {
                 const product = products.find((p) => p.id === log.product_id);
                 return (
-                  <div key={log.id} className="flex items-start gap-3 py-2.5 border-b border-[#f2cfe3] last:border-0">
+                  <div key={log.id} className="flex items-start gap-3 py-2.5 border-b border-[#f0c7c7] last:border-0">
                     <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${log.change > 0 ? "bg-green-50" : "bg-red-50"}`}>
                       {log.change > 0 ? <Plus size={14} className="text-green-600" /> : <Minus size={14} className="text-red-500" />}
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[#52304a] text-[12px] font-medium truncate">{product?.name || "Unknown"}</p>
-                      {log.size && <p className="text-[#8c5971] text-[11px]">Size: {log.size}</p>}
+                      <p className="text-[#5c3336] text-[12px] font-medium truncate">{product?.name || "Unknown"}</p>
+                      {log.size && <p className="text-[#8c4f52] text-[11px]">Size: {log.size}</p>}
                       <p className={`font-bold text-[13px] ${log.change > 0 ? "text-green-600" : "text-red-500"}`}>
                         {log.change > 0 ? "+" : ""}{log.change}
                       </p>
-                      {log.reason && <p className="text-[#8c5971] text-[11px]">{log.reason}</p>}
-                      <p className="text-[#dbb6ca] text-[10px]">{new Date(log.created_at).toLocaleDateString("en-IN")}</p>
+                      {log.reason && <p className="text-[#8c4f52] text-[11px]">{log.reason}</p>}
+                      <p className="text-[#dbb0b0] text-[10px]">{new Date(log.created_at).toLocaleDateString("en-IN")}</p>
                     </div>
                   </div>
                 );
@@ -261,12 +261,12 @@ export default function AdminInventoryPage() {
       {/* Adjust Modal */}
       {adjustModal && (
         <div
-          className="fixed inset-0 z-50 bg-[#1a0914]/40 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#200a0c]/40 backdrop-blur-sm flex items-center justify-center p-4"
           onClick={(e) => e.target === e.currentTarget && setAdjustModal(null)}
         >
-          <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-7 w-full max-w-md shadow-xl">
-            <h2 className="text-[#1a0914] font-bold text-[18px] mb-1">Adjust Stock</h2>
-            <p className="text-[#8c5971] text-[13px] mb-5">{adjustModal.name}</p>
+          <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-7 w-full max-w-md shadow-xl">
+            <h2 className="text-[#200a0c] font-bold text-[18px] mb-1">Adjust Stock</h2>
+            <p className="text-[#8c4f52] text-[13px] mb-5">{adjustModal.name}</p>
 
             {/* Per-size current stock */}
             <div className="mb-5 grid grid-cols-7 gap-2">
@@ -283,7 +283,7 @@ export default function AdminInventoryPage() {
 
             <form onSubmit={handleAdjust} className="space-y-4">
               <div>
-                <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-2 block">Size</label>
+                <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-2 block">Size</label>
                 <div className="grid grid-cols-7 gap-2">
                   {SIZES.map((size) => (
                     <button
@@ -292,8 +292,8 @@ export default function AdminInventoryPage() {
                       onClick={() => setAdjustment({ ...adjustment, size })}
                       className={`h-10 border rounded-xl font-semibold text-[12px] transition-colors ${
                         adjustment.size === size
-                          ? "border-[#c2477f] bg-[#c2477f]/10 text-[#c2477f]"
-                          : "border-[#dbb6ca] text-[#8c5971] hover:border-[#c2477f]/40"
+                          ? "border-[#c8102e] bg-[#c8102e]/10 text-[#c8102e]"
+                          : "border-[#dbb0b0] text-[#8c4f52] hover:border-[#c8102e]/40"
                       }`}
                     >
                       {size}
@@ -302,7 +302,7 @@ export default function AdminInventoryPage() {
                 </div>
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">
+                <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">
                   Change (+ to add, − to remove)
                 </label>
                 <input
@@ -310,16 +310,16 @@ export default function AdminInventoryPage() {
                   type="number"
                   value={adjustment.change}
                   onChange={(e) => setAdjustment({ ...adjustment, change: e.target.value })}
-                  className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[#1a0914] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+                  className="w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[#200a0c] text-[13px] focus:border-[#c8102e]/60 focus:outline-none transition-colors"
                   placeholder="e.g. +5 or -2"
                 />
               </div>
               <div>
-                <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Reason</label>
+                <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Reason</label>
                 <input
                   value={adjustment.reason}
                   onChange={(e) => setAdjustment({ ...adjustment, reason: e.target.value })}
-                  className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[#1a0914] placeholder:text-[#dbb6ca] text-[13px] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+                  className="w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[#200a0c] placeholder:text-[#dbb0b0] text-[13px] focus:border-[#c8102e]/60 focus:outline-none transition-colors"
                   placeholder="e.g. Restock, Damage, Sale adjustment"
                 />
               </div>
@@ -327,14 +327,14 @@ export default function AdminInventoryPage() {
                 <button
                   type="submit"
                   disabled={updating === adjustModal.id}
-                  className="flex-1 py-3.5 bg-[#c2477f] text-white font-medium text-[14px] rounded-xl hover:bg-[#962259] transition-colors disabled:opacity-60"
+                  className="flex-1 py-3.5 bg-[#c8102e] text-white font-medium text-[14px] rounded-xl hover:bg-[#96182a] transition-colors disabled:opacity-60"
                 >
                   {updating === adjustModal.id ? "Saving..." : `Apply to ${adjustment.size}`}
                 </button>
                 <button
                   type="button"
                   onClick={() => setAdjustModal(null)}
-                  className="px-6 py-3.5 border border-[#dbb6ca] text-[#8c5971] rounded-xl hover:border-[#c2477f]/40 hover:text-[#1a0914] transition-colors font-medium text-[14px]"
+                  className="px-6 py-3.5 border border-[#dbb0b0] text-[#8c4f52] rounded-xl hover:border-[#c8102e]/40 hover:text-[#200a0c] transition-colors font-medium text-[14px]"
                 >
                   Cancel
                 </button>

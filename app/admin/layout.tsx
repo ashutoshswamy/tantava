@@ -30,19 +30,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-[#ffffff] pb-16 md:pb-0">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-x-0 bottom-0 z-40 flex bg-white border-t border-[#f2cfe3] transition-all duration-300 md:inset-y-0 md:right-auto md:h-full md:flex-col md:border-r md:border-t-0 ${
+        className={`fixed inset-x-0 bottom-0 z-40 flex bg-white border-t border-[#f0c7c7] transition-all duration-300 md:inset-y-0 md:right-auto md:h-full md:flex-col md:border-r md:border-t-0 ${
           collapsed ? "md:w-16" : "md:w-64"
         }`}
       >
-        <div className="hidden md:flex items-center justify-between px-4 py-5 border-b border-[#f2cfe3]">
+        <div className="hidden md:flex items-center justify-between px-4 py-5 border-b border-[#f0c7c7]">
           {!collapsed && (
-            <Link href="/" className="font-headline-sm text-[18px] text-[#c2477f] hover:opacity-80 transition-opacity">
+            <Link href="/" className="font-headline-sm text-[18px] text-[#c8102e] hover:opacity-80 transition-opacity">
               Tantava
             </Link>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-[#8c5971] hover:text-[#1a0914] transition-colors ml-auto"
+            className="text-[#8c4f52] hover:text-[#200a0c] transition-colors ml-auto"
           >
             {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
@@ -58,8 +58,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex flex-col items-center justify-center gap-0.5 rounded-lg px-3 py-2 flex-shrink-0 transition-all ${
                   active
-                    ? "bg-[#c2477f]/10 text-[#c2477f]"
-                    : "text-[#52304a] hover:text-[#1a0914] hover:bg-[#fdeaf2]"
+                    ? "bg-[#c8102e]/10 text-[#c8102e]"
+                    : "text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9]"
                 }`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -79,8 +79,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-all group ${
                   active
-                    ? "bg-[#c2477f]/10 text-[#c2477f]"
-                    : "text-[#52304a] hover:text-[#1a0914] hover:bg-[#fdeaf2]"
+                    ? "bg-[#c8102e]/10 text-[#c8102e]"
+                    : "text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9]"
                 }`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -92,11 +92,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="hidden px-2 py-3 border-t border-[#f2cfe3] md:block">
+        <div className="hidden px-2 py-3 border-t border-[#f0c7c7] md:block">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#52304a] hover:text-[#1a0914] hover:bg-[#fdeaf2] transition-all"
+            className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9] transition-all"
           >
             <span className="flex-shrink-0"><ExternalLink size={20} /></span>
             {!collapsed && (
@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
 
-        <div className="hidden px-4 py-4 border-t border-[#f2cfe3] md:block">
+        <div className="hidden px-4 py-4 border-t border-[#f0c7c7] md:block">
           <div className="flex items-center gap-3">
             <UserButton
               appearance={{
@@ -114,7 +114,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             />
             {!collapsed && (
               <div className="min-w-0">
-                <p className="font-label-md text-[12px] text-[#8c5971] truncate">Admin Panel</p>
+                <p className="font-label-md text-[12px] text-[#8c4f52] truncate">Admin Panel</p>
               </div>
             )}
           </div>

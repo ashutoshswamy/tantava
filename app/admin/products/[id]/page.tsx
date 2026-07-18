@@ -32,7 +32,7 @@ type ImageMeta = { name: string; size: number } | null;
 const CATEGORY_SUGGESTIONS = ["sarees", "lehengas", "fusion", "gowns", "jewellery"];
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
-const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors";
+const inputCls = "w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[13px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:border-[#c8102e]/60 focus:outline-none transition-colors";
 
 export default function EditProductPage() {
   const params = useParams();
@@ -238,20 +238,20 @@ export default function EditProductPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
+        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#200a0c]">
       <div className="flex items-center gap-3 mb-8">
-        <Link href="/admin/products" className="p-2 text-[#8c5971] hover:text-[#1a0914] hover:bg-[#fdeaf2] rounded-xl transition-colors">
+        <Link href="/admin/products" className="p-2 text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#fbe9e9] rounded-xl transition-colors">
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Edit Product</h1>
-          <p className="text-[#8c5971] text-[13px] mt-0.5">Update product details and save</p>
+          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Edit Product</h1>
+          <p className="text-[#8c4f52] text-[13px] mt-0.5">Update product details and save</p>
         </div>
       </div>
 
@@ -263,11 +263,11 @@ export default function EditProductPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Basic Info */}
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-5">
-          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Basic Info</h2>
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-5">
+          <h2 className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Basic Info</h2>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Product Name *</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Product Name *</label>
             <input
               required
               value={form.name}
@@ -277,7 +277,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Description</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Description</label>
             <textarea
               rows={4}
               value={form.description}
@@ -288,7 +288,7 @@ export default function EditProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Price (₹) *</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Price (₹) *</label>
               <input
                 required
                 type="number"
@@ -300,7 +300,7 @@ export default function EditProductPage() {
               />
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Discounted Price (₹)</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Discounted Price (₹)</label>
               <input
                 type="number"
                 step="0.01"
@@ -315,7 +315,7 @@ export default function EditProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Category *</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Category *</label>
               <input
                 required
                 list="category-suggestions-edit"
@@ -331,7 +331,7 @@ export default function EditProductPage() {
               </datalist>
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Badge</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Badge</label>
               <input
                 value={form.badge}
                 onChange={(e) => setForm({ ...form, badge: e.target.value })}
@@ -343,7 +343,7 @@ export default function EditProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Fabric</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Fabric</label>
               <input
                 value={form.fabric}
                 onChange={(e) => setForm({ ...form, fabric: e.target.value })}
@@ -351,7 +351,7 @@ export default function EditProductPage() {
               />
             </div>
             <div>
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">SKU</label>
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">SKU</label>
               <input
                 value={form.sku}
                 onChange={(e) => setForm({ ...form, sku: e.target.value })}
@@ -361,7 +361,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Care Instructions</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Care Instructions</label>
             <textarea
               rows={2}
               value={form.care}
@@ -372,7 +372,7 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Collection</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Collection</label>
             <select
               value={form.collection_id}
               onChange={(e) => setForm({ ...form, collection_id: e.target.value })}
@@ -387,18 +387,18 @@ export default function EditProductPage() {
         </div>
 
         {/* Stock by Size */}
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
-          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Stock by Size</h2>
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-4">
+          <h2 className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Stock by Size</h2>
           <div className="grid grid-cols-4 sm:grid-cols-7 gap-3">
             {SIZES.map((size) => (
               <div key={size} className="flex flex-col gap-1.5">
-                <span className="text-[11px] font-semibold text-[#8c5971] text-center uppercase">{size}</span>
+                <span className="text-[11px] font-semibold text-[#8c4f52] text-center uppercase">{size}</span>
                 <input
                   type="number"
                   min="0"
                   value={form.size_inventory[size]}
                   onChange={(e) => setForm({ ...form, size_inventory: { ...form.size_inventory, [size]: e.target.value } })}
-                  className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-2 py-2.5 text-[#1a0914] text-[13px] text-center focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+                  className="w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-2 py-2.5 text-[#200a0c] text-[13px] text-center focus:border-[#c8102e]/60 focus:outline-none transition-colors"
                 />
               </div>
             ))}
@@ -406,9 +406,9 @@ export default function EditProductPage() {
         </div>
 
         {/* Images */}
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
-          <h2 className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider">Images</h2>
-          <p className="text-[11px] text-[#8c5971] -mt-2">First image is the product cover. Use the arrows to reorder.</p>
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-4">
+          <h2 className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Images</h2>
+          <p className="text-[11px] text-[#8c4f52] -mt-2">First image is the product cover. Use the arrows to reorder.</p>
           {form.images.map((img, idx) => (
             <div key={idx} className="space-y-2">
               <div className="flex flex-wrap gap-2.5 items-center">
@@ -417,7 +417,7 @@ export default function EditProductPage() {
                     type="button"
                     onClick={() => moveImage(idx, -1)}
                     disabled={idx === 0}
-                    className="px-1.5 py-1 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-lg text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                    className="px-1.5 py-1 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-lg text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#f6d9d9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
                   >
                     <ChevronUp size={12} />
                   </button>
@@ -425,7 +425,7 @@ export default function EditProductPage() {
                     type="button"
                     onClick={() => moveImage(idx, 1)}
                     disabled={idx === form.images.length - 1}
-                    className="px-1.5 py-1 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-lg text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
+                    className="px-1.5 py-1 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-lg text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#f6d9d9] transition-colors disabled:opacity-30 disabled:pointer-events-none"
                   >
                     <ChevronDown size={12} />
                   </button>
@@ -436,7 +436,7 @@ export default function EditProductPage() {
                   className={`${inputCls} min-w-[140px] flex-1`}
                   placeholder="https://..."
                 />
-                <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors cursor-pointer whitespace-nowrap text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>
+                <label className={`flex items-center gap-1.5 px-3 py-3 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#f6d9d9] transition-colors cursor-pointer whitespace-nowrap text-[12px] flex-shrink-0 ${uploadingIdx === idx ? "opacity-60 pointer-events-none" : ""}`}>
                   {uploadingIdx === idx ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
                   <span className="hidden sm:inline">{uploadingIdx === idx ? "..." : "Upload"}</span>
                   <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleImageUpload(idx, e)} disabled={uploadingIdx !== null} />
@@ -445,7 +445,7 @@ export default function EditProductPage() {
                   type="button"
                   onClick={() => handleImageDelete(idx)}
                   disabled={deletingIdx !== null}
-                  className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0 disabled:opacity-60"
+                  className="px-3 py-3 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl text-[#8c4f52] hover:text-red-600 hover:bg-red-50 transition-colors flex-shrink-0 disabled:opacity-60"
                 >
                   {deletingIdx === idx ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
                 </button>
@@ -453,7 +453,7 @@ export default function EditProductPage() {
                   <button
                     type="button"
                     onClick={() => { setForm({ ...form, images: [...form.images, ""] }); setImageMeta((prev) => [...prev, null]); }}
-                    className="px-3 py-3 bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl text-[#8c5971] hover:text-[#1a0914] hover:bg-[#f8dde9] transition-colors flex-shrink-0"
+                    className="px-3 py-3 bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl text-[#8c4f52] hover:text-[#200a0c] hover:bg-[#f6d9d9] transition-colors flex-shrink-0"
                   >
                     <Plus size={16} />
                   </button>
@@ -461,8 +461,8 @@ export default function EditProductPage() {
               </div>
               {img && (
                 <div className="flex items-center gap-2">
-                  <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f2cfe3] object-cover" />
-                  <span className="text-[11px] text-[#8c5971] truncate max-w-[220px]">
+                  <img src={img} alt={`Image ${idx + 1}`} className="h-16 w-auto rounded-xl border border-[#f0c7c7] object-cover" />
+                  <span className="text-[11px] text-[#8c4f52] truncate max-w-[220px]">
                     {imageMeta[idx] ? imageMeta[idx]!.name : filenameFromUrl(img)}
                     {imageMeta[idx] && ` (${formatBytes(imageMeta[idx]!.size)})`}
                   </span>
@@ -473,16 +473,16 @@ export default function EditProductPage() {
         </div>
 
         {/* Active toggle */}
-        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6">
           <div>
-            <p className="text-[#1a0914] font-medium text-[14px]">Active / Visible in shop</p>
-            <p className="text-[#8c5971] text-[12px] mt-0.5">Toggle to hide from customers</p>
+            <p className="text-[#200a0c] font-medium text-[14px]">Active / Visible in shop</p>
+            <p className="text-[#8c4f52] text-[12px] mt-0.5">Toggle to hide from customers</p>
           </div>
           <button
             type="button"
             onClick={() => setForm({ ...form, is_active: !form.is_active })}
             className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
-              form.is_active ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
+              form.is_active ? "bg-[#c8102e]" : "bg-[#f0c7c7]"
             }`}
           >
             <div
@@ -494,16 +494,16 @@ export default function EditProductPage() {
         </div>
 
         {/* Free delivery toggle */}
-        <div className="flex items-center justify-between gap-4 bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6">
+        <div className="flex items-center justify-between gap-4 bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6">
           <div>
-            <p className="text-[#1a0914] font-medium text-[14px]">Free Delivery</p>
-            <p className="text-[#8c5971] text-[12px] mt-0.5">Show a free delivery badge on this product</p>
+            <p className="text-[#200a0c] font-medium text-[14px]">Free Delivery</p>
+            <p className="text-[#8c4f52] text-[12px] mt-0.5">Show a free delivery badge on this product</p>
           </div>
           <button
             type="button"
             onClick={() => setForm({ ...form, free_delivery: !form.free_delivery })}
             className={`w-12 h-6 rounded-full transition-colors relative flex-shrink-0 ${
-              form.free_delivery ? "bg-[#c2477f]" : "bg-[#f2cfe3]"
+              form.free_delivery ? "bg-[#c8102e]" : "bg-[#f0c7c7]"
             }`}
           >
             <div
@@ -518,7 +518,7 @@ export default function EditProductPage() {
           <button
             type="submit"
             disabled={saving}
-            className="flex-1 py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            className="flex-1 py-3.5 px-8 bg-[#c8102e] text-white rounded-xl font-medium text-[14px] hover:bg-[#96182a] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
           >
             {saving ? (
               <>
@@ -529,7 +529,7 @@ export default function EditProductPage() {
           </button>
           <Link
             href="/admin/products"
-            className="px-8 py-3.5 border border-[#dbb6ca] text-center text-[#8c5971] rounded-xl hover:border-[#c2477f]/40 hover:text-[#1a0914] transition-colors font-medium text-[14px]"
+            className="px-8 py-3.5 border border-[#dbb0b0] text-center text-[#8c4f52] rounded-xl hover:border-[#c8102e]/40 hover:text-[#200a0c] transition-colors font-medium text-[14px]"
           >
             Cancel
           </Link>

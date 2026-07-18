@@ -51,20 +51,20 @@ export default function CheckoutSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
+        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#200a0c]">
       <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 bg-[#fdeaf2] rounded-xl text-[#c2477f]">
+        <div className="p-2 bg-[#fbe9e9] rounded-xl text-[#c8102e]">
           <CreditCard size={20} />
         </div>
         <div>
-          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Checkout Settings</h1>
-          <p className="text-[#8c5971] text-[13px] mt-0.5">Choose how customers complete their purchase</p>
+          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Checkout Settings</h1>
+          <p className="text-[#8c4f52] text-[13px] mt-0.5">Choose how customers complete their purchase</p>
         </div>
       </div>
 
@@ -75,8 +75,8 @@ export default function CheckoutSettingsPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-4">
-          <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-4">
+          <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">
             Checkout Mode
           </label>
 
@@ -85,14 +85,14 @@ export default function CheckoutSettingsPage() {
             onClick={() => setForm({ ...form, checkout_mode: "razorpay" })}
             className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
               form.checkout_mode === "razorpay"
-                ? "border-[#c2477f] bg-[#fdeaf2]"
-                : "border-[#dbb6ca]/40 hover:border-[#c2477f]/50"
+                ? "border-[#c8102e] bg-[#fbe9e9]"
+                : "border-[#dbb0b0]/40 hover:border-[#c8102e]/50"
             }`}
           >
-            <CreditCard size={20} className="text-[#c2477f] flex-shrink-0" />
+            <CreditCard size={20} className="text-[#c8102e] flex-shrink-0" />
             <div>
-              <p className="text-[14px] font-medium text-[#1a0914]">Razorpay + Shiprocket</p>
-              <p className="text-[12px] text-[#8c5971]">Customers pay on-site; orders auto-ship via Shiprocket.</p>
+              <p className="text-[14px] font-medium text-[#200a0c]">Razorpay + Shiprocket</p>
+              <p className="text-[12px] text-[#8c4f52]">Customers pay on-site; orders auto-ship via Shiprocket.</p>
             </div>
           </button>
 
@@ -101,20 +101,20 @@ export default function CheckoutSettingsPage() {
             onClick={() => setForm({ ...form, checkout_mode: "whatsapp" })}
             className={`w-full flex items-center gap-4 rounded-xl border p-4 text-left transition-colors ${
               form.checkout_mode === "whatsapp"
-                ? "border-[#c2477f] bg-[#fdeaf2]"
-                : "border-[#dbb6ca]/40 hover:border-[#c2477f]/50"
+                ? "border-[#c8102e] bg-[#fbe9e9]"
+                : "border-[#dbb0b0]/40 hover:border-[#c8102e]/50"
             }`}
           >
-            <MessageCircle size={20} className="text-[#c2477f] flex-shrink-0" />
+            <MessageCircle size={20} className="text-[#c8102e] flex-shrink-0" />
             <div>
-              <p className="text-[14px] font-medium text-[#1a0914]">WhatsApp Chat</p>
-              <p className="text-[12px] text-[#8c5971]">Buy Now / Checkout opens a WhatsApp chat with your number instead of taking payment on-site.</p>
+              <p className="text-[14px] font-medium text-[#200a0c]">WhatsApp Chat</p>
+              <p className="text-[12px] text-[#8c4f52]">Buy Now / Checkout opens a WhatsApp chat with your number instead of taking payment on-site.</p>
             </div>
           </button>
 
           {form.checkout_mode === "whatsapp" && (
             <div className="pt-2">
-              <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">
+              <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">
                 WhatsApp Number
               </label>
               <input
@@ -123,7 +123,7 @@ export default function CheckoutSettingsPage() {
                 value={form.whatsapp_number}
                 onChange={(e) => setForm({ ...form, whatsapp_number: e.target.value })}
                 placeholder="e.g. 919876543210 (country code, no + or spaces)"
-                className="w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors"
+                className="w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[13px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:border-[#c8102e]/60 focus:outline-none transition-colors"
               />
             </div>
           )}
@@ -132,7 +132,7 @@ export default function CheckoutSettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          className="py-3.5 px-8 bg-[#c8102e] text-white rounded-xl font-medium text-[14px] hover:bg-[#96182a] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
         >
           {saving ? (
             <>

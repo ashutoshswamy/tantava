@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Loader2, Truck } from "lucide-react";
 import type { StoreSettings } from "@/lib/supabase";
 
-const inputCls = "w-full bg-[#fdeaf2] border border-[#dbb6ca]/40 rounded-xl px-4 py-3 text-[13px] text-[#1a0914] placeholder:text-[#dbb6ca] focus:border-[#c2477f]/60 focus:outline-none transition-colors resize-none";
+const inputCls = "w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[13px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:border-[#c8102e]/60 focus:outline-none transition-colors resize-none";
 
 export default function DeliveryReturnsSettingsPage() {
   const [loading, setLoading] = useState(true);
@@ -47,20 +47,20 @@ export default function DeliveryReturnsSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c2477f] animate-spin" />
+        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#1a0914]">
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#200a0c]">
       <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 bg-[#fdeaf2] rounded-xl text-[#c2477f]">
+        <div className="p-2 bg-[#fbe9e9] rounded-xl text-[#c8102e]">
           <Truck size={20} />
         </div>
         <div>
-          <h1 className="text-[26px] font-bold text-[#1a0914] tracking-tight">Delivery & Returns</h1>
-          <p className="text-[#8c5971] text-[13px] mt-0.5">Site-wide copy shown on every product page</p>
+          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Delivery & Returns</h1>
+          <p className="text-[#8c4f52] text-[13px] mt-0.5">Site-wide copy shown on every product page</p>
         </div>
       </div>
 
@@ -71,9 +71,9 @@ export default function DeliveryReturnsSettingsPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="bg-white border border-[#f2cfe3] rounded-2xl p-5 sm:p-6 space-y-5">
+        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-5">
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Delivery Info</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Delivery Info</label>
             <textarea
               rows={4}
               value={form.delivery_info}
@@ -83,7 +83,7 @@ export default function DeliveryReturnsSettingsPage() {
             />
           </div>
           <div>
-            <label className="text-[11px] font-semibold text-[#8c5971] uppercase tracking-wider mb-1.5 block">Returns Info</label>
+            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Returns Info</label>
             <textarea
               rows={4}
               value={form.returns_info}
@@ -97,7 +97,7 @@ export default function DeliveryReturnsSettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="py-3.5 px-8 bg-[#c2477f] text-white rounded-xl font-medium text-[14px] hover:bg-[#962259] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          className="py-3.5 px-8 bg-[#c8102e] text-white rounded-xl font-medium text-[14px] hover:bg-[#96182a] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
         >
           {saving ? (
             <>

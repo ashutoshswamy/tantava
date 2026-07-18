@@ -60,9 +60,9 @@ export default function Navbar({ activePage }: NavbarProps) {
         } frosted-nav`}
       >
         {/* Header: brand name */}
-        <div className="h-12 md:h-14 flex items-center justify-center border-b border-outline-variant/20">
+        <div className="py-3 md:py-4 flex items-center justify-center border-b border-outline-variant/20">
           <Link href="/" className="hover:opacity-80 transition-opacity">
-            <span className="font-display-brand text-2xl md:text-4xl text-brand-red tracking-wide">
+            <span className="font-display-brand text-2xl md:text-4xl text-brand-red tracking-wide uppercase">
               Tantava
             </span>
           </Link>
@@ -254,7 +254,7 @@ export default function Navbar({ activePage }: NavbarProps) {
       </div>
 
       {/* Spacer - same height as fixed header+navbar so content is never hidden behind it */}
-      <div className="h-24 md:h-28 shrink-0" />
+      <div className="h-[6.5rem] md:h-32 shrink-0" />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />
