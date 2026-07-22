@@ -57,6 +57,7 @@ export type StoreSettings = {
   theme_secondary: string | null;
   sale_ticker_text: string;
   sale_ticker_enabled: boolean;
+  sale_ticker_color: string | null;
   checkout_mode: "razorpay" | "whatsapp";
   whatsapp_number: string | null;
   testimonials_enabled: boolean;

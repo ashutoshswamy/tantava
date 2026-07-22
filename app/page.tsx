@@ -6,14 +6,12 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { ArrowRight, Truck, Ruler, Store, Layers } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import type { Product, Collection, StoreSettings } from "@/lib/supabase";
-
-const bentoSpan = ["col-span-2 row-span-2", "col-span-2 row-span-1", "col-span-1 row-span-1", "col-span-1 row-span-1"];
 
 const craftPromises = [
   { icon: <Truck size={20} className="opacity-80" />, label: "Pan India Shipping" },
-  { icon: <Ruler size={20} className="opacity-80" />, label: "XS · S · M · L · XL · XXL · XXXL" },
+  { icon: <Ruler size={20} className="opacity-80" />, label: "XS - XXXL" },
   { icon: <FaWhatsapp size={20} className="opacity-80" />, label: "Order via WhatsApp" },
   { icon: <Store size={20} className="opacity-80" />, label: "Pop-ups & Exhibitions" },
 ];
@@ -81,10 +79,12 @@ const fadeUp = {
 export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [collectionOffset, setCollectionOffset] = useState(0);
   const [testimonialsEnabled, setTestimonialsEnabled] = useState(true);
   const [heroImage, setHeroImage] = useState("/hero.png");
   const [saleTickerText, setSaleTickerText] = useState("The Sale Is On");
   const [saleTickerEnabled, setSaleTickerEnabled] = useState(true);
+  const [saleTickerColor, setSaleTickerColor] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/products?active=true&limit=4")
@@ -100,6 +100,12 @@ export default function HomePage() {
   }, []);
 
   useEffect(() => {
+    if (collections.length <= 1) return;
+    const t = setInterval(() => setCollectionOffset((o) => (o + 1) % collections.length), 3500);
+    return () => clearInterval(t);
+  }, [collections.length]);
+
+  useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data: StoreSettings) => {
@@ -107,6 +113,7 @@ export default function HomePage() {
         if (data.hero_image) setHeroImage(data.hero_image);
         if (data.sale_ticker_text) setSaleTickerText(data.sale_ticker_text);
         setSaleTickerEnabled(data.sale_ticker_enabled ?? true);
+        if (data.sale_ticker_color) setSaleTickerColor(data.sale_ticker_color);
       })
       .catch(() => {});
   }, []);
@@ -121,7 +128,11 @@ export default function HomePage() {
       {saleTickerEnabled && (
       <div
         className="relative z-30 overflow-hidden py-2"
-        style={{ background: "linear-gradient(90deg, #7a0400, #930500, #7a0400)" }}
+        style={{
+          background: saleTickerColor
+            ? `linear-gradient(90deg, ${saleTickerColor}, ${saleTickerColor}dd, ${saleTickerColor})`
+            : "linear-gradient(90deg, #7a0400, #930500, #7a0400)",
+        }}
       >
         <div className="flex gap-10 animate-marquee-fast w-max whitespace-nowrap">
           {Array(2).fill(null).map((_, i) => (
@@ -163,35 +174,48 @@ export default function HomePage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[160px] sm:auto-rows-[220px] gap-4">
-              {collections.map((col, i) => (
-                <Link
-                  key={col.id}
-                  href={`/collections/${col.slug}`}
-                  className={`group relative rounded-2xl overflow-hidden bg-surface-container ${bentoSpan[i % 4]}`}
-                >
-                  {col.cover_image ? (
-                    <img
-                      src={col.cover_image}
-                      alt={col.name}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Layers size={40} className="text-outline-variant" />
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-on-surface/10 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
-                    <h3 className="font-headline-sm text-[16px] sm:text-[20px] text-white leading-snug">
-                      {col.name}
-                    </h3>
-                    <span className="inline-flex items-center gap-1 text-white/80 font-label-md text-[11px] uppercase tracking-wider mt-1 group-hover:gap-2 transition-all duration-300">
-                      Explore <ArrowRight size={13} />
-                    </span>
-                  </div>
-                </Link>
-              ))}
+            <div className="relative h-[320px] sm:h-[420px] overflow-hidden rounded-2xl">
+              <AnimatePresence initial={false} mode="popLayout">
+                {(() => {
+                  const col = collections[collectionOffset % collections.length];
+                  return (
+                    <motion.div
+                      key={col.id}
+                      initial={{ x: "100%" }}
+                      animate={{ x: 0 }}
+                      exit={{ x: "-100%" }}
+                      transition={{ duration: 0.7, ease: "easeInOut" }}
+                      className="absolute inset-0"
+                    >
+                      <Link
+                        href={`/collections/${col.slug}`}
+                        className="group relative rounded-2xl overflow-hidden bg-surface-container block w-full h-full"
+                      >
+                        {col.cover_image ? (
+                          <img
+                            src={col.cover_image}
+                            alt={col.name}
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <Layers size={40} className="text-outline-variant" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-on-surface/70 via-on-surface/10 to-transparent" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
+                          <h3 className="font-headline-sm text-[16px] sm:text-[20px] text-white leading-snug">
+                            {col.name}
+                          </h3>
+                          <span className="inline-flex items-center gap-1 text-white/80 font-label-md text-[11px] uppercase tracking-wider mt-1 group-hover:gap-2 transition-all duration-300">
+                            Explore <ArrowRight size={13} />
+                          </span>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })()}
+              </AnimatePresence>
             </div>
           </div>
         </section>

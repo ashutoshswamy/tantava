@@ -209,7 +209,7 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (v === undefined) throw new ValidationError("sale_ticker_text must be a string");
     out.sale_ticker_text = v;
   }
-  for (const field of ["theme_background", "theme_primary", "theme_secondary"] as const) {
+  for (const field of ["theme_background", "theme_primary", "theme_secondary", "sale_ticker_color"] as const) {
     if (field in body) {
       if (body[field] !== null && !isValidHex(String(body[field]))) {
         throw new ValidationError(`${field} must be a hex color like #930500, or null`);

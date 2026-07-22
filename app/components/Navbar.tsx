@@ -59,106 +59,102 @@ export default function Navbar({ activePage }: NavbarProps) {
           scrolled ? "bg-surface/95 shadow-sm" : "bg-surface/90"
         } frosted-nav`}
       >
-        {/* Header: brand name */}
-        <div className="py-3 md:py-4 flex items-center justify-center border-b border-outline-variant/20">
-          <Link href="/" className="hover:opacity-80 transition-opacity">
+        {/* Header: search + brand name + icons */}
+        <div className="py-3 md:py-4 grid grid-cols-3 items-center px-4 sm:px-6 md:px-margin-desktop border-b border-outline-variant/20">
+          <div className="flex items-center">
+            <button
+              onClick={() => setSearchOpen(true)}
+              className="text-on-surface-variant hover:text-primary transition-all duration-300"
+              aria-label="Search"
+            >
+              <Search size={20} />
+            </button>
+          </div>
+
+          <Link href="/" className="hover:opacity-80 transition-opacity justify-self-center">
             <span className="font-display-brand text-2xl md:text-4xl text-brand-red tracking-wide uppercase">
               Tantava
             </span>
           </Link>
+
+          <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-5">
+            <Link
+              href="/wishlist"
+              className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
+              aria-label="Wishlist"
+            >
+              <Heart size={20} />
+              {mounted && wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
+                  {wishlistCount}
+                </span>
+              )}
+            </Link>
+
+            <button
+              onClick={() => setCartOpen(true)}
+              className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
+              aria-label="Cart"
+            >
+              <ShoppingBag size={20} />
+              {mounted && itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
+                  {itemCount}
+                </span>
+              )}
+            </button>
+
+            {isSignedIn ? (
+              <>
+                <Link href="/account" className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300">
+                  <User size={20} />
+                </Link>
+                <div className="hidden md:block">
+                  <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
+                </div>
+              </>
+            ) : (
+              <SignInButton mode="modal">
+                <button
+                  className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
+                  aria-label="Sign in"
+                >
+                  <User size={20} />
+                </button>
+              </SignInButton>
+            )}
+
+            <button
+              className="md:hidden text-on-surface-variant"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
+            >
+              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
         </div>
 
-        {/* Navbar: collections + utility icons */}
-        <nav className="h-12 md:h-14 flex items-center">
-          <div className="grid grid-cols-[1fr_auto] items-center h-full px-4 sm:px-6 md:px-margin-desktop max-w-container-max mx-auto w-full gap-4">
-            {/* Left: collection links */}
-            <div className="hidden md:flex items-center gap-6 overflow-x-auto custom-scrollbar">
-              <Link href="/shop" className={linkClass("shop") + " whitespace-nowrap"}>Shop All</Link>
-              {collections.map((col) => (
-                <Link
-                  key={col.id}
-                  href={`/collections/${col.slug}`}
-                  className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300 whitespace-nowrap"
-                >
-                  {col.name}
-                </Link>
-              ))}
-              <Link href="/contact" className={linkClass("contact") + " whitespace-nowrap"}>Contact</Link>
-              {isAdmin && (
-                <Link
-                  href="/admin"
-                  className="font-label-md text-label-md text-secondary hover:text-primary transition-colors border border-secondary/30 px-3 py-1 rounded whitespace-nowrap"
-                >
-                  Admin
-                </Link>
-              )}
-            </div>
-            <div className="md:hidden" />
-
-            {/* Right: icons */}
-            <div className="flex items-center justify-end gap-2 sm:gap-3 md:gap-5">
-              <button
-                onClick={() => setSearchOpen(true)}
-                className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
-                aria-label="Search"
-              >
-                <Search size={20} />
-              </button>
-
+        {/* Navbar: collections, centered */}
+        <nav className="h-12 md:h-14 hidden md:flex items-center justify-center">
+          <div className="flex items-center justify-center gap-6 h-full px-4 sm:px-6 md:px-margin-desktop max-w-container-max mx-auto overflow-x-auto custom-scrollbar">
+            <Link href="/shop" className={linkClass("shop") + " whitespace-nowrap"}>Shop All</Link>
+            {collections.map((col) => (
               <Link
-                href="/wishlist"
-                className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
-                aria-label="Wishlist"
+                key={col.id}
+                href={`/collections/${col.slug}`}
+                className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300 whitespace-nowrap"
               >
-                <Heart size={20} />
-                {mounted && wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
-                    {wishlistCount}
-                  </span>
-                )}
+                {col.name}
               </Link>
-
-              <button
-                onClick={() => setCartOpen(true)}
-                className="relative hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
-                aria-label="Cart"
+            ))}
+            {isAdmin && (
+              <Link
+                href="/admin"
+                className="font-label-md text-label-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors px-3 py-1 rounded whitespace-nowrap"
               >
-                <ShoppingBag size={20} />
-                {mounted && itemCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-on-primary font-bold">
-                    {itemCount}
-                  </span>
-                )}
-              </button>
-
-              {isSignedIn ? (
-                <>
-                  <Link href="/account" className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300">
-                    <User size={20} />
-                  </Link>
-                  <div className="hidden md:block">
-                    <UserButton appearance={{ elements: { avatarBox: "w-7 h-7" } }} />
-                  </div>
-                </>
-              ) : (
-                <SignInButton mode="modal">
-                  <button
-                    className="hidden md:block text-on-surface-variant hover:text-primary transition-all duration-300"
-                    aria-label="Sign in"
-                  >
-                    <User size={20} />
-                  </button>
-                </SignInButton>
-              )}
-
-              <button
-                className="md:hidden text-on-surface-variant"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
-              >
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
+                Admin
+              </Link>
+            )}
           </div>
         </nav>
 
@@ -171,16 +167,8 @@ export default function Navbar({ activePage }: NavbarProps) {
               transition={{ duration: 0.25, ease: "easeInOut" }}
               className="md:hidden bg-surface border-t border-outline-variant/30 px-margin-mobile py-6 flex flex-col gap-5 overflow-hidden absolute top-full left-0 right-0"
             >
-              <button
-                onClick={() => { setSearchOpen(true); setMobileOpen(false); }}
-                className="flex items-center gap-3 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
-              >
-                <Search size={18} /> Search
-              </button>
-
               {[
                 { href: "/shop",     label: "Shop" },
-                { href: "/contact",  label: "Contact" },
               ].map(({ href, label }) => (
                 <Link
                   key={href}
@@ -220,7 +208,7 @@ export default function Navbar({ activePage }: NavbarProps) {
               {isAdmin && (
                 <Link
                   href="/admin"
-                  className="font-label-md text-label-md text-secondary"
+                  className="font-label-md text-label-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors px-3 py-2 rounded w-fit"
                   onClick={() => setMobileOpen(false)}
                 >
                   Admin Dashboard
@@ -254,7 +242,7 @@ export default function Navbar({ activePage }: NavbarProps) {
       </div>
 
       {/* Spacer - same height as fixed header+navbar so content is never hidden behind it */}
-      <div className="h-[6.5rem] md:h-32 shrink-0" />
+      <div className="h-[3.5rem] md:h-32 shrink-0" />
 
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} />

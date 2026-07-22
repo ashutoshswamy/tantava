@@ -281,7 +281,7 @@ export default function CollectionSlugPage() {
           >
             <div className="flex items-center gap-3">
               {selectedProduct.images[0] && (
-                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-12 h-12 rounded-lg object-contain border border-outline-variant/40 bg-surface-container" />
+                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-12 h-12 rounded-lg object-cover border border-outline-variant/40 bg-surface-container" />
               )}
               <div>
                 <h3 className="font-label-md text-[14px] text-on-surface leading-snug">{selectedProduct.name}</h3>

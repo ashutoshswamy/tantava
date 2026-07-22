@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { Loader2, Image as ImageIcon, Upload } from "lucide-react";
 import { supabase, type StoreSettings } from "@/lib/supabase";
 import { validateImageFile } from "@/lib/image-validation";
+import { isValidHex } from "@/lib/theme-color";
+
+const DEFAULT_TICKER_COLOR = "#930500";
 
 function storagePathFromUrl(url: string): string | null {
   const marker = "/product-images/";
@@ -21,6 +24,7 @@ export default function HomepageSettingsPage() {
     hero_image: "" as string | null,
     sale_ticker_text: "",
     sale_ticker_enabled: true,
+    sale_ticker_color: DEFAULT_TICKER_COLOR,
     testimonials_enabled: true,
   });
 
@@ -32,6 +36,7 @@ export default function HomepageSettingsPage() {
           hero_image: data.hero_image || "",
           sale_ticker_text: data.sale_ticker_text || "The Sale Is On",
           sale_ticker_enabled: data.sale_ticker_enabled ?? true,
+          sale_ticker_color: data.sale_ticker_color || DEFAULT_TICKER_COLOR,
           testimonials_enabled: data.testimonials_enabled ?? true,
         });
         setLoading(false);
@@ -91,6 +96,10 @@ export default function HomepageSettingsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValidHex(form.sale_ticker_color)) {
+      setError("Enter a valid hex color for the sale ticker, e.g. #930500");
+      return;
+    }
     setSaving(true);
     setError("");
     setSaved(false);
@@ -146,7 +155,7 @@ export default function HomepageSettingsPage() {
           </p>
           <div className="relative w-full aspect-[16/7] rounded-xl overflow-hidden bg-[#fbf0da] border border-[#dcc9a0]/40">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={form.hero_image || "/hero.png"} alt="Hero preview" className="w-full h-full object-cover" />
+            <img src={form.hero_image || "/hero.png"} alt="Hero preview" className="w-full h-full object-cover object-top" />
           </div>
           <label className="inline-flex items-center gap-2 py-2.5 px-5 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl font-medium text-[13px] text-[#2b0e0a] cursor-pointer hover:border-[#930500]/50 transition-colors">
             {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
@@ -184,6 +193,26 @@ export default function HomepageSettingsPage() {
             className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
             placeholder="e.g. The Sale Is On"
           />
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Strip Color</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={isValidHex(form.sale_ticker_color) ? form.sale_ticker_color : DEFAULT_TICKER_COLOR}
+                onChange={(e) => setForm({ ...form, sale_ticker_color: e.target.value })}
+                className="w-12 h-12 rounded-lg border border-[#dcc9a0]/40 cursor-pointer bg-transparent p-0.5"
+                aria-label="Pick sale ticker color"
+              />
+              <input
+                type="text"
+                value={form.sale_ticker_color}
+                onChange={(e) => setForm({ ...form, sale_ticker_color: e.target.value.trim() })}
+                placeholder={DEFAULT_TICKER_COLOR}
+                spellCheck={false}
+                className="flex-1 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] font-mono text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4">
