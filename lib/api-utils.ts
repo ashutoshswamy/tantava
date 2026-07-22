@@ -209,11 +209,13 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (v === undefined) throw new ValidationError("sale_ticker_text must be a string");
     out.sale_ticker_text = v;
   }
-  if ("theme_color" in body) {
-    if (body.theme_color !== null && !isValidHex(String(body.theme_color))) {
-      throw new ValidationError("theme_color must be a hex color like #930500, or null");
+  for (const field of ["theme_background", "theme_primary", "theme_secondary"] as const) {
+    if (field in body) {
+      if (body[field] !== null && !isValidHex(String(body[field]))) {
+        throw new ValidationError(`${field} must be a hex color like #930500, or null`);
+      }
+      out[field] = body[field];
     }
-    out.theme_color = body.theme_color;
   }
   if ("sale_ticker_enabled" in body) {
     if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");
