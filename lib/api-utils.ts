@@ -181,6 +181,12 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (v === undefined) throw new ValidationError("returns_info must be a string");
     out.returns_info = v;
   }
+  if ("hero_image" in body) {
+    if (body.hero_image !== null && typeof body.hero_image !== "string") {
+      throw new ValidationError("hero_image must be a string or null");
+    }
+    out.hero_image = body.hero_image;
+  }
   if ("checkout_mode" in body) {
     const v = str(body.checkout_mode);
     if (v === undefined || !["razorpay", "whatsapp"].includes(v)) {
@@ -196,6 +202,15 @@ export function validateSettingsInput(body: Record<string, unknown>) {
   if ("testimonials_enabled" in body) {
     if (typeof body.testimonials_enabled !== "boolean") throw new ValidationError("testimonials_enabled must be a boolean");
     out.testimonials_enabled = body.testimonials_enabled;
+  }
+  if ("sale_ticker_text" in body) {
+    const v = str(body.sale_ticker_text);
+    if (v === undefined) throw new ValidationError("sale_ticker_text must be a string");
+    out.sale_ticker_text = v;
+  }
+  if ("sale_ticker_enabled" in body) {
+    if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");
+    out.sale_ticker_enabled = body.sale_ticker_enabled;
   }
   return out;
 }

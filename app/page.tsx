@@ -82,6 +82,9 @@ export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [testimonialsEnabled, setTestimonialsEnabled] = useState(true);
+  const [heroImage, setHeroImage] = useState("/hero.png");
+  const [saleTickerText, setSaleTickerText] = useState("The Sale Is On");
+  const [saleTickerEnabled, setSaleTickerEnabled] = useState(true);
 
   useEffect(() => {
     fetch("/api/products?active=true&limit=4")
@@ -99,7 +102,12 @@ export default function HomePage() {
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
-      .then((data: StoreSettings) => setTestimonialsEnabled(data.testimonials_enabled ?? true))
+      .then((data: StoreSettings) => {
+        setTestimonialsEnabled(data.testimonials_enabled ?? true);
+        if (data.hero_image) setHeroImage(data.hero_image);
+        if (data.sale_ticker_text) setSaleTickerText(data.sale_ticker_text);
+        setSaleTickerEnabled(data.sale_ticker_enabled ?? true);
+      })
       .catch(() => {});
   }, []);
 
@@ -110,6 +118,7 @@ export default function HomePage() {
       <Navbar />
 
       {/* Sale Ticker */}
+      {saleTickerEnabled && (
       <div
         className="relative z-30 overflow-hidden py-2"
         style={{ background: "linear-gradient(90deg, #7a0400, #930500, #7a0400)" }}
@@ -122,77 +131,25 @@ export default function HomePage() {
                   key={j}
                   className="font-label-md text-[11px] tracking-[0.3em] uppercase text-white/90 flex items-center gap-3"
                 >
-                  The Sale Is On <span className="text-white/40">✦</span>
+                  {saleTickerText} <span className="text-white/40">✦</span>
                 </span>
               ))}
             </div>
           ))}
         </div>
       </div>
+      )}
 
       {/* Hero */}
-      <header className="relative min-h-[500px] h-[calc(100svh-6.5rem)] md:h-[calc(100svh-7.5rem)] flex items-center overflow-hidden">
-        <div className="absolute inset-0 z-0">
-          <div
-            className="w-full h-full bg-scroll md:bg-fixed"
-            style={{
-              backgroundImage: "url('/hero.png')",
-              backgroundSize: "cover",
-              backgroundPosition: "center top",
-            }}
-          />
-          {/* Gradient: transparent on left (shows the dress), blush-white on right (text area) */}
-          <div className="absolute inset-0 bg-gradient-to-l from-background/90 via-background/40 to-transparent" />
-        </div>
-
-        <div className="relative z-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
-          {/* Text pushed to the right half */}
-          <div className="relative mx-auto sm:ml-auto sm:mr-0 w-full max-w-lg text-left sm:text-right">
-            <motion.span
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.2 }}
-              className="font-label-md text-label-md text-primary/70 tracking-[0.25em] uppercase mb-4 block"
-            >
-              For a Limited Time
-            </motion.span>
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.4 }}
-              className="font-headline-lg-mobile md:font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface mb-6 leading-tight"
-            >
-              Festive Favourites, Now On Sale
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.6 }}
-              className="font-body-lg text-body-lg text-on-surface-variant mb-8"
-            >
-              Curated kurtas, anarkalis, and fusion sets at special sale prices — while stocks last.
-            </motion.p>
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.8 }}
-                className="flex flex-col sm:flex-row gap-4 justify-start sm:justify-end"
-              >
-                <Link
-                  href="/shop"
-                  className="w-full sm:w-auto bg-primary text-on-primary px-10 py-4 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity duration-300 text-center shadow-md"
-                >
-                  Shop the Sale
-                </Link>
-                <Link
-                  href="/contact"
-                  className="w-full sm:w-auto border border-primary text-primary px-10 py-4 rounded-lg font-label-md text-label-md hover:bg-primary/10 transition-all duration-300 text-center"
-                >
-                  Contact Us
-                </Link>
-              </motion.div>
-            </div>
-        </div>
+      <header className="relative min-h-[500px] h-[calc(100svh-6.5rem)] md:h-[calc(100svh-7.5rem)] overflow-hidden">
+        <div
+          className="w-full h-full bg-scroll md:bg-fixed"
+          style={{
+            backgroundImage: `url('${heroImage}')`,
+            backgroundSize: "cover",
+            backgroundPosition: "center top",
+          }}
+        />
       </header>
 
       {/* Collections Bento Grid */}
