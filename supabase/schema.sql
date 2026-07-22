@@ -80,6 +80,7 @@ create table if not exists products (
   badge           text,
   is_active       boolean not null default true,
   collection_id   uuid references collections(id) on delete set null,
+  sort_order      integer not null default 0,
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
 );
