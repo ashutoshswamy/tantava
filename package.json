@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed:order": "node scripts/seed-fake-order.mjs",
+    "seed:dummy": "node --env-file=.env.local scripts/seed-dummy-data.mjs",
+    "unseed:dummy": "node --env-file=.env.local scripts/unseed-dummy-data.mjs",
     "reset:storage": "node --env-file=.env.local scripts/reset-storage.mjs"
   },
   "dependencies": {
