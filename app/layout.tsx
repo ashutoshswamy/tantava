@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Nunito, Playfair_Display } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import ThemeInjector from "./components/ThemeInjector";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -37,6 +38,7 @@ export default function RootLayout({
       <html lang="en" className={`${cormorant.variable} ${nunito.variable} ${playfair.variable}`}>
         <head />
         <body className="bg-background text-on-surface font-body-md overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+          <ThemeInjector />
           {children}
         </body>
       </html>

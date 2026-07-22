@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isValidHex } from "./theme-color";
 
 // Logs the real error server-side, returns a generic message to the client
 // so internal schema/constraint details never leak in API responses.
@@ -207,6 +208,12 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     const v = str(body.sale_ticker_text);
     if (v === undefined) throw new ValidationError("sale_ticker_text must be a string");
     out.sale_ticker_text = v;
+  }
+  if ("theme_color" in body) {
+    if (body.theme_color !== null && !isValidHex(String(body.theme_color))) {
+      throw new ValidationError("theme_color must be a hex color like #930500, or null");
+    }
+    out.theme_color = body.theme_color;
   }
   if ("sale_ticker_enabled" in body) {
     if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");

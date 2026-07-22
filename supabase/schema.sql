@@ -101,6 +101,7 @@ create table if not exists store_settings (
   delivery_info         text,
   returns_info          text,
   hero_image            text,
+  theme_color           text,
   sale_ticker_text      text not null default 'The Sale Is On',
   sale_ticker_enabled   boolean not null default true,
   checkout_mode         text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),

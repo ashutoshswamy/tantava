@@ -24,7 +24,7 @@ All money fields are integers in **paise** (₹1 = 100 paise).
 |---|---|
 | `collections` | Curated product groupings (name, slug, cover image, active flag, sort order) |
 | `products` | Catalog: name, description, `price`, `discount_price`, category, `fabric`, `care`, `free_delivery`, `images[]`, `size_inventory` (JSON: `{"XS":0,...,"XXXL":0}`), `sku`, `badge`, `is_active`, `collection_id`, `sort_order` (manual display order, admin-editable) |
-| `store_settings` | Singleton row (`id boolean primary key default true`) holding site-wide `delivery_info` / `returns_info` copy, `checkout_mode` / `whatsapp_number` (see Checkout flow below), `hero_image` (homepage hero banner URL), `sale_ticker_text` / `sale_ticker_enabled` (homepage scrolling banner), and `testimonials_enabled` (toggles the homepage testimonials section) |
+| `store_settings` | Singleton row (`id boolean primary key default true`) holding site-wide `delivery_info` / `returns_info` copy, `checkout_mode` / `whatsapp_number` (see Checkout flow below), `hero_image` (homepage hero banner URL), `sale_ticker_text` / `sale_ticker_enabled` (homepage scrolling banner), `testimonials_enabled` (toggles the homepage testimonials section), and `theme_color` (single hex color the storefront's primary/accent palette is derived from) |
 | `categories` | Admin-managed category taxonomy: `name`, `slug`, `is_active`, `sort_order` |
 | `orders` | Customer orders — `items` JSON snapshot, `subtotal`/`total`, `status` enum, `shipping_address` JSON, Razorpay IDs, `admin_notes` |
 | `inventory_logs` | Append-only audit trail of stock changes (`change` can be +/-, `reason` free text) |
@@ -44,7 +44,7 @@ RLS is enabled on every table. Public (anon key) read policies exist for `produc
 | `products/reorder` | admin — PATCH bulk-persists `sort_order` from an array of product IDs |
 | `categories`, `categories/[id]` | GET public (active only unless `all=true`); POST/PUT/DELETE admin |
 | `collections`, `collections/[id]` | GET public; writes admin |
-| `settings` | GET public (delivery & returns copy, checkout mode, hero image, sale ticker, testimonials toggle); PUT admin |
+| `settings` | GET public (delivery & returns copy, checkout mode, hero image, sale ticker, testimonials toggle, theme color); PUT admin |
 | `inventory` | admin |
 | `orders` | GET signed-in user (own orders; all orders if admin); POST admin-only (manual/offline entry) |
 | `orders/[id]` | GET signed-in user, scoped to their own order (or admin); PUT admin-only |
@@ -68,7 +68,7 @@ RLS is enabled on every table. Public (anon key) read policies exist for `produc
 
 ## Admin panel (`app/admin/`)
 
-Client-rendered pages under `/admin`, gated by `proxy.ts`. Sections (in nav order): Dashboard, Analytics, Products (list/new/edit), Categories, Collections, Inventory, Orders, Homepage (hero image, sale ticker, testimonials toggle), Checkout Settings (payment mode toggle), Delivery & Returns (site-wide copy editor), Feedback, Inquiries.
+Client-rendered pages under `/admin`, gated by `proxy.ts`. Sections (in nav order): Dashboard, Analytics, Products (list/new/edit), Categories, Collections, Inventory, Orders, Homepage (hero image, sale ticker, testimonials toggle), Appearance (storefront brand color), Checkout Settings (payment mode toggle), Delivery & Returns (site-wide copy editor), Feedback, Inquiries.
 
 **Product form** (`admin/products/new`, `admin/products/[id]`): name, description, price, discount price (optional — shown alongside the original price on the storefront when lower), category (free-text input backed by a `<datalist>` populated from every category already used across existing products, so admins can reuse one or type a new one), badge, fabric, care instructions (free text, shown in the "Fabric & Care" PDP accordion), SKU, collection, per-size stock (`XS`–`XXXL`), image upload (validated client-side, uploaded to Supabase Storage via signed URL), active toggle, free-delivery toggle. The product list (`admin/products`) lets admins reorder products, persisted via `PATCH /api/products/reorder` and reflected in storefront listing order.
 
@@ -77,6 +77,8 @@ Client-rendered pages under `/admin`, gated by `proxy.ts`. Sections (in nav orde
 **Homepage** (`admin/homepage`): edits the singleton `store_settings` row — hero banner image (uploaded via the same signed-URL flow as product images), sale ticker text + on/off toggle, and a toggle for whether the homepage testimonials section is shown.
 
 **Delivery & Returns** (`admin/delivery-returns`): edits the singleton `store_settings` row — delivery/returns copy, fetched by every PDP and rendered in the "Delivery & Returns" accordion.
+
+**Appearance** (`admin/appearance`): sets `store_settings.theme_color`, a single hex color (typed in or picked via a native color input). `lib/theme-color.ts` derives the full primary/on-primary/primary-container/on-primary-container CSS variable set from it (contrast-checked, not hardcoded to white text), and `app/components/ThemeInjector.tsx` — mounted once in the root layout — fetches it client-side and overrides those CSS custom properties on `<html>` at runtime. Only the storefront's `bg-primary`/`text-primary`/etc Tailwind classes pick this up; the admin panel itself is styled with hardcoded hex literals and does not re-theme.
 
 **Checkout Settings** (`admin/checkout-settings`): toggles `store_settings.checkout_mode` between `razorpay` and `whatsapp`, and sets the `whatsapp_number` used when in WhatsApp mode. Also edits the singleton `store_settings` row via `PUT /api/settings`.
 

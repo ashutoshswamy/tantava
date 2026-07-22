@@ -72,7 +72,7 @@ Open [http://localhost:3000](http://localhost:3000). Admin panel lives at `/admi
 
 ```
 app/
-  admin/          Admin panel — products, categories, collections, inventory, orders, homepage, checkout settings, delivery & returns, analytics, feedback, inquiries
+  admin/          Admin panel — products, categories, collections, inventory, orders, homepage, appearance, checkout settings, delivery & returns, analytics, feedback, inquiries
   api/            Route handlers (REST-ish JSON endpoints)
   shop/           Storefront product listing + PDP
   collections/    Collection landing + listing pages
