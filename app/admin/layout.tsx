@@ -6,13 +6,14 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import {
   LayoutDashboard, Package, Warehouse, Receipt,
-  ChevronLeft, ChevronRight, BarChart2, ExternalLink, Layers, MessageSquareHeart, Inbox, Truck, CreditCard,
+  ChevronLeft, ChevronRight, BarChart2, ExternalLink, Layers, Tag, MessageSquareHeart, Inbox, Truck, CreditCard,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/admin",              icon: <LayoutDashboard size={20} />,      label: "Dashboard" },
   { href: "/admin/analytics",    icon: <BarChart2 size={20} />,            label: "Analytics" },
   { href: "/admin/products",     icon: <Package size={20} />,              label: "Products" },
+  { href: "/admin/categories",   icon: <Tag size={20} />,                  label: "Categories" },
   { href: "/admin/collections",  icon: <Layers size={20} />,               label: "Collections" },
   { href: "/admin/inventory",    icon: <Warehouse size={20} />,            label: "Inventory" },
   { href: "/admin/orders",       icon: <Receipt size={20} />,              label: "Orders" },
@@ -30,19 +31,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="min-h-screen bg-[#ffffff] pb-16 md:pb-0">
       {/* Sidebar */}
       <aside
-        className={`fixed inset-x-0 bottom-0 z-40 flex bg-white border-t border-[#f0c7c7] transition-all duration-300 md:inset-y-0 md:right-auto md:h-full md:flex-col md:border-r md:border-t-0 ${
+        className={`fixed inset-x-0 bottom-0 z-40 flex bg-white border-t border-[#efdcb0] transition-all duration-300 md:inset-y-0 md:right-auto md:h-full md:flex-col md:border-r md:border-t-0 ${
           collapsed ? "md:w-16" : "md:w-64"
         }`}
       >
-        <div className="hidden md:flex items-center justify-between px-4 py-5 border-b border-[#f0c7c7]">
+        <div className="hidden md:flex items-center justify-between px-4 py-5 border-b border-[#efdcb0]">
           {!collapsed && (
-            <Link href="/" className="font-headline-sm text-[18px] text-[#c8102e] hover:opacity-80 transition-opacity">
+            <Link href="/" className="font-headline-sm text-[18px] text-[#930500] hover:opacity-80 transition-opacity">
               Tantava
             </Link>
           )}
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="text-[#8c4f52] hover:text-[#200a0c] transition-colors ml-auto"
+            className="text-[#8c6f52] hover:text-[#2b0e0a] transition-colors ml-auto"
           >
             {collapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
           </button>
@@ -58,8 +59,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex flex-col items-center justify-center gap-0.5 rounded-lg px-3 py-2 flex-shrink-0 transition-all ${
                   active
-                    ? "bg-[#c8102e]/10 text-[#c8102e]"
-                    : "text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9]"
+                    ? "bg-[#930500]/10 text-[#930500]"
+                    : "text-[#5c3b2e] hover:text-[#2b0e0a] hover:bg-[#fbf0da]"
                 }`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -79,8 +80,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 href={item.href}
                 className={`flex items-center gap-3 rounded-lg px-3 py-3 transition-all group ${
                   active
-                    ? "bg-[#c8102e]/10 text-[#c8102e]"
-                    : "text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9]"
+                    ? "bg-[#930500]/10 text-[#930500]"
+                    : "text-[#5c3b2e] hover:text-[#2b0e0a] hover:bg-[#fbf0da]"
                 }`}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -92,11 +93,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           })}
         </nav>
 
-        <div className="hidden px-2 py-3 border-t border-[#f0c7c7] md:block">
+        <div className="hidden px-2 py-3 border-t border-[#efdcb0] md:block">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#5c3336] hover:text-[#200a0c] hover:bg-[#fbe9e9] transition-all"
+            className="flex items-center gap-3 px-3 py-3 rounded-lg text-[#5c3b2e] hover:text-[#2b0e0a] hover:bg-[#fbf0da] transition-all"
           >
             <span className="flex-shrink-0"><ExternalLink size={20} /></span>
             {!collapsed && (
@@ -105,7 +106,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </Link>
         </div>
 
-        <div className="hidden px-4 py-4 border-t border-[#f0c7c7] md:block">
+        <div className="hidden px-4 py-4 border-t border-[#efdcb0] md:block">
           <div className="flex items-center gap-3">
             <UserButton
               appearance={{
@@ -114,7 +115,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             />
             {!collapsed && (
               <div className="min-w-0">
-                <p className="font-label-md text-[12px] text-[#8c4f52] truncate">Admin Panel</p>
+                <p className="font-label-md text-[12px] text-[#8c6f52] truncate">Admin Panel</p>
               </div>
             )}
           </div>

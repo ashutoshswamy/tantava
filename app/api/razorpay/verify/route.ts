@@ -4,7 +4,6 @@ import Razorpay from "razorpay";
 import { auth } from "@clerk/nextjs/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { apiError } from "@/lib/api-utils";
-import { createShiprocketOrder } from "@/lib/shiprocket";
 import { checkRateLimit } from "@/lib/rate-limit";
 
 const razorpay = new Razorpay({
@@ -115,42 +114,6 @@ export async function POST(req: NextRequest) {
         .update({ size_inventory: updated })
         .eq("id", item.product_id);
     }
-  }
-
-  // Fire Shiprocket order — non-blocking, failure doesn't break checkout
-  try {
-    const addr = orderData.shipping_address;
-    const srResult = await createShiprocketOrder({
-      orderId: data.id,
-      orderDate: new Date().toISOString().slice(0, 10),
-      customerName: addr.name || orderData.user_name || "Customer",
-      customerPhone: addr.phone,
-      customerEmail: orderData.user_email,
-      address: [addr.line1, addr.line2].filter(Boolean).join(", "),
-      city: addr.city,
-      state: addr.state,
-      pincode: addr.pincode,
-      items: verifiedItems.map((i) => ({
-        name: i.name,
-        sku: i.product_id,
-        units: i.quantity,
-        selling_price: Math.round(i.price / 100), // paise → rupees
-      })),
-      subtotal: Math.round(recomputedTotal / 100),
-    });
-
-    await supabase
-      .from("orders")
-      .update({
-        shiprocket_order_id: srResult.shiprocket_order_id,
-        shiprocket_shipment_id: srResult.shipment_id,
-        shiprocket_awb_code: srResult.awb_code ?? null,
-        shiprocket_status: srResult.status ?? null,
-        shiprocket_synced_at: new Date().toISOString(),
-      })
-      .eq("id", data.id);
-  } catch (err) {
-    console.error("[Shiprocket] order creation failed:", err);
   }
 
   return NextResponse.json({ success: true, orderId: data.id });

@@ -10,7 +10,7 @@ If you find a security issue in this codebase, report it privately to the projec
 - **Admin role**: a single flag, `publicMetadata.role === "admin"` on the Clerk user. Checked server-side in two places, both of which must be kept in sync:
   - `lib/auth.ts` (`requireAdmin`) — used by admin API route handlers.
   - `proxy.ts` — Next middleware gate for `/admin(.*)` page routes.
-  - `app/api/admin/stats/route.ts` and `admin/analytics/route.ts` inline the same check directly against Clerk rather than importing `requireAdmin` — if the admin rule ever changes, update all three call sites, not just `lib/auth.ts`.
+  - `app/api/admin/stats/route.ts` inlines the same check directly against Clerk rather than importing `requireAdmin` — if the admin rule ever changes, update both call sites, not just `lib/auth.ts`.
 - **Defense in depth**: middleware is a page-routing convenience, not the security boundary — every admin/user-scoped API route independently re-checks `auth()`/`requireAdmin()` before touching data, because API routes are reachable directly regardless of middleware.
 - **Row Level Security**: enabled on every Supabase table. Anon-key reads are scoped by policy (e.g. `orders_user_read` restricts to `auth.uid() = user_id`). All writes happen through the service-role key from server-side route handlers only — the service-role key must never be exposed to the client (it is not `NEXT_PUBLIC_*`).
 
@@ -26,14 +26,15 @@ If you find a security issue in this codebase, report it privately to the projec
 `lib/rate-limit.ts` implements a fixed-window counter backed by the `rate_limits` Postgres table (key = `route:identifier:windowId`). Applied to:
 - `feedback`, `inquiries` — 5 requests / 10 min per IP
 - `razorpay/create-order`, `razorpay/verify` — 10 requests / 10 min per user
+- `upload-url` — 60 requests / 10 min per user
 
 Expired rows are pruned probabilistically (5% chance per call) rather than via a cron job — acceptable at current traffic, but a table that grows faster than that prune rate would need a scheduled cleanup instead.
 
 ## Input validation
 
 - `lib/validate.ts` provides `isValidEmail` / `isValidLength`, used by the public `feedback` and `inquiries` endpoints.
-- `products` and `settings` admin-write routes validate the body via `lib/api-utils.ts` (`validateProductInput`, `validateSettingsInput`) before it reaches Supabase — type/range checks, rejects with 400 on bad input.
-- Remaining admin-write routes (`collections`, `inventory`, `orders`) do **not** run application-level schema validation — the request body is passed close to as-is to Supabase, relying on Postgres `not null` / `check` constraints (e.g. `status in (...)`) as the backstop. This is acceptable because these routes are admin-only (`requireAdmin`), not public input surfaces — if any of them are ever opened to non-admin callers, add explicit validation first.
+- `products`, `categories`, `collections`, `settings`, and `orders` (create + update) admin-write routes validate the body via `lib/api-utils.ts` (`validateProductInput`, `validateCategoryInput`, `validateCollectionInput`, `validateSettingsInput`, `validateOrderCreateInput`/`validateOrderUpdateInput`) before it reaches Supabase — type/range checks, rejects with 400 on bad input.
+- `inventory` does **not** run application-level schema validation — the request body is passed close to as-is to Supabase, relying on Postgres `not null` / `check` constraints as the backstop. `products/reorder` validates inline (array-of-string-ids shape check) rather than via `lib/api-utils.ts`. This is acceptable because these routes are admin-only (`requireAdmin`), not public input surfaces — if any of them are ever opened to non-admin callers, add explicit validation first.
 
 ## File uploads
 
@@ -42,12 +43,12 @@ Expired rows are pruned probabilistically (5% chance per call) rather than via a
 
 ## Secrets
 
-Required secrets (see README.md for the full list): `SUPABASE_SERVICE_ROLE_KEY`, `CLERK_SECRET_KEY`, `RAZORPAY_KEY_SECRET`, `SHIPROCKET_PASSWORD`. None of these should ever be prefixed `NEXT_PUBLIC_` or referenced from client components — grep for `NEXT_PUBLIC_` before adding any new env var to confirm it's meant to be public.
+Required secrets (see README.md for the full list): `SUPABASE_SERVICE_ROLE_KEY`, `CLERK_SECRET_KEY`, `RAZORPAY_KEY_SECRET`. None of these should ever be prefixed `NEXT_PUBLIC_` or referenced from client components — grep for `NEXT_PUBLIC_` before adding any new env var to confirm it's meant to be public.
 
 ## Known gaps / accepted risk
 
 - No CSP or custom security headers are configured in `next.config.ts` or `proxy.ts` — relies on Next.js/Vercel defaults.
-- No application-level schema validation on `collections`, `inventory`, `orders` admin write routes (`products`/`settings` now validate) — see "Input validation" above.
+- No application-level schema validation on the `inventory` admin write route (`products`, `categories`, `collections`, `settings`, `orders` all validate now) — see "Input validation" above.
 - `rate_limits` cleanup is probabilistic, not scheduled.
 
 If you're changing auth, payment verification, or RLS policies, treat those as high-risk changes — get a second review before merging.

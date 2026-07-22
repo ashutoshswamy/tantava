@@ -41,7 +41,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 function MiniBar({ value, max, color }: { value: number; max: number; color: string }) {
   const pct = max > 0 ? Math.max((value / max) * 100, 1) : 1;
   return (
-    <div className="h-2 w-full bg-[#f0c7c7] rounded-full overflow-hidden">
+    <div className="h-2 w-full bg-[#efdcb0] rounded-full overflow-hidden">
       <div className="h-full rounded-full transition-all duration-700" style={{ width: `${pct}%`, backgroundColor: color }} />
     </div>
   );
@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
+        <Loader2 size={40} className="text-[#930500] animate-spin" />
       </div>
     );
   }
@@ -73,19 +73,19 @@ export default function AnalyticsPage() {
   const totalOrdersCount = Object.values(data.ordersByStatus).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 text-[#200a0c] space-y-6 md:space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 text-[#2b0e0a] space-y-6 md:space-y-8">
       {/* Header */}
       <div>
-        <h1 className="font-headline-lg text-[22px] sm:text-[26px] text-[#200a0c] mb-1">Analytics</h1>
-        <p className="text-[#8c4f52] font-body-md text-[13px]">Last 90 days • paid orders only</p>
+        <h1 className="font-headline-lg text-[22px] sm:text-[26px] text-[#2b0e0a] mb-1">Analytics</h1>
+        <p className="text-[#8c6f52] font-body-md text-[13px]">Last 90 days • paid orders only</p>
       </div>
 
       {/* KPI row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* This month revenue */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-5">
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-5">
           <div className="flex items-center justify-between mb-3">
-            <IndianRupee size={18} className="text-[#c8102e]" />
+            <IndianRupee size={18} className="text-[#930500]" />
             {data.revenueGrowth !== null && (
               <span className={`flex items-center gap-1 text-[11px] font-label-md ${data.revenueGrowth >= 0 ? "text-green-600" : "text-red-500"}`}>
                 {data.revenueGrowth >= 0 ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -93,40 +93,40 @@ export default function AnalyticsPage() {
               </span>
             )}
           </div>
-          <p className="text-[22px] font-bold text-[#200a0c]">{fmt(data.thisMonthRevenue)}</p>
-          <p className="text-[#8c4f52] text-[11px] mt-1">This month</p>
-          <p className="text-[#dbb0b0] text-[10px]">vs {fmt(data.lastMonthRevenue)} last month</p>
+          <p className="text-[22px] font-bold text-[#2b0e0a]">{fmt(data.thisMonthRevenue)}</p>
+          <p className="text-[#8c6f52] text-[11px] mt-1">This month</p>
+          <p className="text-[#dcc9a0] text-[10px]">vs {fmt(data.lastMonthRevenue)} last month</p>
         </div>
 
         {/* AOV */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-5">
-          <ShoppingBag size={18} className="text-[#8a3a3a] mb-3" />
-          <p className="text-[22px] font-bold text-[#200a0c]">{fmt(data.avgOrderValue)}</p>
-          <p className="text-[#8c4f52] text-[11px] mt-1">Avg order value</p>
-          <p className="text-[#dbb0b0] text-[10px]">{totalOrdersCount} total orders</p>
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-5">
+          <ShoppingBag size={18} className="text-[#2f4b6e] mb-3" />
+          <p className="text-[22px] font-bold text-[#2b0e0a]">{fmt(data.avgOrderValue)}</p>
+          <p className="text-[#8c6f52] text-[11px] mt-1">Avg order value</p>
+          <p className="text-[#dcc9a0] text-[10px]">{totalOrdersCount} total orders</p>
         </div>
 
         {/* Customers */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-5">
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-5">
           <Users size={18} className="text-[#3b82f6] mb-3" />
-          <p className="text-[22px] font-bold text-[#200a0c]">{data.uniqueCustomers}</p>
-          <p className="text-[#8c4f52] text-[11px] mt-1">Unique customers</p>
-          <p className="text-[#dbb0b0] text-[10px]">All time</p>
+          <p className="text-[22px] font-bold text-[#2b0e0a]">{data.uniqueCustomers}</p>
+          <p className="text-[#8c6f52] text-[11px] mt-1">Unique customers</p>
+          <p className="text-[#dcc9a0] text-[10px]">All time</p>
         </div>
 
       </div>
 
       {/* Revenue chart */}
-      <div className="bg-white border border-[#f0c7c7] rounded-xl p-4 sm:p-6">
+      <div className="bg-white border border-[#efdcb0] rounded-xl p-4 sm:p-6">
         <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center mb-6">
-          <h2 className="text-[#200a0c] font-headline-sm text-[15px]">Revenue Over Time</h2>
+          <h2 className="text-[#2b0e0a] font-headline-sm text-[15px]">Revenue Over Time</h2>
           <div className="flex gap-1">
             {([7, 14, 30] as const).map((r) => (
               <button
                 key={r}
                 onClick={() => setChartRange(r)}
                 className={`px-3 py-1 rounded-lg font-label-md text-[11px] transition-colors ${
-                  chartRange === r ? "bg-[#c8102e]/15 text-[#c8102e]" : "text-[#8c4f52] hover:text-[#200a0c]"
+                  chartRange === r ? "bg-[#930500]/15 text-[#930500]" : "text-[#8c6f52] hover:text-[#2b0e0a]"
                 }`}
               >
                 {r}d
@@ -140,9 +140,9 @@ export default function AnalyticsPage() {
           {chartData.map((day) => (
             <div key={day.date} className="flex-1 flex flex-col items-center gap-1 group relative">
               {/* Tooltip */}
-              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white border border-[#dbb0b0] rounded-lg px-2 py-1.5 text-[10px] text-[#200a0c] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+              <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white border border-[#dcc9a0] rounded-lg px-2 py-1.5 text-[10px] text-[#2b0e0a] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
                 <p className="font-bold">{fmt(day.revenue)}</p>
-                <p className="text-[#8c4f52]">{day.orders} order{day.orders !== 1 ? "s" : ""}</p>
+                <p className="text-[#8c6f52]">{day.orders} order{day.orders !== 1 ? "s" : ""}</p>
               </div>
               <div className="w-full flex items-end justify-center" style={{ height: "176px" }}>
                 <div
@@ -150,13 +150,13 @@ export default function AnalyticsPage() {
                   style={{
                     height: `${Math.max((day.revenue / maxRevenue) * 100, day.revenue > 0 ? 2 : 0)}%`,
                     background: day.revenue > 0
-                      ? "linear-gradient(to top, #c8102e, #f8d3d3)"
-                      : "#f0c7c7",
+                      ? "linear-gradient(to top, #930500, #f6d8d2)"
+                      : "#efdcb0",
                   }}
                 />
               </div>
               {chartRange <= 14 && (
-                <span className="text-[#dbb0b0] font-label-md text-[9px]">
+                <span className="text-[#dcc9a0] font-label-md text-[9px]">
                   {new Date(day.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}
                 </span>
               )}
@@ -164,7 +164,7 @@ export default function AnalyticsPage() {
           ))}
         </div>
         {chartRange > 14 && (
-          <div className="flex justify-between text-[#dbb0b0] font-label-md text-[10px]">
+          <div className="flex justify-between text-[#dcc9a0] font-label-md text-[10px]">
             <span>{new Date(chartData[0]?.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
             <span>{new Date(chartData[chartData.length - 1]?.date).toLocaleDateString("en-IN", { day: "numeric", month: "short" })}</span>
           </div>
@@ -173,8 +173,8 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Orders by status */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#200a0c] font-headline-sm text-[15px] mb-5">Orders by Status</h2>
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#2b0e0a] font-headline-sm text-[15px] mb-5">Orders by Status</h2>
           <div className="space-y-3">
             {Object.entries(data.ordersByStatus)
               .sort((a, b) => b[1] - a[1])
@@ -183,13 +183,13 @@ export default function AnalyticsPage() {
                   <div className="flex justify-between items-center mb-1.5">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 rounded-full" style={{ backgroundColor: STATUS_COLORS[status] ?? "#6b7280" }} />
-                      <span className="text-[#5c3336] font-label-md text-[12px] capitalize">{status}</span>
+                      <span className="text-[#5c3b2e] font-label-md text-[12px] capitalize">{status}</span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-[#8c4f52] text-[11px]">
+                      <span className="text-[#8c6f52] text-[11px]">
                         {totalOrdersCount > 0 ? ((count / totalOrdersCount) * 100).toFixed(0) : 0}%
                       </span>
-                      <span className="text-[#200a0c] font-label-md text-[13px] w-6 text-right">{count}</span>
+                      <span className="text-[#2b0e0a] font-label-md text-[13px] w-6 text-right">{count}</span>
                     </div>
                   </div>
                   <MiniBar value={count} max={totalOrdersCount} color={STATUS_COLORS[status] ?? "#6b7280"} />
@@ -199,22 +199,22 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Revenue by category */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#200a0c] font-headline-sm text-[15px] mb-5">Revenue by Category</h2>
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#2b0e0a] font-headline-sm text-[15px] mb-5">Revenue by Category</h2>
           {data.revenueByCategory.length === 0 ? (
-            <p className="text-[#8c4f52] text-[13px] text-center py-8">No data yet</p>
+            <p className="text-[#8c6f52] text-[13px] text-center py-8">No data yet</p>
           ) : (
             <div className="space-y-3">
               {data.revenueByCategory.map(({ category, revenue }, i) => {
                 const maxCat = data.revenueByCategory[0].revenue;
-                const colors = ["#c8102e", "#8a3a3a", "#3b82f6", "#059669", "#c8102e"];
+                const colors = ["#930500", "#2f4b6e", "#3b82f6", "#059669", "#930500"];
                 return (
                   <div key={category}>
                     <div className="flex justify-between items-center mb-1.5">
-                      <span className="text-[#5c3336] font-label-md text-[12px]">
+                      <span className="text-[#5c3b2e] font-label-md text-[12px]">
                         {CATEGORY_LABELS[category] ?? category}
                       </span>
-                      <span className="text-[#200a0c] font-label-md text-[12px]">{fmt(revenue)}</span>
+                      <span className="text-[#2b0e0a] font-label-md text-[12px]">{fmt(revenue)}</span>
                     </div>
                     <MiniBar value={revenue} max={maxCat} color={colors[i % colors.length]} />
                   </div>
@@ -227,20 +227,20 @@ export default function AnalyticsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top products */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#200a0c] font-headline-sm text-[15px] mb-5">Top Products</h2>
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#2b0e0a] font-headline-sm text-[15px] mb-5">Top Products</h2>
           {data.topProducts.length === 0 ? (
-            <p className="text-[#8c4f52] text-[13px] text-center py-8">No sales data yet</p>
+            <p className="text-[#8c6f52] text-[13px] text-center py-8">No sales data yet</p>
           ) : (
             <div className="space-y-4">
               {data.topProducts.map((p, i) => (
                 <div key={p.name} className="flex items-center gap-4">
-                  <span className="text-[#dbb0b0] font-bold text-[14px] w-5 shrink-0">#{i + 1}</span>
+                  <span className="text-[#dcc9a0] font-bold text-[14px] w-5 shrink-0">#{i + 1}</span>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[#200a0c] font-label-md text-[13px] truncate">{p.name}</p>
-                    <p className="text-[#8c4f52] text-[11px]">{p.units} unit{p.units !== 1 ? "s" : ""} sold</p>
+                    <p className="text-[#2b0e0a] font-label-md text-[13px] truncate">{p.name}</p>
+                    <p className="text-[#8c6f52] text-[11px]">{p.units} unit{p.units !== 1 ? "s" : ""} sold</p>
                   </div>
-                  <span className="text-[#c8102e] font-label-md text-[13px] shrink-0">{fmt(p.revenue)}</span>
+                  <span className="text-[#930500] font-label-md text-[13px] shrink-0">{fmt(p.revenue)}</span>
                 </div>
               ))}
             </div>
@@ -248,8 +248,8 @@ export default function AnalyticsPage() {
         </div>
 
         {/* Inventory health */}
-        <div className="bg-white border border-[#f0c7c7] rounded-xl p-4 sm:p-6">
-          <h2 className="text-[#200a0c] font-headline-sm text-[15px] mb-5">Inventory Health</h2>
+        <div className="bg-white border border-[#efdcb0] rounded-xl p-4 sm:p-6">
+          <h2 className="text-[#2b0e0a] font-headline-sm text-[15px] mb-5">Inventory Health</h2>
           <div className="space-y-4">
             {[
               { label: "Healthy stock",   value: data.inventoryHealth.healthy,    color: "#22c55e", icon: <Package size={14} /> },
@@ -261,13 +261,13 @@ export default function AnalyticsPage() {
                   {icon}
                 </div>
                 <div className="flex-1">
-                  <p className="text-[#5c3336] font-label-md text-[12px]">{label}</p>
+                  <p className="text-[#5c3b2e] font-label-md text-[12px]">{label}</p>
                   <MiniBar value={value} max={data.inventoryHealth.total} color={color} />
                 </div>
-                <span className="text-[#200a0c] font-bold text-[16px] w-8 text-right">{value}</span>
+                <span className="text-[#2b0e0a] font-bold text-[16px] w-8 text-right">{value}</span>
               </div>
             ))}
-            <p className="text-[#dbb0b0] text-[11px] pt-2 border-t border-[#f0c7c7]">
+            <p className="text-[#dcc9a0] text-[11px] pt-2 border-t border-[#efdcb0]">
               {data.inventoryHealth.total} active products total
             </p>
           </div>

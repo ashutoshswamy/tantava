@@ -100,7 +100,7 @@ export default function CollectionSlugPage() {
       <>
         <Navbar activePage="shop" />
         <main className="min-h-screen bg-surface flex flex-col items-center justify-center text-center px-4">
-          <Layers size={48} className="text-[#eec3c3] mb-4" />
+          <Layers size={48} className="text-[#e8d9bc] mb-4" />
           <h1 className="font-headline-lg text-[32px] text-on-surface mb-3">Collection Not Found</h1>
           <p className="text-on-surface-variant mb-6">This collection doesn&apos;t exist or has been removed.</p>
           <Link
@@ -184,7 +184,7 @@ export default function CollectionSlugPage() {
 
           {products.length === 0 ? (
             <div className="text-center py-20">
-              <Layers size={40} className="text-[#eec3c3] mx-auto mb-4" />
+              <Layers size={40} className="text-[#e8d9bc] mx-auto mb-4" />
               <p className="text-on-surface-variant text-[16px]">No products in this collection yet.</p>
             </div>
           ) : (
@@ -301,7 +301,7 @@ export default function CollectionSlugPage() {
                       onClick={() => setSelectedSize(s)}
                       className={`px-3 py-1.5 rounded-lg border text-[13px] font-label-md transition-all ${
                         selectedSize === s
-                          ? "bg-primary text-white border-[#c8102e]"
+                          ? "bg-primary text-white border-[#930500]"
                           : "border-outline-variant/40 text-on-surface hover:border-primary/50"
                       }`}
                     >

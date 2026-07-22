@@ -87,15 +87,15 @@ export default function AdminProductsPage() {
   const canReorder = !search;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 text-[#200a0c]">
+    <div className="p-4 sm:p-6 lg:p-8 text-[#2b0e0a]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Products</h1>
-          <p className="text-[#8c4f52] text-[13px] mt-0.5">{products.length} total products</p>
+          <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Products</h1>
+          <p className="text-[#8c6f52] text-[13px] mt-0.5">{products.length} total products</p>
         </div>
         <Link
           href="/admin/products/new"
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#c8102e] text-white text-[13px] font-medium rounded-xl hover:bg-[#96182a] transition-colors"
+          className="flex items-center gap-2 px-5 py-2.5 bg-[#930500] text-white text-[13px] font-medium rounded-xl hover:bg-[#8c0500] transition-colors"
         >
           <Plus size={16} />
           Add Product
@@ -104,13 +104,13 @@ export default function AdminProductsPage() {
 
       <div className="mb-6 flex flex-col sm:flex-row gap-3">
         <div className="relative max-w-sm w-full">
-          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8c4f52]" />
+          <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8c6f52]" />
           <input
             type="text"
             placeholder="Search products..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl pl-10 pr-4 py-3 text-[#200a0c] placeholder:text-[#dbb0b0] text-[13px] focus:border-[#c8102e]/60 focus:outline-none transition-colors"
+            className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl pl-10 pr-4 py-3 text-[#2b0e0a] placeholder:text-[#dcc9a0] text-[13px] focus:border-[#930500]/60 focus:outline-none transition-colors"
           />
         </div>
         <select
@@ -121,33 +121,33 @@ export default function AdminProductsPage() {
             if (v === "newest" || v === "oldest") applyDateSort(v);
             e.target.value = "";
           }}
-          className="bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[#200a0c] text-[13px] focus:border-[#c8102e]/60 focus:outline-none transition-colors disabled:opacity-50"
+          className="bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[#2b0e0a] text-[13px] focus:border-[#930500]/60 focus:outline-none transition-colors disabled:opacity-50"
         >
           <option value="" disabled>{applying ? "Applying…" : "Sort by add date…"}</option>
           <option value="newest">Newest First</option>
           <option value="oldest">Oldest First</option>
         </select>
       </div>
-      <p className="text-[11px] text-[#8c4f52] -mt-3 mb-6">
+      <p className="text-[11px] text-[#8c6f52] -mt-3 mb-6">
         This sets the order shown on the storefront. Use the arrows below for manual fine-tuning.
       </p>
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Loader2 size={40} className="text-[#c8102e] animate-spin" />
+          <Loader2 size={40} className="text-[#930500] animate-spin" />
         </div>
       ) : (
         <>
           {/* Mobile cards */}
           <div className="grid gap-3 sm:hidden">
             {filtered.map((product, i) => (
-              <div key={product.id} className="bg-white border border-[#f0c7c7] rounded-2xl p-4">
+              <div key={product.id} className="bg-white border border-[#efdcb0] rounded-2xl p-4">
                 <div className="flex items-start gap-3">
                   <div className="flex flex-col gap-1 pt-0.5">
                     <button
                       onClick={() => moveProduct(i, -1)}
                       disabled={!canReorder || i === 0}
-                      className="p-1 text-[#8c4f52] disabled:opacity-20"
+                      className="p-1 text-[#8c6f52] disabled:opacity-20"
                       title="Move up"
                     >
                       <ArrowUp size={14} />
@@ -155,7 +155,7 @@ export default function AdminProductsPage() {
                     <button
                       onClick={() => moveProduct(i, 1)}
                       disabled={!canReorder || i === filtered.length - 1}
-                      className="p-1 text-[#8c4f52] disabled:opacity-20"
+                      className="p-1 text-[#8c6f52] disabled:opacity-20"
                       title="Move down"
                     >
                       <ArrowDown size={14} />
@@ -169,15 +169,15 @@ export default function AdminProductsPage() {
                     />
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="text-[#200a0c] font-medium text-[13px] leading-tight">{product.name}</p>
-                    {product.sku && <p className="text-[#dbb0b0] text-[11px] mt-0.5">{product.sku}</p>}
-                    <p className="mt-1.5 text-[#c8102e] font-semibold text-[13px]">
+                    <p className="text-[#2b0e0a] font-medium text-[13px] leading-tight">{product.name}</p>
+                    {product.sku && <p className="text-[#dcc9a0] text-[11px] mt-0.5">{product.sku}</p>}
+                    <p className="mt-1.5 text-[#930500] font-semibold text-[13px]">
                       {formatPrice(product.price)}
                     </p>
-                    <p className="text-[12px] text-[#8c4f52] capitalize mt-0.5">
+                    <p className="text-[12px] text-[#8c6f52] capitalize mt-0.5">
                       {product.category} · Stock {totalStock(product.size_inventory)}
                     </p>
-                    <p className="text-[11px] text-[#dbb0b0] mt-0.5">Added {formatDate(product.created_at)}</p>
+                    <p className="text-[11px] text-[#dcc9a0] mt-0.5">Added {formatDate(product.created_at)}</p>
                   </div>
                 </div>
                 <div className="mt-4 flex items-center justify-between gap-3">
@@ -186,7 +186,7 @@ export default function AdminProductsPage() {
                     className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize transition-colors ${
                       product.is_active
                         ? "bg-green-50 text-green-700 hover:bg-green-100"
-                        : "bg-[#fbe9e9] text-[#8c4f52] hover:bg-[#f6d9d9]"
+                        : "bg-[#fbf0da] text-[#8c6f52] hover:bg-[#f5e7c9]"
                     }`}
                   >
                     {product.is_active ? "Active" : "Hidden"}
@@ -194,14 +194,14 @@ export default function AdminProductsPage() {
                   <div className="flex items-center gap-2">
                     <Link
                       href={`/admin/products/${product.id}`}
-                      className="p-2 text-[#8c4f52] hover:text-[#200a0c] rounded-lg hover:bg-[#fbe9e9] transition-colors"
+                      className="p-2 text-[#8c6f52] hover:text-[#2b0e0a] rounded-lg hover:bg-[#fbf0da] transition-colors"
                     >
                       <Pencil size={16} />
                     </Link>
                     <button
                       onClick={() => deleteProduct(product.id)}
                       disabled={deleting === product.id}
-                      className="p-2 text-[#8c4f52] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-30"
+                      className="p-2 text-[#8c6f52] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-30"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -211,37 +211,37 @@ export default function AdminProductsPage() {
             ))}
             {filtered.length === 0 && (
               <div className="text-center py-20">
-                <Package size={40} className="mx-auto mb-3 text-[#dbb0b0]" />
-                <p className="text-[#8c4f52] text-[14px] font-medium">No products found</p>
-                <p className="text-[#dbb0b0] text-[12px] mt-1">Try a different search term</p>
+                <Package size={40} className="mx-auto mb-3 text-[#dcc9a0]" />
+                <p className="text-[#8c6f52] text-[14px] font-medium">No products found</p>
+                <p className="text-[#dcc9a0] text-[12px] mt-1">Try a different search term</p>
               </div>
             )}
           </div>
 
           {/* Desktop table */}
-          <div className="hidden sm:block bg-white border border-[#f0c7c7] rounded-2xl overflow-hidden">
+          <div className="hidden sm:block bg-white border border-[#efdcb0] rounded-2xl overflow-hidden">
             <table className="w-full min-w-[640px]">
               <thead>
-                <tr className="border-b border-[#f0c7c7] bg-[#fbe9e9]/40">
+                <tr className="border-b border-[#efdcb0] bg-[#fbf0da]/40">
                   <th className="px-5 py-3.5 w-16"></th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Product</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider hidden md:table-cell">Category</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Price</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider">Stock</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider hidden lg:table-cell">Added</th>
-                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider hidden sm:table-cell">Status</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider">Product</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden md:table-cell">Category</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider">Price</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider">Stock</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden lg:table-cell">Added</th>
+                  <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden sm:table-cell">Status</th>
                   <th className="px-5 py-3.5"></th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#f0c7c7]">
+              <tbody className="divide-y divide-[#efdcb0]">
                 {filtered.map((product, i) => (
-                  <tr key={product.id} className="hover:bg-[#fbe9e9]/30 transition-colors">
+                  <tr key={product.id} className="hover:bg-[#fbf0da]/30 transition-colors">
                     <td className="px-5 py-4">
                       <div className="flex flex-col gap-1">
                         <button
                           onClick={() => moveProduct(i, -1)}
                           disabled={!canReorder || i === 0}
-                          className="p-1 text-[#8c4f52] hover:text-[#200a0c] disabled:opacity-20 disabled:hover:text-[#8c4f52]"
+                          className="p-1 text-[#8c6f52] hover:text-[#2b0e0a] disabled:opacity-20 disabled:hover:text-[#8c6f52]"
                           title="Move up"
                         >
                           <ArrowUp size={14} />
@@ -249,7 +249,7 @@ export default function AdminProductsPage() {
                         <button
                           onClick={() => moveProduct(i, 1)}
                           disabled={!canReorder || i === filtered.length - 1}
-                          className="p-1 text-[#8c4f52] hover:text-[#200a0c] disabled:opacity-20 disabled:hover:text-[#8c4f52]"
+                          className="p-1 text-[#8c6f52] hover:text-[#2b0e0a] disabled:opacity-20 disabled:hover:text-[#8c6f52]"
                           title="Move down"
                         >
                           <ArrowDown size={14} />
@@ -266,19 +266,19 @@ export default function AdminProductsPage() {
                           />
                         )}
                         <div>
-                          <p className="text-[#200a0c] font-medium text-[13px] leading-tight">{product.name}</p>
+                          <p className="text-[#2b0e0a] font-medium text-[13px] leading-tight">{product.name}</p>
                           {product.sku && (
-                            <p className="text-[#dbb0b0] text-[11px] mt-0.5">{product.sku}</p>
+                            <p className="text-[#dcc9a0] text-[11px] mt-0.5">{product.sku}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell">
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize" style={{ backgroundColor: "#c8102e18", color: "#c8102e" }}>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize" style={{ backgroundColor: "#93050018", color: "#930500" }}>
                         {product.category}
                       </span>
                     </td>
-                    <td className="px-5 py-4 text-[#c8102e] font-semibold text-[13px]">
+                    <td className="px-5 py-4 text-[#930500] font-semibold text-[13px]">
                       {formatPrice(product.price)}
                     </td>
                     <td className="px-5 py-4">
@@ -291,7 +291,7 @@ export default function AdminProductsPage() {
                         );
                       })()}
                     </td>
-                    <td className="px-5 py-4 hidden lg:table-cell text-[13px] text-[#8c4f52]">
+                    <td className="px-5 py-4 hidden lg:table-cell text-[13px] text-[#8c6f52]">
                       {formatDate(product.created_at)}
                     </td>
                     <td className="px-5 py-4 hidden sm:table-cell">
@@ -300,7 +300,7 @@ export default function AdminProductsPage() {
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize transition-colors ${
                           product.is_active
                             ? "bg-green-50 text-green-700 hover:bg-green-100"
-                            : "bg-[#fbe9e9] text-[#8c4f52] hover:bg-[#f6d9d9]"
+                            : "bg-[#fbf0da] text-[#8c6f52] hover:bg-[#f5e7c9]"
                         }`}
                       >
                         {product.is_active ? "Active" : "Hidden"}
@@ -310,7 +310,7 @@ export default function AdminProductsPage() {
                       <div className="flex items-center gap-1.5 justify-end">
                         <Link
                           href={`/admin/products/${product.id}`}
-                          className="p-2 text-[#8c4f52] hover:text-[#200a0c] rounded-lg hover:bg-[#fbe9e9] transition-colors"
+                          className="p-2 text-[#8c6f52] hover:text-[#2b0e0a] rounded-lg hover:bg-[#fbf0da] transition-colors"
                           title="Edit product"
                         >
                           <Pencil size={15} />
@@ -318,7 +318,7 @@ export default function AdminProductsPage() {
                         <button
                           onClick={() => deleteProduct(product.id)}
                           disabled={deleting === product.id}
-                          className="p-2 text-[#8c4f52] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-30"
+                          className="p-2 text-[#8c6f52] hover:text-red-600 rounded-lg hover:bg-red-50 transition-colors disabled:opacity-30"
                           title="Delete product"
                         >
                           <Trash2 size={15} />
@@ -331,9 +331,9 @@ export default function AdminProductsPage() {
             </table>
             {filtered.length === 0 && (
               <div className="text-center py-20">
-                <Package size={40} className="mx-auto mb-3 text-[#dbb0b0]" />
-                <p className="text-[#8c4f52] text-[14px] font-medium">No products found</p>
-                <p className="text-[#dbb0b0] text-[12px] mt-1">Try a different search term</p>
+                <Package size={40} className="mx-auto mb-3 text-[#dcc9a0]" />
+                <p className="text-[#8c6f52] text-[14px] font-medium">No products found</p>
+                <p className="text-[#dcc9a0] text-[12px] mt-1">Try a different search term</p>
               </div>
             )}
           </div>

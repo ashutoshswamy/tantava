@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -11,42 +11,12 @@ import {
   Receipt,
   Package,
   Truck,
-  MapPin,
-  ExternalLink,
-  ChevronDown,
-  ChevronUp,
-  RefreshCw,
   CheckCircle2,
   Clock,
   AlertCircle,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
-// ─── Types ─────────────────────────────────────────────────────────────────
-
-interface TrackingActivity {
-  date: string;
-  activity: string;
-  location: string;
-  "sr-status"?: string;
-}
-
-interface TrackingData {
-  shiprocket_order_id: string | null;
-  shiprocket_shipment_id: string | null;
-  courier_name: string | null;
-  awb_code: string | null;
-  status: string | null;
-  tracking_url: string | null;
-  activities: TrackingActivity[];
-  estimated_delivery: string | null;
-}
-
-interface TrackingResult {
-  tracking: TrackingData | null;
-  message?: string;
-  error?: string;
-}
 
 // ─── Constants ──────────────────────────────────────────────────────────────
 
@@ -137,195 +107,6 @@ function StatusTimeline({ status }: { status: string }) {
           );
         })}
       </div>
-    </div>
-  );
-}
-
-function TrackingPanel({ orderId, status }: { orderId: string; status: string }) {
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<TrackingResult | null>(null);
-  const [lastFetched, setLastFetched] = useState<Date | null>(null);
-
-  const fetchTracking = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/shiprocket/track/${orderId}`);
-      const data: TrackingResult = await res.json();
-      setResult(data);
-      setLastFetched(new Date());
-    } catch {
-      setResult({ tracking: null, error: "Failed to load tracking" });
-    } finally {
-      setLoading(false);
-    }
-  }, [orderId]);
-
-  const handleToggle = () => {
-    if (!open && !result) fetchTracking();
-    setOpen((v) => !v);
-  };
-
-  // Only show the tracking panel for shipped/delivered orders
-  const showTracking = ["shipped", "delivered", "processing"].includes(status);
-  if (!showTracking) return null;
-
-  const t = result?.tracking;
-
-  return (
-    <div className="mt-4 border-t border-outline-variant/20 pt-4">
-      <button
-        onClick={handleToggle}
-        className="flex items-center gap-2 text-primary font-label-md text-[12px] hover:opacity-80 transition-opacity"
-      >
-        <Truck size={14} />
-        {open ? "Hide" : "View"} Shipment Tracking
-        {open ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.25, ease: "easeInOut" }}
-            className="overflow-hidden"
-          >
-            <div className="mt-4 space-y-4">
-              {/* Refresh bar */}
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] text-on-surface-variant">
-                  {lastFetched
-                    ? `Updated ${lastFetched.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })}`
-                    : ""}
-                </span>
-                <button
-                  onClick={fetchTracking}
-                  disabled={loading}
-                  className="flex items-center gap-1.5 text-[11px] text-on-surface-variant hover:text-primary transition-colors disabled:opacity-40"
-                >
-                  <RefreshCw size={11} className={loading ? "animate-spin" : ""} />
-                  Refresh
-                </button>
-              </div>
-
-              {loading && !t ? (
-                <div className="flex items-center justify-center py-6">
-                  <Loader2 size={22} className="text-outline animate-spin" />
-                </div>
-              ) : result?.error ? (
-                <div className="flex items-center gap-2 p-3 bg-red-50 rounded-lg">
-                  <AlertCircle size={14} className="text-red-500 shrink-0" />
-                  <p className="text-[12px] text-red-600">{result.error}</p>
-                </div>
-              ) : !t ? (
-                <div className="p-3 bg-surface-container rounded-lg">
-                  <p className="text-[12px] text-on-surface-variant">
-                    {result?.message ?? "Tracking information not available yet."}
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {/* Courier + AWB Info */}
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {t.courier_name && (
-                      <div className="bg-surface-container rounded-lg px-4 py-3">
-                        <p className="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Courier</p>
-                        <p className="font-label-md text-[13px] text-on-surface">{t.courier_name}</p>
-                      </div>
-                    )}
-                    {t.awb_code && (
-                      <div className="bg-surface-container rounded-lg px-4 py-3">
-                        <p className="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">AWB / Tracking No.</p>
-                        <p className="font-label-md text-[13px] text-on-surface font-mono">{t.awb_code}</p>
-                      </div>
-                    )}
-                    {t.estimated_delivery && (
-                      <div className="bg-surface-container rounded-lg px-4 py-3">
-                        <p className="text-[10px] text-on-surface-variant uppercase tracking-wider mb-1">Est. Delivery</p>
-                        <p className="font-label-md text-[13px] text-on-surface">
-                          {new Date(t.estimated_delivery).toLocaleDateString("en-IN", {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Live status */}
-                  {t.status && (
-                    <div className="flex items-center gap-2">
-                      <Package size={13} className="text-primary" />
-                      <span className="text-[12px] text-on-surface-variant">Current status:</span>
-                      <span className="font-label-md text-[12px] text-primary">{t.status}</span>
-                    </div>
-                  )}
-
-                  {/* Activity timeline */}
-                  {t.activities.length > 0 && (
-                    <div>
-                      <p className="font-label-md text-[11px] text-on-surface-variant uppercase tracking-wider mb-3">
-                        Tracking History
-                      </p>
-                      <div className="space-y-0 relative">
-                        <div className="absolute left-[7px] top-2 bottom-2 w-px bg-outline-variant/30" />
-                        {t.activities.slice(0, 6).map((act, i) => (
-                          <div key={i} className="flex gap-4 pb-4 relative">
-                            <div
-                              className={`w-3.5 h-3.5 rounded-full border-2 shrink-0 mt-0.5 z-10 ${
-                                i === 0
-                                  ? "bg-primary border-primary"
-                                  : "bg-surface border-outline-variant"
-                              }`}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <p className={`text-[12px] leading-snug ${i === 0 ? "text-on-surface font-medium" : "text-on-surface-variant"}`}>
-                                {act.activity}
-                              </p>
-                              <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                {act.location && (
-                                  <span className="flex items-center gap-0.5 text-[10px] text-on-surface-variant">
-                                    <MapPin size={9} />
-                                    {act.location}
-                                  </span>
-                                )}
-                                <span className="text-[10px] text-on-surface-variant opacity-60">
-                                  {new Date(act.date).toLocaleString("en-IN", {
-                                    day: "numeric",
-                                    month: "short",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                  })}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* External tracking link */}
-                  {t.tracking_url && (
-                    <a
-                      href={t.tracking_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-[12px] text-primary font-label-md hover:opacity-75 transition-opacity"
-                    >
-                      Track on Shiprocket
-                      <ExternalLink size={11} />
-                    </a>
-                  )}
-                </div>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 }
@@ -462,9 +243,6 @@ export default function OrdersPage() {
 
                     {/* Status timeline */}
                     <StatusTimeline status={order.status} />
-
-                    {/* Shiprocket live tracking panel */}
-                    <TrackingPanel orderId={order.id} status={order.status} />
                   </div>
                 </motion.div>
               ))}

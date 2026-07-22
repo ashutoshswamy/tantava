@@ -4,20 +4,24 @@ import { useEffect, useState } from "react";
 import { Loader2, Truck } from "lucide-react";
 import type { StoreSettings } from "@/lib/supabase";
 
-const inputCls = "w-full bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-4 py-3 text-[13px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:border-[#c8102e]/60 focus:outline-none transition-colors resize-none";
+const inputCls = "w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors resize-none";
 
 export default function DeliveryReturnsSettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState({ delivery_info: "", returns_info: "" });
+  const [form, setForm] = useState({ delivery_info: "", returns_info: "", testimonials_enabled: true });
 
   useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data: StoreSettings) => {
-        setForm({ delivery_info: data.delivery_info || "", returns_info: data.returns_info || "" });
+        setForm({
+          delivery_info: data.delivery_info || "",
+          returns_info: data.returns_info || "",
+          testimonials_enabled: data.testimonials_enabled ?? true,
+        });
         setLoading(false);
       });
   }, []);
@@ -47,20 +51,20 @@ export default function DeliveryReturnsSettingsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <Loader2 size={40} className="text-[#c8102e] animate-spin" />
+        <Loader2 size={40} className="text-[#930500] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#200a0c]">
+    <div className="max-w-3xl p-4 sm:p-6 lg:p-8 text-[#2b0e0a]">
       <div className="flex items-center gap-3 mb-8">
-        <div className="p-2 bg-[#fbe9e9] rounded-xl text-[#c8102e]">
+        <div className="p-2 bg-[#fbf0da] rounded-xl text-[#930500]">
           <Truck size={20} />
         </div>
         <div>
-          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Delivery & Returns</h1>
-          <p className="text-[#8c4f52] text-[13px] mt-0.5">Site-wide copy shown on every product page</p>
+          <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Delivery & Returns</h1>
+          <p className="text-[#8c6f52] text-[13px] mt-0.5">Site-wide copy shown on every product page</p>
         </div>
       </div>
 
@@ -71,9 +75,9 @@ export default function DeliveryReturnsSettingsPage() {
       )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="bg-white border border-[#f0c7c7] rounded-2xl p-5 sm:p-6 space-y-5">
+        <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 space-y-5">
           <div>
-            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Delivery Info</label>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Delivery Info</label>
             <textarea
               rows={4}
               value={form.delivery_info}
@@ -83,7 +87,7 @@ export default function DeliveryReturnsSettingsPage() {
             />
           </div>
           <div>
-            <label className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider mb-1.5 block">Returns Info</label>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Returns Info</label>
             <textarea
               rows={4}
               value={form.returns_info}
@@ -94,10 +98,32 @@ export default function DeliveryReturnsSettingsPage() {
           </div>
         </div>
 
+        <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 flex items-center justify-between gap-4">
+          <div>
+            <p className="text-[14px] font-medium text-[#2b0e0a]">Homepage Testimonials</p>
+            <p className="text-[12px] text-[#8c6f52] mt-0.5">Show the customer testimonials section on the homepage</p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={form.testimonials_enabled}
+            onClick={() => setForm({ ...form, testimonials_enabled: !form.testimonials_enabled })}
+            className={`relative w-12 h-7 rounded-full shrink-0 transition-colors ${
+              form.testimonials_enabled ? "bg-[#930500]" : "bg-[#dcc9a0]/50"
+            }`}
+          >
+            <span
+              className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${
+                form.testimonials_enabled ? "translate-x-5" : "translate-x-0"
+              }`}
+            />
+          </button>
+        </div>
+
         <button
           type="submit"
           disabled={saving}
-          className="py-3.5 px-8 bg-[#c8102e] text-white rounded-xl font-medium text-[14px] hover:bg-[#96182a] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          className="py-3.5 px-8 bg-[#930500] text-white rounded-xl font-medium text-[14px] hover:bg-[#8c0500] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
         >
           {saving ? (
             <>

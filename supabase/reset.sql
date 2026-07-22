@@ -10,8 +10,16 @@ drop policy if exists "orders_user_read"         on orders;
 drop policy if exists "products_public_read"     on products;
 drop policy if exists "store_settings_public_read" on store_settings;
 drop policy if exists "collections_public_read"  on collections;
+drop policy if exists "categories_public_read"   on categories;
 drop policy if exists "product_images_public_read"  on storage.objects;
 drop policy if exists "product_images_service_write" on storage.objects;
+
+-- ─────────────────────────────────────────────
+-- STORAGE
+-- Supabase blocks direct DELETE on storage.objects/buckets (protect_delete trigger).
+-- Empty and drop the product-images bucket via the Storage API instead:
+--   npm run reset:storage
+-- ─────────────────────────────────────────────
 
 -- ─────────────────────────────────────────────
 -- DROP TRIGGERS
@@ -19,6 +27,7 @@ drop policy if exists "product_images_service_write" on storage.objects;
 drop trigger if exists orders_updated_at     on orders;
 drop trigger if exists products_updated_at   on products;
 drop trigger if exists collections_updated_at on collections;
+drop trigger if exists categories_updated_at on categories;
 drop trigger if exists store_settings_updated_at on store_settings;
 
 -- ─────────────────────────────────────────────
@@ -28,7 +37,6 @@ drop index if exists inquiries_created_at_idx;
 drop index if exists feedbacks_created_at_idx;
 drop index if exists inventory_logs_created_at_idx;
 drop index if exists inventory_logs_product_id_idx;
-drop index if exists orders_shiprocket_order_id_idx;
 drop index if exists orders_created_at_idx;
 drop index if exists orders_status_idx;
 drop index if exists orders_user_id_idx;
@@ -37,6 +45,8 @@ drop index if exists products_is_active_idx;
 drop index if exists products_category_idx;
 drop index if exists collections_is_active_idx;
 drop index if exists collections_slug_idx;
+drop index if exists categories_is_active_idx;
+drop index if exists categories_slug_idx;
 drop index if exists rate_limits_expires_at_idx;
 
 -- ─────────────────────────────────────────────
@@ -50,6 +60,7 @@ drop table if exists orders         cascade;
 drop table if exists products       cascade;
 drop table if exists store_settings cascade;
 drop table if exists collections    cascade;
+drop table if exists categories     cascade;
 
 -- ─────────────────────────────────────────────
 -- DROP FUNCTIONS

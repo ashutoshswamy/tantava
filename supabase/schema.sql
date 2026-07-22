@@ -41,6 +41,26 @@ create or replace trigger collections_updated_at
   for each row execute function set_updated_at();
 
 -- ─────────────────────────────────────────────
+-- CATEGORIES
+-- ─────────────────────────────────────────────
+create table if not exists categories (
+  id          uuid primary key default uuid_generate_v4(),
+  name        text not null,
+  slug        text unique not null,
+  is_active   boolean not null default true,
+  sort_order  integer not null default 0,
+  created_at  timestamptz not null default now(),
+  updated_at  timestamptz not null default now()
+);
+
+create index if not exists categories_slug_idx     on categories (slug);
+create index if not exists categories_is_active_idx on categories (is_active);
+
+create or replace trigger categories_updated_at
+  before update on categories
+  for each row execute function set_updated_at();
+
+-- ─────────────────────────────────────────────
 -- PRODUCTS
 -- size_inventory: {"XS":0,"S":0,"M":5,"L":3,"XL":0,"XXL":0}
 -- ─────────────────────────────────────────────
@@ -76,12 +96,13 @@ create or replace trigger products_updated_at
 -- singleton row (site-wide delivery & returns copy, set by admin)
 -- ─────────────────────────────────────────────
 create table if not exists store_settings (
-  id              boolean primary key default true check (id),
-  delivery_info   text,
-  returns_info    text,
-  checkout_mode   text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),
-  whatsapp_number text,
-  updated_at      timestamptz not null default now()
+  id                    boolean primary key default true check (id),
+  delivery_info         text,
+  returns_info          text,
+  checkout_mode         text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),
+  whatsapp_number       text,
+  testimonials_enabled  boolean not null default true,
+  updated_at            timestamptz not null default now()
 );
 
 insert into store_settings (id) values (true) on conflict (id) do nothing;
@@ -95,7 +116,6 @@ create or replace trigger store_settings_updated_at
 -- user_id: Clerk user ID
 -- items JSONB: [{product_id, name, price, quantity, size, image}]
 -- shipping_address JSONB: {name, phone, line1, line2?, city, state, pincode}
--- Shiprocket columns added in migration 20260622000001_shiprocket_columns
 -- ─────────────────────────────────────────────
 create table if not exists orders (
   id                      uuid primary key default uuid_generate_v4(),
@@ -112,12 +132,6 @@ create table if not exists orders (
   razorpay_payment_id     text unique,
   razorpay_signature      text,
   admin_notes             text,
-  -- Shiprocket integration
-  shiprocket_order_id     text unique,   -- numeric order ID from Shiprocket
-  shiprocket_shipment_id  text unique,   -- assigned once courier is allocated
-  shiprocket_awb_code     text,          -- Air Waybill number for tracking
-  shiprocket_status       text,          -- last known Shiprocket status string
-  shiprocket_synced_at    timestamptz,   -- timestamp of last successful sync
   created_at              timestamptz not null default now(),
   updated_at              timestamptz not null default now()
 );
@@ -153,6 +167,11 @@ create index if not exists inventory_logs_created_at_idx  on inventory_logs (cre
 -- Collections: public read of active collections; writes via service role only
 alter table collections enable row level security;
 create policy "collections_public_read" on collections
+  for select using (is_active = true);
+
+-- Categories: public read of active categories; writes via service role only
+alter table categories enable row level security;
+create policy "categories_public_read" on categories
   for select using (is_active = true);
 
 -- Products: public read of active items; writes via service role only

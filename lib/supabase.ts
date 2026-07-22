@@ -17,6 +17,16 @@ export type Collection = {
   updated_at: string;
 };
 
+export type Category = {
+  id: string;
+  name: string;
+  slug: string;
+  is_active: boolean;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Product = {
   id: string;
   name: string;
@@ -43,6 +53,7 @@ export type StoreSettings = {
   returns_info: string | null;
   checkout_mode: "razorpay" | "whatsapp";
   whatsapp_number: string | null;
+  testimonials_enabled: boolean;
   updated_at: string;
 };
 
@@ -60,12 +71,6 @@ export type Order = {
   razorpay_signature: string | null;
   shipping_address: ShippingAddress | null;
   admin_notes: string | null;
-  // Shiprocket integration
-  shiprocket_order_id: string | null;
-  shiprocket_shipment_id: string | null;
-  shiprocket_awb_code: string | null;
-  shiprocket_status: string | null;
-  shiprocket_synced_at: string | null;
   created_at: string;
   updated_at: string;
 };

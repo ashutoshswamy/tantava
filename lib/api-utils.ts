@@ -113,6 +113,29 @@ export function validateProductInput(body: Record<string, unknown>, partial: boo
   return out;
 }
 
+export function validateCategoryInput(body: Record<string, unknown>, partial: boolean) {
+  const out: Record<string, unknown> = {};
+  if ("name" in body || !partial) {
+    const v = str(body.name);
+    if (!partial && v === undefined) throw new ValidationError("name is required");
+    if (v !== undefined) out.name = v;
+  }
+  if ("slug" in body) {
+    const v = str(body.slug);
+    if (v !== undefined) out.slug = v;
+  }
+  if ("is_active" in body) {
+    if (typeof body.is_active !== "boolean") throw new ValidationError("is_active must be a boolean");
+    out.is_active = body.is_active;
+  }
+  if ("sort_order" in body) {
+    const v = num(body.sort_order);
+    if (v === undefined) throw new ValidationError("sort_order must be a number");
+    out.sort_order = v;
+  }
+  return out;
+}
+
 export function validateCollectionInput(body: Record<string, unknown>, partial: boolean) {
   const out: Record<string, unknown> = {};
   if ("name" in body || !partial) {
@@ -169,6 +192,10 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     const v = str(body.whatsapp_number);
     if (v === undefined) throw new ValidationError("whatsapp_number must be a string");
     out.whatsapp_number = v;
+  }
+  if ("testimonials_enabled" in body) {
+    if (typeof body.testimonials_enabled !== "boolean") throw new ValidationError("testimonials_enabled must be a boolean");
+    out.testimonials_enabled = body.testimonials_enabled;
   }
   return out;
 }

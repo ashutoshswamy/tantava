@@ -2,7 +2,7 @@
 
 E-commerce storefront and admin panel for Tantava, an Indian ethnic wear label — sarees, lehengas, fusion wear, gowns, and jewellery.
 
-Built with Next.js 16 (App Router), Supabase (Postgres), Clerk (auth), Razorpay (payments), and Shiprocket (fulfillment).
+Built with Next.js 16 (App Router), Supabase (Postgres), Clerk (auth), and Razorpay (payments).
 
 For architecture, data model, and API details see [DOCUMENTATION.md](./DOCUMENTATION.md). For the threat model and security controls see [SECURITY.md](./SECURITY.md).
 
@@ -12,7 +12,6 @@ For architecture, data model, and API details see [DOCUMENTATION.md](./DOCUMENTA
 - **Auth**: Clerk (`@clerk/nextjs`) — role-based admin access via `publicMetadata.role`
 - **Database**: Supabase Postgres, accessed directly via `@supabase/supabase-js` (no ORM), Row Level Security enabled
 - **Payments**: Razorpay
-- **Shipping**: Shiprocket (custom integration, no SDK)
 - **State**: Zustand (cart, wishlist)
 - **Animation**: Framer Motion
 
@@ -42,17 +41,11 @@ CLERK_SECRET_KEY=
 NEXT_PUBLIC_RAZORPAY_KEY_ID=
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
-
-# Shiprocket
-SHIPROCKET_EMAIL=
-SHIPROCKET_PASSWORD=
-SHIPROCKET_PICKUP_LOCATION=
-SHIPROCKET_TEST_MODE=true
 ```
 
 ### 3. Set up the database
 
-Run `supabase/schema.sql` once against a fresh Supabase project (SQL editor or CLI). For an existing database, apply any new files under `supabase/migrations/` in filename order. `supabase/reset.sql` drops everything — dev/staging only.
+Run `supabase/schema.sql` once against a fresh Supabase project (SQL editor or CLI) — it's the canonical, idempotent schema. `supabase/reset.sql` drops every table/policy/trigger/function — dev/staging only. It can't touch storage (Supabase blocks direct SQL deletes on storage tables), so also run `npm run reset:storage` to empty and delete the `product-images` bucket.
 
 Grant a Clerk user admin access by setting `publicMetadata.role = "admin"` on their account (Clerk dashboard or Backend API).
 
@@ -72,22 +65,23 @@ Open [http://localhost:3000](http://localhost:3000). Admin panel lives at `/admi
 | `npm run build` | Production build |
 | `npm run start` | Start production server |
 | `npm run lint` | ESLint |
-| `npm run seed:order` | Seed a fake order for local testing (`scripts/seed-fake-order.mjs`) |
+| `npm run seed:order` | Seed a fake order for local testing (`scripts/seed-fake-order.mjs`) — **script file is currently missing from the repo, will fail if run** |
+| `npm run reset:storage` | Empty and delete the `product-images` Supabase Storage bucket (`scripts/reset-storage.mjs`) |
 
 ## Project Structure
 
 ```
 app/
-  admin/          Admin panel — products, collections, inventory, orders, delivery & returns, analytics, feedback, inquiries
+  admin/          Admin panel — products, categories, collections, inventory, orders, checkout settings, delivery & returns, analytics, feedback, inquiries
   api/            Route handlers (REST-ish JSON endpoints)
   shop/           Storefront product listing + PDP
   collections/    Collection landing + listing pages
   checkout/       Cart → Razorpay checkout flow
   account/        Customer order history
   ...             Marketing pages (contact, feedback, wishlist)
-lib/              Server/shared helpers (auth, supabase clients, rate limiting, validation, Shiprocket)
+lib/              Server/shared helpers (auth, supabase clients, rate limiting, validation)
 store/            Zustand stores (cart, wishlist)
-supabase/         schema.sql, reset.sql, migrations/
+supabase/         schema.sql, reset.sql
 proxy.ts          Clerk middleware — route protection for /admin, /account, /checkout
 ```
 

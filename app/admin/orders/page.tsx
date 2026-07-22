@@ -53,14 +53,14 @@ function OrderCard({
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   return (
-    <div className="bg-white border border-[#f0c7c7] rounded-2xl p-4 sm:p-6">
+    <div className="bg-white border border-[#efdcb0] rounded-2xl p-4 sm:p-6">
       {/* Header row */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4 pb-4 border-b border-[#f0c7c7]">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-4 pb-4 border-b border-[#efdcb0]">
         <div>
-          <p className="text-[#200a0c] font-semibold text-[14px]">
+          <p className="text-[#2b0e0a] font-semibold text-[14px]">
             #{order.id.slice(0, 8).toUpperCase()}
           </p>
-          <p className="text-[#8c4f52] text-[12px] mt-0.5">
+          <p className="text-[#8c6f52] text-[12px] mt-0.5">
             {order.user_name || order.user_email || order.user_id.slice(0, 10)}
             {" · "}
             {new Date(order.created_at).toLocaleDateString("en-IN", {
@@ -70,7 +70,7 @@ function OrderCard({
             })}
           </p>
         </div>
-        <span className="text-[#c8102e] font-bold text-[20px]">
+        <span className="text-[#930500] font-bold text-[20px]">
           {formatPrice(order.total)}
         </span>
       </div>
@@ -78,11 +78,11 @@ function OrderCard({
       {/* Items */}
       <div className="flex flex-wrap gap-2 mb-4">
         {order.items.map((item, idx) => (
-          <div key={idx} className="flex items-center gap-2 bg-[#fbe9e9] rounded-xl px-3 py-2">
+          <div key={idx} className="flex items-center gap-2 bg-[#fbf0da] rounded-xl px-3 py-2">
             <img src={item.image} alt={item.name} className="w-8 h-10 object-cover rounded-lg" />
             <div>
-              <p className="text-[#200a0c] font-medium text-[12px]">{item.name}</p>
-              <p className="text-[#8c4f52] text-[11px]">
+              <p className="text-[#2b0e0a] font-medium text-[12px]">{item.name}</p>
+              <p className="text-[#8c6f52] text-[11px]">
                 {item.size} × {item.quantity}
               </p>
             </div>
@@ -92,7 +92,7 @@ function OrderCard({
 
       {/* Shipping */}
       {order.shipping_address && (
-        <p className="text-[#8c4f52] text-[12px] mb-1">
+        <p className="text-[#8c6f52] text-[12px] mb-1">
           📍{" "}
           {[
             order.shipping_address.line1,
@@ -105,22 +105,22 @@ function OrderCard({
         </p>
       )}
       {order.razorpay_payment_id && (
-        <p className="text-[#dbb0b0] text-[11px] mb-4">
+        <p className="text-[#dcc9a0] text-[11px] mb-4">
           Payment: {order.razorpay_payment_id}
         </p>
       )}
 
       {/* Admin controls */}
-      <div className="border-t border-[#f0c7c7] pt-4 mt-2 space-y-3">
+      <div className="border-t border-[#efdcb0] pt-4 mt-2 space-y-3">
         {/* Status selector */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-          <span className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider sm:w-20 sm:shrink-0">Status</span>
+          <span className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider sm:w-20 sm:shrink-0">Status</span>
           <div className="relative">
             <select
               value={edit.status}
               onChange={(e) => setEdit((p) => ({ ...p, status: e.target.value }))}
-              className={`pl-3 pr-8 py-1.5 rounded-xl font-medium text-[12px] capitalize cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-[#c8102e]/40 transition-colors ${
-                STATUS_STYLES[edit.status] || "bg-[#fbe9e9] text-[#8c4f52]"
+              className={`pl-3 pr-8 py-1.5 rounded-xl font-medium text-[12px] capitalize cursor-pointer appearance-none focus:outline-none focus:ring-1 focus:ring-[#930500]/40 transition-colors ${
+                STATUS_STYLES[edit.status] || "bg-[#fbf0da] text-[#8c6f52]"
               }`}
             >
               {ORDER_STATUSES.map((s) => (
@@ -138,13 +138,13 @@ function OrderCard({
 
         {/* Admin notes */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:gap-3">
-          <span className="text-[11px] font-semibold text-[#8c4f52] uppercase tracking-wider sm:w-20 sm:shrink-0 sm:pt-1.5">Notes</span>
+          <span className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider sm:w-20 sm:shrink-0 sm:pt-1.5">Notes</span>
           <textarea
             value={edit.admin_notes}
             onChange={(e) => setEdit((p) => ({ ...p, admin_notes: e.target.value }))}
             placeholder="Internal notes (not visible to customer)"
             rows={2}
-            className="w-full flex-1 sm:max-w-sm bg-[#fbe9e9] border border-[#dbb0b0]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#200a0c] placeholder:text-[#dbb0b0] focus:outline-none focus:border-[#c8102e]/40 resize-none transition-colors"
+            className="w-full flex-1 sm:max-w-sm bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-3 py-1.5 text-[12px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:outline-none focus:border-[#930500]/40 resize-none transition-colors"
           />
         </div>
 
@@ -154,7 +154,7 @@ function OrderCard({
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#c8102e] text-white font-medium text-[12px] hover:bg-[#96182a] transition-colors disabled:opacity-50"
+              className="flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-[#930500] text-white font-medium text-[12px] hover:bg-[#8c0500] transition-colors disabled:opacity-50"
             >
               {saving ? (
                 <Loader2 size={12} className="animate-spin" />
@@ -205,11 +205,11 @@ export default function AdminOrdersPage() {
   const filtered = filter === "all" ? orders : orders.filter((o) => o.status === filter);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 text-[#200a0c]">
+    <div className="p-4 sm:p-6 lg:p-8 text-[#2b0e0a]">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-[26px] font-bold text-[#200a0c] tracking-tight">Orders</h1>
-          <p className="text-[#8c4f52] text-[13px] mt-0.5">{orders.length} total orders</p>
+          <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Orders</h1>
+          <p className="text-[#8c6f52] text-[13px] mt-0.5">{orders.length} total orders</p>
         </div>
       </div>
 
@@ -220,8 +220,8 @@ export default function AdminOrdersPage() {
             onClick={() => setFilter(s)}
             className={`px-4 py-2 rounded-xl font-medium text-[12px] capitalize transition-colors ${
               filter === s
-                ? "bg-[#c8102e] text-white"
-                : "bg-white border border-[#f0c7c7] text-[#5c3336] hover:bg-[#fbe9e9] hover:text-[#200a0c]"
+                ? "bg-[#930500] text-white"
+                : "bg-white border border-[#efdcb0] text-[#5c3b2e] hover:bg-[#fbf0da] hover:text-[#2b0e0a]"
             }`}
           >
             {s}
@@ -231,7 +231,7 @@ export default function AdminOrdersPage() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <Loader2 size={40} className="text-[#c8102e] animate-spin" />
+          <Loader2 size={40} className="text-[#930500] animate-spin" />
         </div>
       ) : (
         <div className="space-y-4">
@@ -240,9 +240,9 @@ export default function AdminOrdersPage() {
           ))}
           {filtered.length === 0 && (
             <div className="text-center py-20">
-              <Receipt size={40} className="mx-auto mb-3 text-[#dbb0b0]" />
-              <p className="text-[#8c4f52] text-[14px] font-medium">No orders found</p>
-              <p className="text-[#dbb0b0] text-[12px] mt-1">Try a different status filter</p>
+              <Receipt size={40} className="mx-auto mb-3 text-[#dcc9a0]" />
+              <p className="text-[#8c6f52] text-[14px] font-medium">No orders found</p>
+              <p className="text-[#dcc9a0] text-[12px] mt-1">Try a different status filter</p>
             </div>
           )}
         </div>
