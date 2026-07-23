@@ -5,6 +5,8 @@ import { auth } from "@clerk/nextjs/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { apiError } from "@/lib/api-utils";
 import { checkRateLimit } from "@/lib/rate-limit";
+import { findActiveCoupon, hasCompletedOrder } from "@/lib/coupons-server";
+import { calcDiscount } from "@/lib/discount";
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID!,
@@ -77,9 +79,34 @@ export async function POST(req: NextRequest) {
     });
   }
 
+  // Re-derive the discount server-side too — never trust a client-supplied amount.
+  let discountAmount = 0;
+  let appliedCouponCode: string | null = null;
+  const requestedCode = typeof orderData.coupon_code === "string" ? orderData.coupon_code : null;
+
+  if (requestedCode) {
+    const coupon = await findActiveCoupon(supabase, requestedCode);
+    if (coupon) {
+      discountAmount = calcDiscount(recomputedTotal, coupon.discount_type, coupon.discount_value);
+      appliedCouponCode = coupon.code;
+    }
+  } else {
+    const { data: settings } = await supabase
+      .from("store_settings")
+      .select("first_purchase_discount_percent")
+      .eq("id", true)
+      .single();
+    const percent = settings?.first_purchase_discount_percent ?? 0;
+    if (percent > 0 && !(await hasCompletedOrder(supabase, userId))) {
+      discountAmount = calcDiscount(recomputedTotal, "percent", percent);
+    }
+  }
+
+  const finalTotal = recomputedTotal - discountAmount;
+
   // Cross-check against what was actually paid on Razorpay's side.
   const paidOrder = await razorpay.orders.fetch(razorpay_order_id);
-  if (paidOrder.amount !== recomputedTotal) {
+  if (paidOrder.amount !== finalTotal) {
     return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
   }
 
@@ -91,7 +118,9 @@ export async function POST(req: NextRequest) {
       shipping_address: orderData.shipping_address,
       items: verifiedItems,
       subtotal: recomputedTotal,
-      total: recomputedTotal,
+      total: finalTotal,
+      coupon_code: appliedCouponCode,
+      discount_amount: discountAmount,
       user_id: userId,
       status: "paid",
       razorpay_order_id,

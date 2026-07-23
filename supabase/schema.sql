@@ -101,15 +101,19 @@ create table if not exists store_settings (
   delivery_info         text,
   returns_info          text,
   hero_image            text,
+  hero_images           text[] not null default '{}'::text[],
   theme_background      text,
   theme_primary         text,
   theme_secondary       text,
   sale_ticker_text      text not null default 'The Sale Is On',
   sale_ticker_enabled   boolean not null default true,
   sale_ticker_color     text,
+  sale_ticker_text_color text,
   checkout_mode         text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),
   whatsapp_number       text,
   testimonials_enabled  boolean not null default true,
+  first_purchase_discount_percent integer not null default 0
+                          check (first_purchase_discount_percent >= 0 and first_purchase_discount_percent <= 100),
   updated_at            timestamptz not null default now()
 );
 
@@ -139,6 +143,8 @@ create table if not exists orders (
   razorpay_order_id       text unique,
   razorpay_payment_id     text unique,
   razorpay_signature      text,
+  coupon_code             text,
+  discount_amount         integer not null default 0 check (discount_amount >= 0),
   admin_notes             text,
   created_at              timestamptz not null default now(),
   updated_at              timestamptz not null default now()
@@ -150,6 +156,26 @@ create index if not exists orders_created_at_idx on orders (created_at desc);
 
 create or replace trigger orders_updated_at
   before update on orders
+  for each row execute function set_updated_at();
+
+-- ─────────────────────────────────────────────
+-- COUPONS
+-- ─────────────────────────────────────────────
+create table if not exists coupons (
+  id              uuid primary key default uuid_generate_v4(),
+  code            text unique not null,
+  discount_type   text not null default 'percent' check (discount_type in ('percent', 'flat')),
+  discount_value  integer not null check (discount_value > 0),
+  expires_at      timestamptz,
+  is_active       boolean not null default true,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+
+create index if not exists coupons_code_idx on coupons (code);
+
+create or replace trigger coupons_updated_at
+  before update on coupons
   for each row execute function set_updated_at();
 
 -- ─────────────────────────────────────────────
@@ -199,6 +225,10 @@ create policy "orders_user_read" on orders
 
 -- Inventory logs: admin only via service role — no client access
 alter table inventory_logs enable row level security;
+
+-- Coupons: writes/reads via service role only — codes are checked through
+-- the /api/coupons/validate endpoint, never queried directly by clients.
+alter table coupons enable row level security;
 
 -- ─────────────────────────────────────────────
 -- FEEDBACKS

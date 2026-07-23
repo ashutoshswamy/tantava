@@ -15,7 +15,7 @@ const values = [
 export default function AboutPage() {
   return (
     <>
-      <Navbar />
+      <Navbar activePage="about" />
 
       <main className="pt-8 sm:pt-12 pb-stack-lg px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <motion.header

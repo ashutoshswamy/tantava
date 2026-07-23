@@ -7,9 +7,17 @@ import { useUser } from "@clerk/nextjs";
 import { useCart } from "@/store/cart";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
-import { ShoppingBag, Loader2, Lock, ShieldCheck, MessageCircle } from "lucide-react";
+import { ShoppingBag, Loader2, Lock, ShieldCheck, MessageCircle, Tag, X, Sparkles } from "lucide-react";
 import type { StoreSettings } from "@/lib/supabase";
 import { buildWhatsAppCheckoutUrl } from "@/lib/whatsapp";
+import { calcDiscount } from "@/lib/discount";
+
+type AppliedCoupon = {
+  code: string;
+  discount_type: "percent" | "flat";
+  discount_value: number;
+  discount_amount: number;
+};
 
 declare global {
   interface Window {
@@ -23,6 +31,11 @@ export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
   const [loading, setLoading] = useState(false);
   const [settings, setSettings] = useState<StoreSettings | null>(null);
+  const [couponInput, setCouponInput] = useState("");
+  const [couponChecking, setCouponChecking] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+  const [firstPurchase, setFirstPurchase] = useState({ eligible: false, percent: 0 });
   const [form, setForm] = useState({
     name: user?.fullName || "",
     phone: "",
@@ -39,9 +52,48 @@ export default function CheckoutPage() {
       .then((data) => { if (!data.error) setSettings(data); });
   }, []);
 
+  useEffect(() => {
+    fetch("/api/coupons/eligibility")
+      .then((r) => r.json())
+      .then((data) => setFirstPurchase(data))
+      .catch(() => {});
+  }, []);
+
   const isWhatsAppCheckout = settings?.checkout_mode === "whatsapp" && settings.whatsapp_number;
 
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
+
+  const welcomeDiscount =
+    !appliedCoupon && firstPurchase.eligible ? calcDiscount(total(), "percent", firstPurchase.percent) : 0;
+  const discountAmount = appliedCoupon ? appliedCoupon.discount_amount : welcomeDiscount;
+  const finalTotal = Math.max(0, total() - discountAmount);
+
+  const applyCoupon = async () => {
+    if (!couponInput.trim()) return;
+    setCouponChecking(true);
+    setCouponError("");
+    try {
+      const res = await fetch("/api/coupons/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: couponInput.trim(), subtotal: total() }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Invalid coupon");
+      setAppliedCoupon(data);
+    } catch (err) {
+      setAppliedCoupon(null);
+      setCouponError(err instanceof Error ? err.message : "Invalid coupon");
+    } finally {
+      setCouponChecking(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+    setCouponError("");
+  };
 
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,8 +111,12 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: total(),
-          notes: { user_id: user?.id, user_email: user?.emailAddresses[0]?.emailAddress },
+          amount: finalTotal,
+          notes: {
+            user_id: user?.id,
+            user_email: user?.emailAddresses[0]?.emailAddress,
+            coupon_code: appliedCoupon?.code ?? null,
+          },
         }),
       });
 
@@ -102,7 +158,8 @@ export default function CheckoutPage() {
                   image: i.image,
                 })),
                 subtotal: total(),
-                total: total(),
+                total: finalTotal,
+                coupon_code: appliedCoupon?.code ?? null,
                 shipping_address: form,
               },
             }),
@@ -247,7 +304,7 @@ export default function CheckoutPage() {
 
                 {isWhatsAppCheckout ? (
                   <a
-                    href={buildWhatsAppCheckoutUrl(settings!.whatsapp_number!, items, total())}
+                    href={buildWhatsAppCheckoutUrl(settings!.whatsapp_number!, items, finalTotal)}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => clearCart()}
@@ -271,7 +328,7 @@ export default function CheckoutPage() {
                       ) : (
                         <>
                           <Lock size={18} />
-                          PAY SECURELY {formatPrice(total())}
+                          PAY SECURELY {formatPrice(finalTotal)}
                         </>
                       )}
                     </button>
@@ -317,18 +374,70 @@ export default function CheckoutPage() {
                     </div>
                   ))}
                 </div>
+                {/* Coupon */}
+                <div className="mb-6">
+                  {appliedCoupon ? (
+                    <div className="flex items-center justify-between gap-3 px-4 py-3 bg-secondary/10 border border-secondary/30 rounded-lg">
+                      <div className="flex items-center gap-2 text-secondary font-label-md text-label-md">
+                        <Tag size={16} />
+                        <span>{appliedCoupon.code} applied</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="text-on-surface-variant hover:text-primary transition-colors"
+                        aria-label="Remove coupon"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex gap-2">
+                        <input
+                          value={couponInput}
+                          onChange={(e) => setCouponInput(e.target.value)}
+                          placeholder="Have a coupon code?"
+                          className="flex-1 px-4 py-2.5 border border-outline-variant rounded-lg font-body-md text-on-surface bg-surface focus:border-primary focus:outline-none transition-colors uppercase"
+                        />
+                        <button
+                          type="button"
+                          onClick={applyCoupon}
+                          disabled={couponChecking || !couponInput.trim()}
+                          className="px-5 py-2.5 border border-primary text-primary rounded-lg font-label-md text-label-md hover:bg-primary hover:text-on-primary transition-colors disabled:opacity-40"
+                        >
+                          {couponChecking ? <Loader2 size={16} className="animate-spin" /> : "Apply"}
+                        </button>
+                      </div>
+                      {couponError && <p className="text-error font-label-md text-[12px] mt-2">{couponError}</p>}
+                      {welcomeDiscount > 0 && (
+                        <div className="flex items-center gap-2 mt-3 px-4 py-3 bg-secondary/10 border border-secondary/30 rounded-lg text-secondary font-label-md text-label-md">
+                          <Sparkles size={16} />
+                          <span>Welcome discount: {firstPurchase.percent}% off your first order</span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </div>
+
                 <div className="border-t border-outline-variant/30 pt-4 space-y-3">
                   <div className="flex justify-between font-body-md text-on-surface-variant">
                     <span>Subtotal</span>
                     <span>{formatPrice(total())}</span>
                   </div>
+                  {discountAmount > 0 && (
+                    <div className="flex justify-between font-body-md text-secondary">
+                      <span>Discount</span>
+                      <span>-{formatPrice(discountAmount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between font-body-md text-on-surface-variant">
                     <span>Shipping</span>
                     <span className="text-secondary">Free</span>
                   </div>
                   <div className="flex justify-between font-headline-sm text-[18px] text-on-surface pt-2 border-t border-outline-variant/30">
                     <span>Total</span>
-                    <span className="text-primary">{formatPrice(total())}</span>
+                    <span className="text-primary">{formatPrice(finalTotal)}</span>
                   </div>
                 </div>
               </div>

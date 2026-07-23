@@ -9,9 +9,14 @@ export default function CheckoutSettingsPage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [form, setForm] = useState<{ checkout_mode: "razorpay" | "whatsapp"; whatsapp_number: string }>({
+  const [form, setForm] = useState<{
+    checkout_mode: "razorpay" | "whatsapp";
+    whatsapp_number: string;
+    first_purchase_discount_percent: number;
+  }>({
     checkout_mode: "razorpay",
     whatsapp_number: "",
+    first_purchase_discount_percent: 0,
   });
 
   useEffect(() => {
@@ -21,6 +26,7 @@ export default function CheckoutSettingsPage() {
         setForm({
           checkout_mode: data.checkout_mode || "razorpay",
           whatsapp_number: data.whatsapp_number || "",
+          first_purchase_discount_percent: data.first_purchase_discount_percent ?? 0,
         });
         setLoading(false);
       });
@@ -127,6 +133,28 @@ export default function CheckoutSettingsPage() {
               />
             </div>
           )}
+        </div>
+
+        <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 space-y-3">
+          <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">
+            First-Purchase Discount
+          </label>
+          <p className="text-[12px] text-[#8c6f52] -mt-1">
+            Automatically applied at checkout for customers placing their first order. Set to 0 to disable.
+          </p>
+          <div className="flex items-center gap-3">
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={form.first_purchase_discount_percent}
+              onChange={(e) =>
+                setForm({ ...form, first_purchase_discount_percent: Number(e.target.value) })
+              }
+              className="w-28 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] focus:border-[#930500]/60 focus:outline-none transition-colors"
+            />
+            <span className="text-[13px] text-[#8c6f52]">% off</span>
+          </div>
         </div>
 
         <button

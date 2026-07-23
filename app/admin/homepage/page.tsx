@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Image as ImageIcon, Upload } from "lucide-react";
+import { Loader2, Image as ImageIcon, Upload, X, ChevronUp, ChevronDown } from "lucide-react";
 import { supabase, type StoreSettings } from "@/lib/supabase";
 import { validateImageFile } from "@/lib/image-validation";
 import { isValidHex } from "@/lib/theme-color";
 
 const DEFAULT_TICKER_COLOR = "#930500";
+const DEFAULT_TICKER_TEXT_COLOR = "#ffffff";
 
 function storagePathFromUrl(url: string): string | null {
   const marker = "/product-images/";
@@ -21,10 +22,11 @@ export default function HomepageSettingsPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
-    hero_image: "" as string | null,
+    hero_images: [] as string[],
     sale_ticker_text: "",
     sale_ticker_enabled: true,
     sale_ticker_color: DEFAULT_TICKER_COLOR,
+    sale_ticker_text_color: DEFAULT_TICKER_TEXT_COLOR,
     testimonials_enabled: true,
   });
 
@@ -33,10 +35,11 @@ export default function HomepageSettingsPage() {
       .then((r) => r.json())
       .then((data: StoreSettings) => {
         setForm({
-          hero_image: data.hero_image || "",
+          hero_images: data.hero_images?.length ? data.hero_images : data.hero_image ? [data.hero_image] : [],
           sale_ticker_text: data.sale_ticker_text || "The Sale Is On",
           sale_ticker_enabled: data.sale_ticker_enabled ?? true,
           sale_ticker_color: data.sale_ticker_color || DEFAULT_TICKER_COLOR,
+          sale_ticker_text_color: data.sale_ticker_text_color || DEFAULT_TICKER_TEXT_COLOR,
           testimonials_enabled: data.testimonials_enabled ?? true,
         });
         setLoading(false);
@@ -44,60 +47,79 @@ export default function HomepageSettingsPage() {
   }, []);
 
   const handleHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files || []);
     e.target.value = "";
-    if (!file) return;
-
-    const validationError = await validateImageFile(file);
-    if (validationError) {
-      setError(validationError);
-      return;
-    }
+    if (files.length === 0) return;
 
     setUploading(true);
     setError("");
 
-    const urlRes = await fetch("/api/upload-url", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ filename: file.name }),
-    });
+    for (const file of files) {
+      const validationError = await validateImageFile(file);
+      if (validationError) {
+        setError(validationError);
+        continue;
+      }
 
-    if (!urlRes.ok) {
-      const data = await urlRes.json();
-      setError(data.error || "Failed to prepare upload");
-      setUploading(false);
-      return;
+      const urlRes = await fetch("/api/upload-url", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name }),
+      });
+
+      if (!urlRes.ok) {
+        const data = await urlRes.json();
+        setError(data.error || "Failed to prepare upload");
+        continue;
+      }
+
+      const { path, token, publicUrl } = await urlRes.json();
+      const { error: uploadError } = await supabase.storage
+        .from("product-images")
+        .uploadToSignedUrl(path, token, file);
+
+      if (uploadError) {
+        setError(uploadError.message || "Failed to upload image");
+        continue;
+      }
+
+      setForm((f) => ({ ...f, hero_images: [...f.hero_images, publicUrl] }));
     }
 
-    const { path, token, publicUrl } = await urlRes.json();
-    const { error: uploadError } = await supabase.storage
-      .from("product-images")
-      .uploadToSignedUrl(path, token, file);
+    setUploading(false);
+  };
 
-    if (uploadError) {
-      setError(uploadError.message || "Failed to upload image");
-      setUploading(false);
-      return;
-    }
-
-    const oldPath = form.hero_image ? storagePathFromUrl(form.hero_image) : null;
-    if (oldPath) {
+  const handleHeroImageDelete = async (idx: number) => {
+    const url = form.hero_images[idx];
+    const path = url ? storagePathFromUrl(url) : null;
+    if (path) {
       await fetch("/api/upload-url", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ path: oldPath }),
+        body: JSON.stringify({ path }),
       });
     }
+    setForm((f) => ({ ...f, hero_images: f.hero_images.filter((_, i) => i !== idx) }));
+  };
 
-    setForm((f) => ({ ...f, hero_image: publicUrl }));
-    setUploading(false);
+  const moveHeroImage = (idx: number, dir: -1 | 1) => {
+    const target = idx + dir;
+    setForm((f) => {
+      if (target < 0 || target >= f.hero_images.length) return f;
+      const next = [...f.hero_images];
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return { ...f, hero_images: next };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValidHex(form.sale_ticker_color)) {
       setError("Enter a valid hex color for the sale ticker, e.g. #930500");
+      return;
+    }
+    if (!isValidHex(form.sale_ticker_text_color)) {
+      setError("Enter a valid hex color for the sale ticker text, e.g. #ffffff");
       return;
     }
     setSaving(true);
@@ -148,19 +170,63 @@ export default function HomepageSettingsPage() {
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 space-y-3">
-          <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block">Homepage Hero Image</label>
+          <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block">Homepage Hero Images</label>
           <p className="text-[12px] text-[#8c6f52] -mt-1">
-            Recommended size: 1920×1080px or larger, landscape. Image fills the full-width hero banner and is
-            cropped to fit, so keep the main subject centered.
+            Recommended size: 1920×1080px or larger, landscape. Add multiple images to auto-scroll through them;
+            one image shows statically. Use the arrows to set the scroll order.
           </p>
-          <div className="relative w-full aspect-[16/7] rounded-xl overflow-hidden bg-[#fbf0da] border border-[#dcc9a0]/40">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={form.hero_image || "/hero.png"} alt="Hero preview" className="w-full h-full object-cover object-top" />
-          </div>
+
+          {form.hero_images.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {form.hero_images.map((url, idx) => (
+                <div key={url + idx} className="relative aspect-[16/9] rounded-xl overflow-hidden bg-[#fbf0da] border border-[#dcc9a0]/40 group">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt={`Hero ${idx + 1}`} className="w-full h-full object-cover object-top" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
+                  <span className="absolute top-1.5 left-1.5 px-1.5 py-0.5 rounded-md bg-black/60 text-white text-[10px] font-medium">
+                    {idx + 1}
+                  </span>
+                  <div className="absolute top-1.5 right-1.5 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      type="button"
+                      onClick={() => moveHeroImage(idx, -1)}
+                      disabled={idx === 0}
+                      className="p-1 bg-white/90 rounded-md text-[#2b0e0a] hover:bg-white disabled:opacity-30 transition-colors"
+                    >
+                      <ChevronUp size={13} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveHeroImage(idx, 1)}
+                      disabled={idx === form.hero_images.length - 1}
+                      className="p-1 bg-white/90 rounded-md text-[#2b0e0a] hover:bg-white disabled:opacity-30 transition-colors"
+                    >
+                      <ChevronDown size={13} />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleHeroImageDelete(idx)}
+                      className="p-1 bg-white/90 rounded-md text-red-500 hover:bg-white transition-colors"
+                    >
+                      <X size={13} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {form.hero_images.length === 0 && (
+            <div className="w-full aspect-[16/7] rounded-xl overflow-hidden bg-[#fbf0da] border border-[#dcc9a0]/40">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/hero.png" alt="Hero preview" className="w-full h-full object-cover object-top" />
+            </div>
+          )}
+
           <label className="inline-flex items-center gap-2 py-2.5 px-5 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl font-medium text-[13px] text-[#2b0e0a] cursor-pointer hover:border-[#930500]/50 transition-colors">
             {uploading ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
-            {uploading ? "Uploading..." : "Change Image"}
-            <input type="file" accept="image/*" onChange={handleHeroImageUpload} disabled={uploading} className="hidden" />
+            {uploading ? "Uploading..." : "Add Images"}
+            <input type="file" accept="image/*" multiple onChange={handleHeroImageUpload} disabled={uploading} className="hidden" />
           </label>
         </div>
 
@@ -208,6 +274,26 @@ export default function HomepageSettingsPage() {
                 value={form.sale_ticker_color}
                 onChange={(e) => setForm({ ...form, sale_ticker_color: e.target.value.trim() })}
                 placeholder={DEFAULT_TICKER_COLOR}
+                spellCheck={false}
+                className="flex-1 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] font-mono text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
+              />
+            </div>
+          </div>
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Text Color</label>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={isValidHex(form.sale_ticker_text_color) ? form.sale_ticker_text_color : DEFAULT_TICKER_TEXT_COLOR}
+                onChange={(e) => setForm({ ...form, sale_ticker_text_color: e.target.value })}
+                className="w-12 h-12 rounded-lg border border-[#dcc9a0]/40 cursor-pointer bg-transparent p-0.5"
+                aria-label="Pick sale ticker text color"
+              />
+              <input
+                type="text"
+                value={form.sale_ticker_text_color}
+                onChange={(e) => setForm({ ...form, sale_ticker_text_color: e.target.value.trim() })}
+                placeholder={DEFAULT_TICKER_TEXT_COLOR}
                 spellCheck={false}
                 className="flex-1 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] font-mono text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
               />

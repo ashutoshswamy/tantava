@@ -188,6 +188,13 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     }
     out.hero_image = body.hero_image;
   }
+  if ("hero_images" in body) {
+    const v = body.hero_images;
+    if (!Array.isArray(v) || !v.every((s) => typeof s === "string")) {
+      throw new ValidationError("hero_images must be an array of strings");
+    }
+    out.hero_images = v;
+  }
   if ("checkout_mode" in body) {
     const v = str(body.checkout_mode);
     if (v === undefined || !["razorpay", "whatsapp"].includes(v)) {
@@ -209,7 +216,7 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (v === undefined) throw new ValidationError("sale_ticker_text must be a string");
     out.sale_ticker_text = v;
   }
-  for (const field of ["theme_background", "theme_primary", "theme_secondary", "sale_ticker_color"] as const) {
+  for (const field of ["theme_background", "theme_primary", "theme_secondary", "sale_ticker_color", "sale_ticker_text_color"] as const) {
     if (field in body) {
       if (body[field] !== null && !isValidHex(String(body[field]))) {
         throw new ValidationError(`${field} must be a hex color like #930500, or null`);
@@ -221,6 +228,58 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");
     out.sale_ticker_enabled = body.sale_ticker_enabled;
   }
+  if ("first_purchase_discount_percent" in body) {
+    const v = num(body.first_purchase_discount_percent);
+    if (v === undefined || v < 0 || v > 100) {
+      throw new ValidationError("first_purchase_discount_percent must be between 0 and 100");
+    }
+    out.first_purchase_discount_percent = v;
+  }
+  return out;
+}
+
+export function validateCouponInput(body: Record<string, unknown>, partial: boolean) {
+  const out: Record<string, unknown> = {};
+
+  if ("code" in body || !partial) {
+    const v = str(body.code);
+    if (!partial && (v === undefined || !v.trim())) throw new ValidationError("code is required");
+    if (v !== undefined) {
+      if (!v.trim()) throw new ValidationError("code cannot be blank");
+      out.code = v.trim().toUpperCase();
+    }
+  }
+
+  const type = str(body.discount_type);
+  if ("discount_type" in body || !partial) {
+    if (!partial && type === undefined) throw new ValidationError("discount_type is required");
+    if (type !== undefined) {
+      if (!["percent", "flat"].includes(type)) throw new ValidationError("discount_type must be 'percent' or 'flat'");
+      out.discount_type = type;
+    }
+  }
+
+  if ("discount_value" in body || !partial) {
+    const v = num(body.discount_value);
+    if (!partial && v === undefined) throw new ValidationError("discount_value is required");
+    if (v !== undefined) {
+      if (v <= 0) throw new ValidationError("discount_value must be greater than 0");
+      if (type === "percent" && v > 100) throw new ValidationError("percent discount cannot exceed 100");
+      out.discount_value = v;
+    }
+  }
+
+  if ("expires_at" in body) {
+    const v = body.expires_at;
+    if (v !== null && typeof v !== "string") throw new ValidationError("expires_at must be a date string or null");
+    out.expires_at = v;
+  }
+
+  if ("is_active" in body) {
+    if (typeof body.is_active !== "boolean") throw new ValidationError("is_active must be a boolean");
+    out.is_active = body.is_active;
+  }
+
   return out;
 }
 

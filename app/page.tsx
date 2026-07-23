@@ -81,10 +81,12 @@ export default function HomePage() {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [collectionOffset, setCollectionOffset] = useState(0);
   const [testimonialsEnabled, setTestimonialsEnabled] = useState(true);
-  const [heroImage, setHeroImage] = useState("/hero.png");
+  const [heroImages, setHeroImages] = useState<string[]>(["/hero.png"]);
+  const [heroIndex, setHeroIndex] = useState(0);
   const [saleTickerText, setSaleTickerText] = useState("The Sale Is On");
   const [saleTickerEnabled, setSaleTickerEnabled] = useState(true);
   const [saleTickerColor, setSaleTickerColor] = useState<string | null>(null);
+  const [saleTickerTextColor, setSaleTickerTextColor] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/products?active=true&limit=4")
@@ -106,14 +108,22 @@ export default function HomePage() {
   }, [collections.length]);
 
   useEffect(() => {
+    if (heroImages.length <= 1) return;
+    const t = setInterval(() => setHeroIndex((i) => (i + 1) % heroImages.length), 5000);
+    return () => clearInterval(t);
+  }, [heroImages.length]);
+
+  useEffect(() => {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data: StoreSettings) => {
         setTestimonialsEnabled(data.testimonials_enabled ?? true);
-        if (data.hero_image) setHeroImage(data.hero_image);
+        const images = data.hero_images?.length ? data.hero_images : data.hero_image ? [data.hero_image] : [];
+        if (images.length) setHeroImages(images);
         if (data.sale_ticker_text) setSaleTickerText(data.sale_ticker_text);
         setSaleTickerEnabled(data.sale_ticker_enabled ?? true);
         if (data.sale_ticker_color) setSaleTickerColor(data.sale_ticker_color);
+        if (data.sale_ticker_text_color) setSaleTickerTextColor(data.sale_ticker_text_color);
       })
       .catch(() => {});
   }, []);
@@ -122,7 +132,7 @@ export default function HomePage() {
 
   return (
     <>
-      <Navbar />
+      <Navbar activePage="home" />
 
       {/* Sale Ticker */}
       {saleTickerEnabled && (
@@ -140,9 +150,10 @@ export default function HomePage() {
               {Array(6).fill(null).map((_, j) => (
                 <span
                   key={j}
-                  className="font-label-md text-[11px] tracking-[0.3em] uppercase text-white/90 flex items-center gap-3"
+                  className="font-label-md text-[11px] tracking-[0.3em] uppercase flex items-center gap-3"
+                  style={{ color: saleTickerTextColor || "rgba(255,255,255,0.9)" }}
                 >
-                  {saleTickerText} <span className="text-white/40">✦</span>
+                  {saleTickerText} <span style={{ opacity: 0.4 }}>✦</span>
                 </span>
               ))}
             </div>
@@ -153,14 +164,18 @@ export default function HomePage() {
 
       {/* Hero */}
       <header className="relative min-h-[500px] h-[calc(100svh-6.5rem)] md:h-[calc(100svh-7.5rem)] overflow-hidden">
-        <div
-          className="w-full h-full bg-scroll md:bg-fixed"
-          style={{
-            backgroundImage: `url('${heroImage}')`,
-            backgroundSize: "cover",
-            backgroundPosition: "center top",
-          }}
-        />
+        {heroImages.map((img, i) => (
+          <div
+            key={img + i}
+            className="absolute inset-0 w-full h-full bg-scroll md:bg-fixed transition-opacity duration-1000 ease-in-out"
+            style={{
+              backgroundImage: `url('${img}')`,
+              backgroundSize: "cover",
+              backgroundPosition: "center top",
+              opacity: i === heroIndex ? 1 : 0,
+            }}
+          />
+        ))}
       </header>
 
       {/* Collections Bento Grid */}

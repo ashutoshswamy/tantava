@@ -12,7 +12,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { Collection } from "@/lib/supabase";
 
 interface NavbarProps {
-  activePage?: "shop" | "contact";
+  activePage?: "home" | "shop" | "contact" | "about";
 }
 
 export default function Navbar({ activePage }: NavbarProps) {
@@ -147,17 +147,31 @@ export default function Navbar({ activePage }: NavbarProps) {
 
         {/* Navbar: collections, centered */}
         <nav className="h-12 md:h-14 hidden md:flex items-center justify-center">
-          <div className="flex items-center justify-center gap-6 h-full px-4 sm:px-6 md:px-margin-desktop max-w-container-max mx-auto overflow-x-auto custom-scrollbar">
+          <div className="flex items-center justify-center gap-6 h-full px-4 sm:px-6 md:px-margin-desktop max-w-container-max mx-auto">
+            <Link href="/" className={linkClass("home") + " whitespace-nowrap"}>Home</Link>
             <Link href="/shop" className={linkClass("shop") + " whitespace-nowrap"}>New Arrivals</Link>
-            {collections.map((col) => (
-              <Link
-                key={col.id}
-                href={`/collections/${col.slug}`}
-                className="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300 whitespace-nowrap"
-              >
-                {col.name}
-              </Link>
-            ))}
+            {collections.length > 0 && (
+              <div className="relative group h-full flex items-center">
+                <button className="flex items-center gap-1 font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-300 whitespace-nowrap">
+                  Collections
+                  <ChevronDown size={14} className="transition-transform duration-200 group-hover:rotate-180" />
+                </button>
+                <div className="absolute left-1/2 -translate-x-1/2 top-full hidden group-hover:block pt-2 z-50">
+                  <div className="bg-surface border border-outline-variant/30 rounded-lg shadow-lg py-2 min-w-[180px]">
+                    {collections.map((col) => (
+                      <Link
+                        key={col.id}
+                        href={`/collections/${col.slug}`}
+                        className="block px-4 py-2 font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container transition-colors whitespace-nowrap"
+                      >
+                        {col.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            <Link href="/about" className={linkClass("about") + " whitespace-nowrap"}>About Us</Link>
             {isAdmin && (
               <Link
                 href="/admin"

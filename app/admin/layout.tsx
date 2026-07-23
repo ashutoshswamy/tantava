@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import {
   LayoutDashboard, Package, Warehouse, Receipt,
-  ChevronLeft, ChevronRight, BarChart2, ExternalLink, Layers, Tag, MessageSquareHeart, Inbox, Truck, CreditCard, Image as ImageIcon, Palette,
+  ChevronLeft, ChevronRight, BarChart2, ExternalLink, Layers, Tag, MessageSquareHeart, Inbox, Truck, CreditCard, Image as ImageIcon, Palette, Ticket,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { href: "/admin/products",     icon: <Package size={20} />,              label: "Products" },
   { href: "/admin/categories",   icon: <Tag size={20} />,                  label: "Categories" },
   { href: "/admin/collections",  icon: <Layers size={20} />,               label: "Collections" },
+  { href: "/admin/coupons",      icon: <Ticket size={20} />,               label: "Coupons" },
   { href: "/admin/inventory",    icon: <Warehouse size={20} />,            label: "Inventory" },
   { href: "/admin/orders",       icon: <Receipt size={20} />,              label: "Orders" },
   { href: "/admin/homepage",     icon: <ImageIcon size={20} />,            label: "Homepage" },

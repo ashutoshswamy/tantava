@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { Collection } from "@/lib/supabase";
-import { Plus, Loader2, Pencil, Layers, Trash2 } from "lucide-react";
+import { Plus, Loader2, Pencil, Layers, Trash2, ChevronUp, ChevronDown } from "lucide-react";
 
 type CollectionWithCount = Collection & { product_count: number };
 
@@ -11,6 +11,7 @@ export default function AdminCollectionsPage() {
   const [collections, setCollections] = useState<CollectionWithCount[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [movingId, setMovingId] = useState<string | null>(null);
 
   const load = async () => {
     try {
@@ -43,6 +44,41 @@ export default function AdminCollectionsPage() {
       setCollections((prev) => prev.filter((c) => c.id !== id));
     }
     setDeleting(null);
+  };
+
+  const move = async (idx: number, dir: -1 | 1) => {
+    const target = idx + dir;
+    if (target < 0 || target >= collections.length) return;
+
+    const a = collections[idx];
+    const b = collections[target];
+    setMovingId(a.id);
+
+    const next = [...collections];
+    [next[idx], next[target]] = [next[target], next[idx]];
+    setCollections(next);
+
+    await Promise.all([
+      fetch(`/api/collections/${a.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sort_order: b.sort_order }),
+      }),
+      fetch(`/api/collections/${b.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sort_order: a.sort_order }),
+      }),
+    ]);
+
+    setCollections((prev) =>
+      prev.map((c) => {
+        if (c.id === a.id) return { ...c, sort_order: b.sort_order };
+        if (c.id === b.id) return { ...c, sort_order: a.sort_order };
+        return c;
+      })
+    );
+    setMovingId(null);
   };
 
   if (loading) {
@@ -90,13 +126,13 @@ export default function AdminCollectionsPage() {
                 <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider">Collection</th>
                 <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden sm:table-cell">Slug</th>
                 <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden md:table-cell">Products</th>
-                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden lg:table-cell">Sort</th>
+                <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider hidden lg:table-cell">Order</th>
                 <th className="text-left px-5 py-3.5 text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider">Status</th>
                 <th className="px-5 py-3.5" />
               </tr>
             </thead>
             <tbody className="divide-y divide-[#efdcb0]">
-              {collections.map((col) => (
+              {collections.map((col, idx) => (
                 <tr key={col.id} className="hover:bg-[#fbf0da]/30 transition-colors">
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
@@ -126,7 +162,24 @@ export default function AdminCollectionsPage() {
                     <span className="text-[13px] text-[#2b0e0a] font-medium">{col.product_count}</span>
                   </td>
                   <td className="px-5 py-4 hidden lg:table-cell">
-                    <span className="text-[13px] text-[#2b0e0a]">{col.sort_order}</span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => move(idx, -1)}
+                        disabled={idx === 0 || movingId !== null}
+                        className="p-1 text-[#8c6f52] hover:text-[#2b0e0a] hover:bg-[#fbf0da] rounded-lg transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                        title="Move up"
+                      >
+                        <ChevronUp size={15} />
+                      </button>
+                      <button
+                        onClick={() => move(idx, 1)}
+                        disabled={idx === collections.length - 1 || movingId !== null}
+                        className="p-1 text-[#8c6f52] hover:text-[#2b0e0a] hover:bg-[#fbf0da] rounded-lg transition-colors disabled:opacity-30 disabled:hover:bg-transparent"
+                        title="Move down"
+                      >
+                        <ChevronDown size={15} />
+                      </button>
+                    </div>
                   </td>
                   <td className="px-5 py-4">
                     <span

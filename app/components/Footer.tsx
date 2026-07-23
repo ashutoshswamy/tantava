@@ -1,7 +1,20 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
+import type { Collection } from "@/lib/supabase";
 
 export default function Footer() {
+  const [collections, setCollections] = useState<Collection[]>([]);
+
+  useEffect(() => {
+    fetch("/api/collections")
+      .then((r) => r.json())
+      .then((data) => Array.isArray(data) && setCollections(data))
+      .catch(() => {});
+  }, []);
+
   return (
     <footer className="bg-surface-container-low w-full py-stack-lg border-t border-outline-variant/30">
       <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
@@ -25,10 +38,15 @@ export default function Footer() {
         <div>
           <h4 className="font-label-md text-label-md text-secondary font-bold mb-6">Shop</h4>
           <ul className="space-y-4">
-            {["All Styles", "Embroidered Kurtas", "Anarkali Sets", "Printed Suits", "Co-ord Sets"].map((label) => (
-              <li key={label}>
-                <Link href="/shop" className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">
-                  {label}
+            <li>
+              <Link href="/shop" className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">
+                New Arrivals
+              </Link>
+            </li>
+            {collections.map((col) => (
+              <li key={col.id}>
+                <Link href={`/collections/${col.slug}`} className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">
+                  {col.name}
                 </Link>
               </li>
             ))}
@@ -39,6 +57,7 @@ export default function Footer() {
           <h4 className="font-label-md text-label-md text-secondary font-bold mb-6">Experience</h4>
           <ul className="space-y-4">
             {[
+              { label: "About Us",       href: "/about" },
               { label: "Contact",        href: "/contact" },
               { label: "Share Feedback", href: "/feedback" },
             ].map(({ label, href }) => (

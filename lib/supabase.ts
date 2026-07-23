@@ -52,15 +52,29 @@ export type StoreSettings = {
   delivery_info: string | null;
   returns_info: string | null;
   hero_image: string | null;
+  hero_images: string[];
   theme_background: string | null;
   theme_primary: string | null;
   theme_secondary: string | null;
   sale_ticker_text: string;
   sale_ticker_enabled: boolean;
   sale_ticker_color: string | null;
+  sale_ticker_text_color: string | null;
   checkout_mode: "razorpay" | "whatsapp";
   whatsapp_number: string | null;
   testimonials_enabled: boolean;
+  first_purchase_discount_percent: number;
+  updated_at: string;
+};
+
+export type Coupon = {
+  id: string;
+  code: string;
+  discount_type: "percent" | "flat";
+  discount_value: number;
+  expires_at: string | null;
+  is_active: boolean;
+  created_at: string;
   updated_at: string;
 };
 
@@ -77,6 +91,8 @@ export type Order = {
   razorpay_payment_id: string | null;
   razorpay_signature: string | null;
   shipping_address: ShippingAddress | null;
+  coupon_code: string | null;
+  discount_amount: number;
   admin_notes: string | null;
   created_at: string;
   updated_at: string;
