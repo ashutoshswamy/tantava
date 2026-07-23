@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { apiError, validateCollectionInput, ValidationError } from "@/lib/api-utils";
@@ -48,6 +49,7 @@ export async function PUT(
     .single();
 
   if (error) return apiError("collections.[id].PUT", error);
+  revalidateTag("collections", "max");
   return NextResponse.json(data);
 }
 
@@ -69,5 +71,6 @@ export async function DELETE(
     .eq("id", id);
 
   if (error) return apiError("collections.[id].DELETE", error);
+  revalidateTag("collections", "max");
   return NextResponse.json({ success: true });
 }

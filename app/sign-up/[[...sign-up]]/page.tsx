@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SignUp } from "@clerk/nextjs";
 import { AuthShell } from "@/app/components/AuthShell";
 
@@ -7,6 +8,7 @@ export default function SignUpPage() {
       title="Create your Tantava account"
       description="Save your favorites, track your orders, and move through checkout faster every time."
     >
+      <Suspense fallback={null}>
         <SignUp
           path="/sign-up"
           routing="path"
@@ -27,6 +29,7 @@ export default function SignUpPage() {
             },
           }}
         />
+      </Suspense>
     </AuthShell>
   );
 }

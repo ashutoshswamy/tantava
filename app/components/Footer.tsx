@@ -7,12 +7,14 @@ import type { Collection } from "@/lib/supabase";
 
 export default function Footer() {
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [year, setYear] = useState<number | null>(null);
 
   useEffect(() => {
     fetch("/api/collections")
       .then((r) => r.json())
       .then((data) => Array.isArray(data) && setCollections(data))
       .catch(() => {});
+    setYear(new Date().getFullYear());
   }, []);
 
   return (
@@ -73,11 +75,17 @@ export default function Footer() {
         <div>
           <h4 className="font-label-md text-label-md text-secondary font-bold mb-6">Policies</h4>
           <ul className="space-y-4">
-            {["Privacy Policy", "Terms of Service", "Shipping & Returns"].map((label) => (
+            {[
+              { label: "FAQ",                        href: "/faq" },
+              { label: "Terms of Service",            href: "/terms" },
+              { label: "Shipping Policy",              href: "/shipping-policy" },
+              { label: "Return & Exchange Policy",     href: "/return-policy" },
+              { label: "Privacy Policy",               href: "/privacy-policy" },
+            ].map(({ label, href }) => (
               <li key={label}>
-                <a href="#" className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">
+                <Link href={href} className="font-body-md text-body-md text-on-surface-variant hover:text-primary underline transition-all">
                   {label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>
@@ -86,7 +94,7 @@ export default function Footer() {
 
       <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop mt-stack-lg pt-8 border-t border-outline-variant/30 flex flex-col md:flex-row justify-between items-center gap-4">
         <p className="font-label-md text-label-md text-on-surface-variant">
-          © {new Date().getFullYear()} Tantava. India · Pan India Shipping.
+          © {year ?? ""} Tantava. India · Pan India Shipping.
         </p>
         <a
           href="https://anahat-entertainment.vercel.app"

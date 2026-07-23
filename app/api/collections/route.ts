@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cacheLife, cacheTag, revalidateTag } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { apiError, validateCollectionInput, ValidationError } from "@/lib/api-utils";
@@ -12,21 +13,43 @@ function toSlug(name: string): string {
     .replace(/-+/g, "-");
 }
 
+// Storefront listing is read far more often than it changes, so it's cached
+// in the shared Redis-backed remote handler; admin's `all=true` view always
+// reads fresh so edits show up immediately in the dashboard.
+async function getActiveCollections() {
+  "use cache: remote";
+  cacheTag("collections");
+  cacheLife({ expire: 300 });
+
+  const supabase = createServerSupabase();
+  const { data, error } = await supabase
+    .from("collections")
+    .select("*")
+    .eq("is_active", true)
+    .order("sort_order", { ascending: true });
+
+  if (error) throw error;
+  return data;
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const all = searchParams.get("all");
 
+  if (all !== "true") {
+    try {
+      return NextResponse.json(await getActiveCollections());
+    } catch (error) {
+      return apiError("collections.GET", error);
+    }
+  }
+
   const supabase = createServerSupabase();
-  let query = supabase
+  const { data, error } = await supabase
     .from("collections")
     .select("*")
     .order("sort_order", { ascending: true });
 
-  if (all !== "true") {
-    query = query.eq("is_active", true);
-  }
-
-  const { data, error } = await query;
   if (error) return apiError("collections.GET", error);
   return NextResponse.json(data);
 }
@@ -57,5 +80,6 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return apiError("collections.POST", error);
+  revalidateTag("collections", "max");
   return NextResponse.json(data, { status: 201 });
 }

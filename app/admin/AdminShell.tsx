@@ -26,7 +26,7 @@ const NAV_ITEMS = [
   { href: "/admin/inquiries",   icon: <Inbox size={20} />,                label: "Inquiries" },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
