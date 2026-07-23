@@ -95,7 +95,7 @@ export default function WishlistPage() {
                     transition={{ duration: 0.3 }}
                     className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                   >
-                    <Link href={`/shop/${item.productId}`} className="block relative aspect-[0.73] overflow-hidden bg-surface-container">
+                    <Link href={`/shop/${item.productId}`} className="block relative aspect-[0.73] overflow-hidden bg-white">
                       <img
                         src={item.image}
                         alt={item.name}

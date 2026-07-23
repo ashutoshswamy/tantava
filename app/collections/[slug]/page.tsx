@@ -192,7 +192,7 @@ export default function CollectionSlugPage() {
               {products.map((product) => (
                 <div key={product.id} className="group relative bg-white border border-outline-variant/40 rounded-2xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all duration-300">
                   <Link href={`/product/${product.id}`} className="block">
-                    <div className="relative aspect-[3/4] overflow-hidden bg-surface-container">
+                    <div className="relative aspect-[3/4] overflow-hidden bg-white">
                       {product.images[0] ? (
                         <img
                           src={product.images[0]}
@@ -200,7 +200,7 @@ export default function CollectionSlugPage() {
                           className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
-                        <div className="w-full h-full bg-surface-container" />
+                        <div className="w-full h-full bg-white" />
                       )}
                       {product.badge && (
                         <span className="absolute top-3 left-3 px-2.5 py-1 bg-primary text-white text-[10px] font-label-md uppercase tracking-wider rounded-full">

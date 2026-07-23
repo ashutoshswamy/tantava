@@ -152,7 +152,7 @@ export default function ShopPage() {
                       transition={{ duration: 0.4, delay: i * 0.05 }}
                       className="group relative"
                     >
-                      <div className="relative aspect-[0.73] overflow-hidden bg-surface-container mb-4">
+                      <div className="relative aspect-[0.73] overflow-hidden bg-white mb-4">
                         {product.badge && (
                           <div className="absolute top-4 left-4 z-10">
                             <span className="bg-secondary text-primary-container font-label-md text-[10px] px-3 py-1 uppercase tracking-widest border border-primary-container">
@@ -260,7 +260,7 @@ export default function ShopPage() {
                 <X size={20} />
               </button>
               <div className="flex flex-col md:flex-row">
-                <div className="relative w-full md:w-1/2 aspect-[0.73] bg-surface-container overflow-hidden">
+                <div className="relative w-full md:w-1/2 aspect-[0.73] bg-white overflow-hidden">
                   <AnimatePresence mode="sync">
                     <motion.img
                       key={modalImg}

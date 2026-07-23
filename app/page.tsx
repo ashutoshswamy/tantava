@@ -264,7 +264,7 @@ export default function HomePage() {
                 variants={fadeUp}
               >
                 <Link href={`/shop/${product.id}`} className="min-w-[220px] sm:min-w-[280px] md:min-w-[340px] group cursor-pointer block">
-                  <div className="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-surface-container">
+                  <div className="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-white">
                     <img
                       alt={product.name}
                       className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"

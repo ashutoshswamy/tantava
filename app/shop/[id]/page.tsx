@@ -111,7 +111,7 @@ export default function ProductDetailPage() {
             className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12"
           >
             <div className="lg:col-span-7 flex flex-col sm:flex-row-reverse gap-4">
-              <div className="relative w-full aspect-[1/1.2] bg-surface-container overflow-hidden rounded-lg group">
+              <div className="relative w-full aspect-[1/1.2] bg-white overflow-hidden rounded-lg group">
                 <AnimatePresence mode="sync">
                   <motion.img
                     key={selectedImg}
@@ -145,7 +145,7 @@ export default function ProductDetailPage() {
                     <button
                       key={i}
                       onClick={() => setSelectedImg(i)}
-                      className={`flex-shrink-0 w-20 h-24 bg-surface-container rounded-sm overflow-hidden p-0.5 transition-opacity ${i === selectedImg ? "product-thumbnail-active" : "opacity-60 hover:opacity-100"}`}
+                      className={`flex-shrink-0 w-20 h-24 bg-white rounded-sm overflow-hidden p-0.5 transition-opacity ${i === selectedImg ? "product-thumbnail-active" : "opacity-60 hover:opacity-100"}`}
                     >
                       <img alt={`Thumbnail ${i + 1}`} className="w-full h-full object-contain rounded-sm" src={img} />
                     </button>

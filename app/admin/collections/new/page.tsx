@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Loader2, Upload } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { validateImageFile } from "@/lib/image-validation";
 
 const inputCls = "w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors";
 
@@ -37,14 +39,41 @@ export default function NewCollectionPage() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setUploading(true);
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    if (res.ok) {
-      const { url } = await res.json();
-      setForm((f) => ({ ...f, cover_image: url }));
+
+    const validationError = await validateImageFile(file);
+    if (validationError) {
+      setError(validationError);
+      e.target.value = "";
+      return;
     }
+
+    setUploading(true);
+
+    const urlRes = await fetch("/api/upload-url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filename: file.name }),
+    });
+
+    if (!urlRes.ok) {
+      const data = await urlRes.json();
+      setError(data.error || "Failed to prepare upload");
+      setUploading(false);
+      e.target.value = "";
+      return;
+    }
+
+    const { path, token, publicUrl } = await urlRes.json();
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .uploadToSignedUrl(path, token, file);
+
+    if (uploadError) {
+      setError(uploadError.message || "Failed to upload image");
+    } else {
+      setForm((f) => ({ ...f, cover_image: publicUrl }));
+    }
+
     setUploading(false);
     e.target.value = "";
   };
