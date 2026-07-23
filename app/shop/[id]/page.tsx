@@ -7,6 +7,7 @@ import type { Product } from "@/lib/supabase";
 type Props = { params: Promise<{ id: string }> };
 
 async function getProduct(id: string): Promise<Product | null> {
+  "use cache";
   const supabase = createServerSupabase();
   const { data } = await supabase.from("products").select("*").eq("id", id).single();
   return data;
@@ -43,39 +44,44 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function Page({ params }: Props) {
+async function ProductJsonLd({ params }: Props) {
   const { id } = await params;
   const product = await getProduct(id);
+  if (!product) return null;
 
-  const jsonLd = product
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Product",
-        name: product.name,
-        description: product.description ?? undefined,
-        image: product.images,
-        sku: product.sku ?? undefined,
-        category: product.category,
-        offers: {
-          "@type": "Offer",
-          priceCurrency: "INR",
-          price: ((product.discount_price ?? product.price) / 100).toFixed(2),
-          availability: Object.values(product.size_inventory ?? {}).some((qty) => qty > 0)
-            ? "https://schema.org/InStock"
-            : "https://schema.org/OutOfStock",
-          url: `https://thetantava.in/shop/${product.id}`,
-        },
-      }
-    : null;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    description: product.description ?? undefined,
+    image: product.images,
+    sku: product.sku ?? undefined,
+    category: product.category,
+    offers: {
+      "@type": "Offer",
+      priceCurrency: "INR",
+      price: ((product.discount_price ?? product.price) / 100).toFixed(2),
+      availability: Object.values(product.size_inventory ?? {}).some((qty) => qty > 0)
+        ? "https://schema.org/InStock"
+        : "https://schema.org/OutOfStock",
+      url: `https://thetantava.in/shop/${product.id}`,
+    },
+  };
 
   return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+  );
+}
+
+export default function Page({ params }: Props) {
+  return (
     <>
-      {jsonLd && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-      )}
+      <Suspense fallback={null}>
+        <ProductJsonLd params={params} />
+      </Suspense>
       <Suspense fallback={null}>
         <ProductDetailPage />
       </Suspense>

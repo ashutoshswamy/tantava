@@ -7,6 +7,7 @@ import type { Collection } from "@/lib/supabase";
 type Props = { params: Promise<{ slug: string }> };
 
 async function getCollection(slug: string): Promise<Collection | null> {
+  "use cache";
   const supabase = createServerSupabase();
   const { data } = await supabase.from("collections").select("*").eq("slug", slug).single();
   return data;
