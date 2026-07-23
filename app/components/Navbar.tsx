@@ -61,7 +61,7 @@ export default function Navbar({ activePage }: NavbarProps) {
         } frosted-nav`}
       >
         {/* Header: search + brand name + icons */}
-        <div className="py-3 md:py-4 grid grid-cols-[auto_1fr_auto] items-center px-4 sm:px-6 md:px-margin-desktop border-b border-outline-variant/20">
+        <div className="relative py-3 md:py-4 flex items-center justify-between px-4 sm:px-6 md:px-margin-desktop border-b border-outline-variant/20">
           <div className="flex items-center">
             <button
               className="md:hidden -m-2.5 p-2.5 text-on-surface-variant"
@@ -79,8 +79,11 @@ export default function Navbar({ activePage }: NavbarProps) {
             </button>
           </div>
 
-          <Link href="/" className="hover:opacity-80 transition-opacity justify-self-center min-w-0">
-            <span className="font-display-brand text-xl sm:text-2xl md:text-4xl text-brand-red tracking-wide uppercase whitespace-nowrap">
+          <Link
+            href="/"
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hover:opacity-80 transition-opacity"
+          >
+            <span className="font-display-brand text-xl sm:text-2xl md:text-4xl text-brand-red tracking-[0.15em] uppercase whitespace-nowrap">
               Tantava
             </span>
           </Link>
