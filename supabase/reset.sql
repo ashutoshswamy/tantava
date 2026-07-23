@@ -29,6 +29,7 @@ drop trigger if exists products_updated_at   on products;
 drop trigger if exists collections_updated_at on collections;
 drop trigger if exists categories_updated_at on categories;
 drop trigger if exists store_settings_updated_at on store_settings;
+drop trigger if exists coupons_updated_at on coupons;
 
 -- ─────────────────────────────────────────────
 -- DROP INDEXES
@@ -48,6 +49,7 @@ drop index if exists collections_slug_idx;
 drop index if exists categories_is_active_idx;
 drop index if exists categories_slug_idx;
 drop index if exists rate_limits_expires_at_idx;
+drop index if exists coupons_code_idx;
 
 -- ─────────────────────────────────────────────
 -- DROP TABLES (order respects FK dependencies)
@@ -57,6 +59,7 @@ drop table if exists inquiries      cascade;
 drop table if exists feedbacks      cascade;
 drop table if exists inventory_logs cascade;
 drop table if exists orders         cascade;
+drop table if exists coupons        cascade;
 drop table if exists products       cascade;
 drop table if exists store_settings cascade;
 drop table if exists collections    cascade;
