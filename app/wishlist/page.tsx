@@ -121,7 +121,7 @@ export default function WishlistPage() {
                           <button
                             key={s}
                             onClick={() => setSizeMap((prev) => ({ ...prev, [item.productId]: s }))}
-                            className={`w-9 h-9 text-[11px] border rounded font-label-md transition-colors ${
+                            className={`w-10 h-10 text-[11px] border rounded font-label-md transition-colors ${
                               (sizeMap[item.productId] ?? "XS") === s
                                 ? "border-primary bg-primary/10 text-primary"
                                 : "border-outline-variant text-on-surface-variant hover:border-primary"

@@ -212,13 +212,13 @@ export default function CollectionSlugPage() {
 
                   <button
                     onClick={(e) => toggleWishlist(product, e)}
-                    className={`absolute top-3 right-3 p-2 rounded-full backdrop-blur-sm transition-colors ${
+                    className={`absolute top-3 right-3 p-2.5 rounded-full backdrop-blur-sm transition-colors ${
                       isWished(product.id)
                         ? "bg-primary text-white"
                         : "bg-white/80 text-on-surface-variant hover:text-primary"
                     }`}
                   >
-                    <Heart size={14} fill={isWished(product.id) ? "currentColor" : "none"} />
+                    <Heart size={16} fill={isWished(product.id) ? "currentColor" : "none"} />
                   </button>
 
                   <div className="p-4">

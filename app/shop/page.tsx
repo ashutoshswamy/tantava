@@ -172,7 +172,7 @@ export default function ShopPage() {
                               category: product.category,
                             });
                           }}
-                          className={`absolute top-3 right-3 z-10 w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-sm ${
+                          className={`absolute top-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-sm ${
                             isWished(product.id)
                               ? "bg-primary text-on-primary"
                               : "bg-surface/80 text-on-surface-variant hover:bg-primary hover:text-on-primary"
@@ -255,7 +255,7 @@ export default function ShopPage() {
             >
               <button
                 onClick={() => setModalProduct(null)}
-                className="absolute top-4 right-4 text-on-surface hover:text-primary z-10 bg-surface rounded-full p-1"
+                className="absolute top-4 right-4 text-on-surface hover:text-primary z-10 bg-surface rounded-full p-2.5"
               >
                 <X size={20} />
               </button>

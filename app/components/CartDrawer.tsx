@@ -66,7 +66,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
               </h2>
               <button
                 onClick={onClose}
-                className="text-on-surface-variant hover:text-primary transition-colors"
+                className="-m-2.5 p-2.5 text-on-surface-variant hover:text-primary transition-colors"
               >
                 <X size={20} />
               </button>
@@ -118,7 +118,7 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                           <div className="flex items-center border border-outline-variant rounded">
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+                              className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
                             >
                               <Minus size={14} />
                             </button>
@@ -127,14 +127,14 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                             </span>
                             <button
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="w-8 h-8 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
+                              className="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:text-primary transition-colors"
                             >
                               <Plus size={14} />
                             </button>
                           </div>
                           <button
                             onClick={() => removeItem(item.id)}
-                            className="text-on-surface-variant hover:text-error transition-colors"
+                            className="-m-2.5 p-2.5 text-on-surface-variant hover:text-error transition-colors"
                           >
                             <Trash2 size={16} />
                           </button>

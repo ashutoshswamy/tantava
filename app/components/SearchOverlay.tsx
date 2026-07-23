@@ -89,7 +89,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
               />
               <button
                 onClick={onClose}
-                className="text-outline hover:text-primary transition-colors flex-shrink-0"
+                className="-m-2.5 p-2.5 text-outline hover:text-primary transition-colors flex-shrink-0"
               >
                 <X size={20} />
               </button>

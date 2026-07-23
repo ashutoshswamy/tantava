@@ -137,7 +137,7 @@ export default function OrdersPage() {
           <div className="flex items-center gap-4 mb-10">
             <Link
               href="/account"
-              className="w-9 h-9 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary"
+              className="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant hover:text-primary"
             >
               <ArrowLeft size={18} />
             </Link>
