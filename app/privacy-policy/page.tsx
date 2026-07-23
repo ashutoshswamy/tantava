@@ -1,7 +1,9 @@
 import PolicyLayout, { PolicySection } from "../components/PolicyLayout";
 
 export const metadata = {
-  title: "Privacy Policy — Tantava",
+  title: "Privacy Policy",
+  description: "Read Tantava's privacy policy — how we collect, use, and protect your personal data.",
+  alternates: { canonical: "/privacy-policy" },
 };
 
 export default function PrivacyPolicyPage() {

@@ -1,7 +1,9 @@
 import PolicyLayout, { PolicySection } from "../components/PolicyLayout";
 
 export const metadata = {
-  title: "Return, Exchange & Store Credit Policy — Tantava",
+  title: "Return, Exchange & Store Credit Policy",
+  description: "Tantava's policy on returns, exchanges, and store credit — eligibility, timelines, and how to raise a request.",
+  alternates: { canonical: "/return-policy" },
 };
 
 export default function ReturnPolicyPage() {

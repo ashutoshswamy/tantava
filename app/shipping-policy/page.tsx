@@ -1,7 +1,9 @@
 import PolicyLayout, { PolicySection } from "../components/PolicyLayout";
 
 export const metadata = {
-  title: "Shipping Policy — Tantava",
+  title: "Shipping Policy",
+  description: "Delivery timelines, shipping charges, and dispatch details for Tantava orders across India.",
+  alternates: { canonical: "/shipping-policy" },
 };
 
 export default function ShippingPolicyPage() {

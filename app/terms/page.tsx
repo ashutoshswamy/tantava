@@ -1,7 +1,9 @@
 import PolicyLayout, { PolicySection } from "../components/PolicyLayout";
 
 export const metadata = {
-  title: "Terms of Service — Tantava",
+  title: "Terms of Service",
+  description: "The terms and conditions governing your use of Tantava and purchases made on thetantava.in.",
+  alternates: { canonical: "/terms" },
 };
 
 export default function TermsPage() {

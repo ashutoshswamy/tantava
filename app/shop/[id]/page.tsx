@@ -1,10 +1,84 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import ProductDetailPage from "./client";
+import { createServerSupabase } from "@/lib/supabase-server";
+import type { Product } from "@/lib/supabase";
 
-export default function Page() {
+type Props = { params: Promise<{ id: string }> };
+
+async function getProduct(id: string): Promise<Product | null> {
+  const supabase = createServerSupabase();
+  const { data } = await supabase.from("products").select("*").eq("id", id).single();
+  return data;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const product = await getProduct(id);
+  if (!product) return {};
+
+  const title = product.name;
+  const description =
+    product.description?.slice(0, 155) ||
+    `Shop ${product.name} at Tantava — handcrafted ethnic wear with pan-India shipping.`;
+  const image = product.images[0] || "/og-image.png";
+
+  return {
+    title,
+    description,
+    alternates: { canonical: `/shop/${product.id}` },
+    openGraph: {
+      title,
+      description,
+      url: `/shop/${product.id}`,
+      type: "website",
+      images: [{ url: image, alt: product.name }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  const product = await getProduct(id);
+
+  const jsonLd = product
+    ? {
+        "@context": "https://schema.org",
+        "@type": "Product",
+        name: product.name,
+        description: product.description ?? undefined,
+        image: product.images,
+        sku: product.sku ?? undefined,
+        category: product.category,
+        offers: {
+          "@type": "Offer",
+          priceCurrency: "INR",
+          price: ((product.discount_price ?? product.price) / 100).toFixed(2),
+          availability: Object.values(product.size_inventory ?? {}).some((qty) => qty > 0)
+            ? "https://schema.org/InStock"
+            : "https://schema.org/OutOfStock",
+          url: `https://thetantava.in/shop/${product.id}`,
+        },
+      }
+    : null;
+
   return (
-    <Suspense fallback={null}>
-      <ProductDetailPage />
-    </Suspense>
+    <>
+      {jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+      )}
+      <Suspense fallback={null}>
+        <ProductDetailPage />
+      </Suspense>
+    </>
   );
 }

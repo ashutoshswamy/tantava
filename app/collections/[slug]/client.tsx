@@ -191,7 +191,7 @@ export default function CollectionSlugPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => (
                 <div key={product.id} className="group relative bg-white border border-outline-variant/40 rounded-2xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all duration-300">
-                  <Link href={`/product/${product.id}`} className="block">
+                  <Link href={`/shop/${product.id}`} className="block">
                     <div className="relative aspect-[3/4] overflow-hidden bg-white">
                       {product.images[0] ? (
                         <img
@@ -222,7 +222,7 @@ export default function CollectionSlugPage() {
                   </button>
 
                   <div className="p-4">
-                    <Link href={`/product/${product.id}`}>
+                    <Link href={`/shop/${product.id}`}>
                       <h3 className="font-label-md text-[14px] text-on-surface leading-snug line-clamp-2 hover:text-primary transition-colors">
                         {product.name}
                       </h3>
