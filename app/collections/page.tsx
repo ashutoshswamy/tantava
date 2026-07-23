@@ -27,7 +27,7 @@ export default function CollectionsPage() {
       <main className="min-h-screen bg-surface">
         <div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-10 sm:py-16">
           <div className="text-center mb-10 sm:mb-12">
-            <h1 className="font-headline-lg text-[28px] sm:text-[40px] md:text-[52px] text-on-surface leading-tight">
+            <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
               Collections
             </h1>
             <p className="text-on-surface-variant mt-3 text-[15px] max-w-xl mx-auto font-body-md">

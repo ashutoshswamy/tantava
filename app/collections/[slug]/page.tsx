@@ -145,7 +145,7 @@ export default function CollectionSlugPage() {
                   <ArrowLeft size={14} />
                   Collections
                 </Link>
-                <h1 className="font-headline-lg text-[26px] sm:text-[36px] md:text-[48px] leading-tight">
+                <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg leading-tight">
                   {collection.name}
                 </h1>
                 {collection.description && (
@@ -164,7 +164,7 @@ export default function CollectionSlugPage() {
                 <ArrowLeft size={14} />
                 Collections
               </Link>
-              <h1 className="font-headline-lg text-[26px] sm:text-[36px] md:text-[48px] text-on-surface">
+              <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
                 {collection.name}
               </h1>
               {collection.description && (
