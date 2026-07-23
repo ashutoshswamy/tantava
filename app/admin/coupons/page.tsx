@@ -2,13 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import type { Coupon } from "@/lib/supabase";
-import { Plus, Loader2, Pencil, Ticket, Trash2 } from "lucide-react";
+import type { Coupon, StoreSettings } from "@/lib/supabase";
+import { Plus, Loader2, Pencil, Ticket, Trash2, Sparkles } from "lucide-react";
 
 export default function AdminCouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+
+  const [newUserPercent, setNewUserPercent] = useState(0);
+  const [newUserLoading, setNewUserLoading] = useState(true);
+  const [newUserSaving, setNewUserSaving] = useState(false);
+  const [newUserSaved, setNewUserSaved] = useState(false);
 
   const load = async () => {
     try {
@@ -20,9 +25,34 @@ export default function AdminCouponsPage() {
     }
   };
 
+  const loadNewUserDiscount = async () => {
+    try {
+      const res = await fetch("/api/settings");
+      const data: StoreSettings = await res.json();
+      setNewUserPercent(data.first_purchase_discount_percent ?? 0);
+    } finally {
+      setNewUserLoading(false);
+    }
+  };
+
   useEffect(() => {
     load();
+    loadNewUserDiscount();
   }, []);
+
+  const saveNewUserDiscount = async () => {
+    setNewUserSaving(true);
+    const res = await fetch("/api/settings", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ first_purchase_discount_percent: newUserPercent }),
+    });
+    if (res.ok) {
+      setNewUserSaved(true);
+      setTimeout(() => setNewUserSaved(false), 2000);
+    }
+    setNewUserSaving(false);
+  };
 
   const handleDelete = async (id: string, code: string) => {
     if (!confirm(`Delete coupon "${code}"?`)) return;
@@ -34,7 +64,7 @@ export default function AdminCouponsPage() {
 
   const isExpired = (c: Coupon) => c.expires_at !== null && new Date(c.expires_at) < new Date();
 
-  if (loading) {
+  if (loading || newUserLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 size={40} className="text-[#930500] animate-spin" />
@@ -44,9 +74,46 @@ export default function AdminCouponsPage() {
 
   return (
     <div className="p-4 sm:p-6 lg:p-8 text-[#2b0e0a]">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div className="mb-8">
+        <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Coupons</h1>
+        <p className="text-[#8c6f52] text-[13px] mt-0.5">Manage discount codes and the automatic new-customer discount</p>
+      </div>
+
+      {/* New User Coupon */}
+      <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 mb-8">
+        <div className="flex items-center gap-3 mb-1">
+          <div className="p-1.5 bg-[#fbf0da] rounded-lg text-[#930500]">
+            <Sparkles size={16} />
+          </div>
+          <h2 className="text-[15px] font-semibold text-[#2b0e0a]">New User Coupon</h2>
+        </div>
+        <p className="text-[12px] text-[#8c6f52] mb-4">
+          Automatically applied at checkout for customers placing their first order — no code needed. Set to 0 to disable.
+        </p>
+        <div className="flex items-center gap-3">
+          <input
+            type="number"
+            min={0}
+            max={100}
+            value={newUserPercent}
+            onChange={(e) => setNewUserPercent(Number(e.target.value))}
+            className="w-28 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] focus:border-[#930500]/60 focus:outline-none transition-colors"
+          />
+          <span className="text-[13px] text-[#8c6f52]">% off</span>
+          <button
+            type="button"
+            onClick={saveNewUserDiscount}
+            disabled={newUserSaving}
+            className="ml-auto py-2.5 px-6 bg-[#930500] text-white rounded-xl font-medium text-[13px] hover:bg-[#8c0500] transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+          >
+            {newUserSaving ? <Loader2 size={16} className="animate-spin" /> : newUserSaved ? "Saved!" : "Save"}
+          </button>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
-          <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Coupons</h1>
+          <h2 className="text-[15px] font-semibold text-[#2b0e0a]">Coupon Codes</h2>
           <p className="text-[#8c6f52] text-[13px] mt-0.5">{coupons.length} coupon{coupons.length !== 1 ? "s" : ""}</p>
         </div>
         <Link
