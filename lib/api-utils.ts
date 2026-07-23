@@ -235,6 +235,17 @@ export function validateSettingsInput(body: Record<string, unknown>) {
     if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");
     out.sale_ticker_enabled = body.sale_ticker_enabled;
   }
+  if ("promo_modal_enabled" in body) {
+    if (typeof body.promo_modal_enabled !== "boolean") throw new ValidationError("promo_modal_enabled must be a boolean");
+    out.promo_modal_enabled = body.promo_modal_enabled;
+  }
+  for (const field of ["promo_modal_title", "promo_modal_message", "promo_modal_image", "promo_modal_button_text", "promo_modal_button_link"] as const) {
+    if (field in body) {
+      const v = body[field];
+      if (v !== null && typeof v !== "string") throw new ValidationError(`${field} must be a string or null`);
+      out[field] = v;
+    }
+  }
   if ("first_purchase_discount_percent" in body) {
     const v = num(body.first_purchase_discount_percent);
     if (v === undefined || v < 0 || v > 100) {

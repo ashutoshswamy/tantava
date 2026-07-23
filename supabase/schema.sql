@@ -116,6 +116,12 @@ create table if not exists store_settings (
   testimonials_enabled  boolean not null default true,
   first_purchase_discount_percent integer not null default 0
                           check (first_purchase_discount_percent >= 0 and first_purchase_discount_percent <= 100),
+  promo_modal_enabled   boolean not null default false,
+  promo_modal_title     text,
+  promo_modal_message   text,
+  promo_modal_image     text,
+  promo_modal_button_text text,
+  promo_modal_button_link text,
   updated_at            timestamptz not null default now()
 );
 

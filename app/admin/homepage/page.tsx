@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Loader2, Image as ImageIcon, Upload, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Loader2, Image as ImageIcon, Upload, X, ChevronUp, ChevronDown, Megaphone, Trash2 } from "lucide-react";
 import { supabase, type StoreSettings } from "@/lib/supabase";
 import { validateImageFile } from "@/lib/image-validation";
 import { isValidHex } from "@/lib/theme-color";
@@ -29,7 +29,14 @@ export default function HomepageSettingsPage() {
     sale_ticker_text_color: DEFAULT_TICKER_TEXT_COLOR,
     sale_ticker_speed_seconds: 40,
     testimonials_enabled: true,
+    promo_modal_enabled: false,
+    promo_modal_title: "",
+    promo_modal_message: "",
+    promo_modal_image: "",
+    promo_modal_button_text: "",
+    promo_modal_button_link: "",
   });
+  const [uploadingPromoImage, setUploadingPromoImage] = useState(false);
 
   useEffect(() => {
     fetch("/api/settings")
@@ -43,6 +50,12 @@ export default function HomepageSettingsPage() {
           sale_ticker_text_color: data.sale_ticker_text_color || DEFAULT_TICKER_TEXT_COLOR,
           sale_ticker_speed_seconds: data.sale_ticker_speed_seconds ?? 40,
           testimonials_enabled: data.testimonials_enabled ?? true,
+          promo_modal_enabled: data.promo_modal_enabled,
+          promo_modal_title: data.promo_modal_title || "",
+          promo_modal_message: data.promo_modal_message || "",
+          promo_modal_image: data.promo_modal_image || "",
+          promo_modal_button_text: data.promo_modal_button_text || "",
+          promo_modal_button_link: data.promo_modal_button_link || "",
         });
         setLoading(false);
       });
@@ -114,6 +127,69 @@ export default function HomepageSettingsPage() {
     });
   };
 
+  const handlePromoImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+
+    const validationError = await validateImageFile(file);
+    if (validationError) {
+      setError(validationError);
+      return;
+    }
+
+    setUploadingPromoImage(true);
+    setError("");
+
+    const urlRes = await fetch("/api/upload-url", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ filename: file.name }),
+    });
+
+    if (!urlRes.ok) {
+      const data = await urlRes.json();
+      setError(data.error || "Failed to prepare upload");
+      setUploadingPromoImage(false);
+      return;
+    }
+
+    const { path, token, publicUrl } = await urlRes.json();
+    const { error: uploadError } = await supabase.storage
+      .from("product-images")
+      .uploadToSignedUrl(path, token, file);
+
+    if (uploadError) {
+      setError(uploadError.message || "Failed to upload image");
+      setUploadingPromoImage(false);
+      return;
+    }
+
+    const oldPath = form.promo_modal_image ? storagePathFromUrl(form.promo_modal_image) : null;
+    if (oldPath) {
+      await fetch("/api/upload-url", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: oldPath }),
+      });
+    }
+
+    setForm((f) => ({ ...f, promo_modal_image: publicUrl }));
+    setUploadingPromoImage(false);
+  };
+
+  const handlePromoImageDelete = async () => {
+    const path = form.promo_modal_image ? storagePathFromUrl(form.promo_modal_image) : null;
+    if (path) {
+      await fetch("/api/upload-url", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+    }
+    setForm((f) => ({ ...f, promo_modal_image: "" }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValidHex(form.sale_ticker_color)) {
@@ -160,7 +236,7 @@ export default function HomepageSettingsPage() {
         </div>
         <div>
           <h1 className="text-[26px] font-bold text-[#2b0e0a] tracking-tight">Homepage</h1>
-          <p className="text-[#8c6f52] text-[13px] mt-0.5">Hero image, sale ticker, and testimonials section</p>
+          <p className="text-[#8c6f52] text-[13px] mt-0.5">Hero image, welcome popup, sale ticker, and testimonials section</p>
         </div>
       </div>
 
@@ -230,6 +306,101 @@ export default function HomepageSettingsPage() {
             {uploading ? "Uploading..." : "Add Images"}
             <input type="file" accept="image/*" multiple onChange={handleHeroImageUpload} disabled={uploading} className="hidden" />
           </label>
+        </div>
+
+        <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 space-y-4">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <Megaphone size={16} className="text-[#930500]" />
+              <div>
+                <p className="text-[14px] font-medium text-[#2b0e0a]">Welcome Popup</p>
+                <p className="text-[12px] text-[#8c6f52] mt-0.5">Big modal shown once per visit — sales, launches, announcements</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={form.promo_modal_enabled}
+              onClick={() => setForm({ ...form, promo_modal_enabled: !form.promo_modal_enabled })}
+              className={`relative w-12 h-7 rounded-full shrink-0 transition-colors ${
+                form.promo_modal_enabled ? "bg-[#930500]" : "bg-[#dcc9a0]/50"
+              }`}
+            >
+              <span
+                className={`absolute top-1 left-1 w-5 h-5 rounded-full bg-white transition-transform ${
+                  form.promo_modal_enabled ? "translate-x-5" : "translate-x-0"
+                }`}
+              />
+            </button>
+          </div>
+
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Title</label>
+            <input
+              type="text"
+              value={form.promo_modal_title}
+              onChange={(e) => setForm({ ...form, promo_modal_title: e.target.value })}
+              className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
+              placeholder="e.g. Festive Sale Is Live"
+            />
+          </div>
+
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Message</label>
+            <textarea
+              rows={3}
+              value={form.promo_modal_message}
+              onChange={(e) => setForm({ ...form, promo_modal_message: e.target.value })}
+              className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors resize-none"
+              placeholder="e.g. Flat 20% off on all kurtas, this week only."
+            />
+          </div>
+
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Image (optional)</label>
+            {form.promo_modal_image ? (
+              <div className="relative inline-block">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={form.promo_modal_image} alt="Promo preview" className="h-28 w-auto rounded-xl border border-[#efdcb0] object-cover" />
+                <button
+                  type="button"
+                  onClick={handlePromoImageDelete}
+                  className="absolute -top-2 -right-2 p-1.5 bg-white border border-[#efdcb0] rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shadow-sm"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </div>
+            ) : (
+              <label className="inline-flex items-center gap-2 py-2.5 px-5 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl font-medium text-[13px] text-[#2b0e0a] cursor-pointer hover:border-[#930500]/50 transition-colors">
+                {uploadingPromoImage ? <Loader2 size={16} className="animate-spin" /> : <Upload size={16} />}
+                {uploadingPromoImage ? "Uploading..." : "Upload Image"}
+                <input type="file" accept="image/*" onChange={handlePromoImageUpload} disabled={uploadingPromoImage} className="hidden" />
+              </label>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Button Text (optional)</label>
+              <input
+                type="text"
+                value={form.promo_modal_button_text}
+                onChange={(e) => setForm({ ...form, promo_modal_button_text: e.target.value })}
+                className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
+                placeholder="e.g. Shop Now"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">Button Link (optional)</label>
+              <input
+                type="text"
+                value={form.promo_modal_button_link}
+                onChange={(e) => setForm({ ...form, promo_modal_button_link: e.target.value })}
+                className="w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
+                placeholder="e.g. /shop"
+              />
+            </div>
+          </div>
         </div>
 
         <div className="bg-white border border-[#efdcb0] rounded-2xl p-5 sm:p-6 space-y-4">

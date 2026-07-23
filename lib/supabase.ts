@@ -65,6 +65,12 @@ export type StoreSettings = {
   whatsapp_number: string | null;
   testimonials_enabled: boolean;
   first_purchase_discount_percent: number;
+  promo_modal_enabled: boolean;
+  promo_modal_title: string | null;
+  promo_modal_message: string | null;
+  promo_modal_image: string | null;
+  promo_modal_button_text: string | null;
+  promo_modal_button_link: string | null;
   updated_at: string;
 };
 

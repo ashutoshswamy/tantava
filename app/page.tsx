@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import PromoModal from "./components/PromoModal";
 import { ArrowRight, Truck, Ruler, Store, Layers } from "lucide-react";
 import { FaWhatsapp } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -134,6 +135,7 @@ export default function HomePage() {
   return (
     <>
       <Navbar activePage="home" />
+      <PromoModal />
 
       {/* Sale Ticker */}
       {saleTickerEnabled && (
