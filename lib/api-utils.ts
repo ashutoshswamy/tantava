@@ -224,6 +224,13 @@ export function validateSettingsInput(body: Record<string, unknown>) {
       out[field] = body[field];
     }
   }
+  if ("sale_ticker_speed_seconds" in body) {
+    const v = num(body.sale_ticker_speed_seconds);
+    if (v === undefined || v < 5 || v > 120) {
+      throw new ValidationError("sale_ticker_speed_seconds must be between 5 and 120");
+    }
+    out.sale_ticker_speed_seconds = v;
+  }
   if ("sale_ticker_enabled" in body) {
     if (typeof body.sale_ticker_enabled !== "boolean") throw new ValidationError("sale_ticker_enabled must be a boolean");
     out.sale_ticker_enabled = body.sale_ticker_enabled;

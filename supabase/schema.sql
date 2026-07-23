@@ -109,6 +109,8 @@ create table if not exists store_settings (
   sale_ticker_enabled   boolean not null default true,
   sale_ticker_color     text,
   sale_ticker_text_color text,
+  sale_ticker_speed_seconds integer not null default 40
+                          check (sale_ticker_speed_seconds >= 5 and sale_ticker_speed_seconds <= 120),
   checkout_mode         text not null default 'razorpay' check (checkout_mode in ('razorpay', 'whatsapp')),
   whatsapp_number       text,
   testimonials_enabled  boolean not null default true,

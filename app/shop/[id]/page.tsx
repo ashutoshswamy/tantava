@@ -13,8 +13,6 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
-const DEFAULT_CARE = "Dry Clean Only. Store in muslin cloth away from direct sunlight.";
-const DEFAULT_DELIVERY_RETURNS = "Complimentary shipping across India. 14–21 working days. Returns within 7 days for standard sizes.";
 const SIZES = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"];
 
 function firstAvailableSize(product: Product): string {
@@ -57,16 +55,10 @@ export default function ProductDetailPage() {
   const formatPrice = (paise: number) => `₹${(paise / 100).toLocaleString("en-IN")}`;
 
   const accordionItems = product ? [
-    {
-      title: "Product Description",
-      content: [product.fabric, product.description].filter(Boolean).join(". "),
-    },
-    { title: "Fabric & Care", content: product.care || DEFAULT_CARE },
-    {
-      title: "Delivery & Returns",
-      content: [settings?.delivery_info, settings?.returns_info].filter(Boolean).join(" ") || DEFAULT_DELIVERY_RETURNS,
-    },
-  ] : [];
+    { title: "Product Description", content: [product.fabric, product.description].filter(Boolean).join(". ") },
+    { title: "Fabric & Care", content: product.care ?? "" },
+    { title: "Delivery & Returns", content: [settings?.delivery_info, settings?.returns_info].filter(Boolean).join(" ") },
+  ].filter((item) => item.content) : [];
 
   const handleAddToCart = () => {
     if (!product) return;

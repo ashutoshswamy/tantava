@@ -27,6 +27,7 @@ export default function HomepageSettingsPage() {
     sale_ticker_enabled: true,
     sale_ticker_color: DEFAULT_TICKER_COLOR,
     sale_ticker_text_color: DEFAULT_TICKER_TEXT_COLOR,
+    sale_ticker_speed_seconds: 40,
     testimonials_enabled: true,
   });
 
@@ -40,6 +41,7 @@ export default function HomepageSettingsPage() {
           sale_ticker_enabled: data.sale_ticker_enabled ?? true,
           sale_ticker_color: data.sale_ticker_color || DEFAULT_TICKER_COLOR,
           sale_ticker_text_color: data.sale_ticker_text_color || DEFAULT_TICKER_TEXT_COLOR,
+          sale_ticker_speed_seconds: data.sale_ticker_speed_seconds ?? 40,
           testimonials_enabled: data.testimonials_enabled ?? true,
         });
         setLoading(false);
@@ -298,6 +300,25 @@ export default function HomepageSettingsPage() {
                 className="flex-1 bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] font-mono text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors"
               />
             </div>
+          </div>
+          <div>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider block mb-2">
+              Strip Speed
+            </label>
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-[#8c6f52] w-10">Fast</span>
+              <input
+                type="range"
+                min={10}
+                max={90}
+                step={5}
+                value={form.sale_ticker_speed_seconds}
+                onChange={(e) => setForm({ ...form, sale_ticker_speed_seconds: Number(e.target.value) })}
+                className="flex-1 accent-[#930500]"
+              />
+              <span className="text-[11px] text-[#8c6f52] w-10 text-right">Slow</span>
+            </div>
+            <p className="text-[11px] text-[#dcc9a0] mt-1">{form.sale_ticker_speed_seconds}s per loop</p>
           </div>
         </div>
 

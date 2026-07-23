@@ -80,13 +80,14 @@ export default function HomePage() {
   const [newArrivals, setNewArrivals] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [collectionOffset, setCollectionOffset] = useState(0);
-  const [testimonialsEnabled, setTestimonialsEnabled] = useState(true);
-  const [heroImages, setHeroImages] = useState<string[]>(["/hero.png"]);
+  const [testimonialsEnabled, setTestimonialsEnabled] = useState(false);
+  const [heroImages, setHeroImages] = useState<string[]>([]);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [saleTickerText, setSaleTickerText] = useState("The Sale Is On");
-  const [saleTickerEnabled, setSaleTickerEnabled] = useState(true);
+  const [saleTickerText, setSaleTickerText] = useState("");
+  const [saleTickerEnabled, setSaleTickerEnabled] = useState(false);
   const [saleTickerColor, setSaleTickerColor] = useState<string | null>(null);
   const [saleTickerTextColor, setSaleTickerTextColor] = useState<string | null>(null);
+  const [saleTickerSpeed, setSaleTickerSpeed] = useState(0);
 
   useEffect(() => {
     fetch("/api/products?active=true&limit=4")
@@ -117,13 +118,13 @@ export default function HomePage() {
     fetch("/api/settings")
       .then((r) => r.json())
       .then((data: StoreSettings) => {
-        setTestimonialsEnabled(data.testimonials_enabled ?? true);
-        const images = data.hero_images?.length ? data.hero_images : data.hero_image ? [data.hero_image] : [];
-        if (images.length) setHeroImages(images);
-        if (data.sale_ticker_text) setSaleTickerText(data.sale_ticker_text);
-        setSaleTickerEnabled(data.sale_ticker_enabled ?? true);
-        if (data.sale_ticker_color) setSaleTickerColor(data.sale_ticker_color);
-        if (data.sale_ticker_text_color) setSaleTickerTextColor(data.sale_ticker_text_color);
+        setTestimonialsEnabled(data.testimonials_enabled);
+        setHeroImages(data.hero_images?.length ? data.hero_images : data.hero_image ? [data.hero_image] : []);
+        setSaleTickerText(data.sale_ticker_text);
+        setSaleTickerEnabled(data.sale_ticker_enabled);
+        setSaleTickerColor(data.sale_ticker_color);
+        setSaleTickerTextColor(data.sale_ticker_text_color);
+        setSaleTickerSpeed(data.sale_ticker_speed_seconds);
       })
       .catch(() => {});
   }, []);
@@ -141,17 +142,20 @@ export default function HomePage() {
         style={{
           background: saleTickerColor
             ? `linear-gradient(90deg, ${saleTickerColor}, ${saleTickerColor}dd, ${saleTickerColor})`
-            : "linear-gradient(90deg, #7a0400, #930500, #7a0400)",
+            : "linear-gradient(90deg, var(--color-on-primary-container), var(--color-primary), var(--color-on-primary-container))",
         }}
       >
-        <div className="flex gap-10 animate-marquee-fast w-max whitespace-nowrap">
+        <div
+          className="flex gap-10 animate-marquee w-max whitespace-nowrap"
+          style={{ animationDuration: `${saleTickerSpeed}s` }}
+        >
           {Array(2).fill(null).map((_, i) => (
             <div key={i} className="flex gap-10">
               {Array(6).fill(null).map((_, j) => (
                 <span
                   key={j}
                   className="font-label-md text-[11px] tracking-[0.3em] uppercase flex items-center gap-3"
-                  style={{ color: saleTickerTextColor || "rgba(255,255,255,0.9)" }}
+                  style={{ color: saleTickerTextColor || "var(--color-on-primary)" }}
                 >
                   {saleTickerText} <span style={{ opacity: 0.4 }}>✦</span>
                 </span>

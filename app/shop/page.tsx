@@ -85,11 +85,8 @@ export default function ShopPage() {
               <span className="text-primary">Shop All</span>
             </nav>
             <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary">
-              Handcrafted Kurtis & Fusion Wear
+              Curated Collection
             </h1>
-            <p className="max-w-2xl mt-4 font-body-lg text-body-lg text-on-surface-variant">
-              {products.length > 0 ? `${products.length} pieces` : "Discover our collection"} kurtas, anarkalis, and fusion sets for office, festive, and everyday elegance.
-            </p>
           </div>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {/* Search */}

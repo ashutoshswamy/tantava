@@ -60,6 +60,7 @@ export type StoreSettings = {
   sale_ticker_enabled: boolean;
   sale_ticker_color: string | null;
   sale_ticker_text_color: string | null;
+  sale_ticker_speed_seconds: number;
   checkout_mode: "razorpay" | "whatsapp";
   whatsapp_number: string | null;
   testimonials_enabled: boolean;
