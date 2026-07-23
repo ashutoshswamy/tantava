@@ -3,9 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Loader2, Upload } from "lucide-react";
+import { ArrowLeft, Loader2, Upload, Trash2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { validateImageFile } from "@/lib/image-validation";
+
+function storagePathFromUrl(url: string): string | null {
+  const marker = "/product-images/";
+  const idx = url.indexOf(marker);
+  return idx === -1 ? null : url.slice(idx + marker.length);
+}
 
 const inputCls = "w-full bg-[#fbf0da] border border-[#dcc9a0]/40 rounded-xl px-4 py-3 text-[13px] text-[#2b0e0a] placeholder:text-[#dcc9a0] focus:border-[#930500]/60 focus:outline-none transition-colors";
 
@@ -70,12 +76,35 @@ export default function NewCollectionPage() {
 
     if (uploadError) {
       setError(uploadError.message || "Failed to upload image");
-    } else {
-      setForm((f) => ({ ...f, cover_image: publicUrl }));
+      setUploading(false);
+      e.target.value = "";
+      return;
     }
 
+    const oldPath = form.cover_image ? storagePathFromUrl(form.cover_image) : null;
+    if (oldPath) {
+      await fetch("/api/upload-url", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: oldPath }),
+      });
+    }
+
+    setForm((f) => ({ ...f, cover_image: publicUrl }));
     setUploading(false);
     e.target.value = "";
+  };
+
+  const handleImageDelete = async () => {
+    const path = form.cover_image ? storagePathFromUrl(form.cover_image) : null;
+    if (path) {
+      await fetch("/api/upload-url", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path }),
+      });
+    }
+    setForm((f) => ({ ...f, cover_image: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -179,8 +208,15 @@ export default function NewCollectionPage() {
               </label>
             </div>
             {form.cover_image && (
-              <div className="mt-3">
+              <div className="mt-3 relative inline-block">
                 <img src={form.cover_image} alt="Cover preview" className="h-24 w-auto rounded-xl border border-[#efdcb0] object-cover" />
+                <button
+                  type="button"
+                  onClick={handleImageDelete}
+                  className="absolute -top-2 -right-2 p-1.5 bg-white border border-[#efdcb0] rounded-full text-red-400 hover:text-red-600 hover:bg-red-50 transition-colors shadow-sm"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             )}
           </div>
