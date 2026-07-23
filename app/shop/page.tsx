@@ -190,7 +190,6 @@ export default function ShopPage() {
                           className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
                           src={product.images[0] || ""}
                         />
-                        <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity" />
                         <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
                           <button
                             onClick={() => { setModalProduct(product); setSelectedSize(firstAvailableSize(product)); setModalImg(0); }}
