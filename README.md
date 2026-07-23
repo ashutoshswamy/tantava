@@ -14,6 +14,7 @@ For architecture, data model, and API details see [DOCUMENTATION.md](./DOCUMENTA
 - **Payments**: Razorpay
 - **State**: Zustand (cart, wishlist)
 - **Animation**: Framer Motion
+- **Cache**: Upstash Redis backs Next's `use cache: remote` handler (`cache-handlers/remote-handler.js`)
 
 ## Getting Started
 
@@ -36,12 +37,23 @@ SUPABASE_SERVICE_ROLE_KEY=
 # Clerk
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=
+NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=
+NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=
+NEXT_PUBLIC_CLERK_PROXY_URL=/api/__clerk
 
 # Razorpay
 NEXT_PUBLIC_RAZORPAY_KEY_ID=
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
+
+# Upstash Redis — required at build/runtime, backs the `use cache: remote` handler
+UPSTASH_REDIS_REST_URL=
+UPSTASH_REDIS_REST_TOKEN=
 ```
+
+`NEXT_PUBLIC_CLERK_PROXY_URL` routes Clerk's JS through `/api/__clerk` (this app's own domain) instead of Clerk's CDN — works around ad blockers/extensions that block requests to `*.clerk.*`. The route handler lives at `app/api/__clerk/[[...path]]/route.ts`.
 
 ### 3. Set up the database
 
@@ -66,13 +78,15 @@ Open [http://localhost:3000](http://localhost:3000). Admin panel lives at `/admi
 | `npm run start` | Start production server |
 | `npm run lint` | ESLint |
 | `npm run seed:order` | Seed a fake order for local testing (`scripts/seed-fake-order.mjs`) — **script file is currently missing from the repo, will fail if run** |
+| `npm run seed:dummy` | Seed dummy catalog/homepage data (`scripts/seed-dummy-data.mjs`) |
+| `npm run unseed:dummy` | Remove the dummy data seeded above (`scripts/unseed-dummy-data.mjs`) |
 | `npm run reset:storage` | Empty and delete the `product-images` Supabase Storage bucket (`scripts/reset-storage.mjs`) |
 
 ## Project Structure
 
 ```
 app/
-  admin/          Admin panel — products, categories, collections, inventory, orders, homepage, appearance, checkout settings, delivery & returns, analytics, feedback, inquiries
+  admin/          Admin panel — products, categories, collections, coupons, inventory, orders, users, homepage, appearance, checkout settings, delivery & returns, analytics, feedback, inquiries
   api/            Route handlers (REST-ish JSON endpoints)
   shop/           Storefront product listing + PDP
   collections/    Collection landing + listing pages

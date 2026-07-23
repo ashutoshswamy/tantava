@@ -21,7 +21,7 @@ export default function Footer() {
     <footer className="bg-surface-container-low w-full py-stack-lg border-t border-outline-variant/30">
       <div className="grid grid-cols-1 min-[480px]:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
         <div>
-          <Link href="/" className="font-headline-sm text-headline-sm text-primary mb-6 block">
+          <Link href="/" className="font-headline-sm text-headline-sm text-primary tracking-[0.15em] uppercase mb-6 block">
             Tantava
           </Link>
           <p className="font-body-md text-body-md text-on-surface-variant mb-6 max-w-xs">
