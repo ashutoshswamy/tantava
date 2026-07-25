@@ -50,7 +50,7 @@ export default function EditProductPage() {
     description: "",
     price: "",
     discount_price: "",
-    category: "",
+    category_ids: [] as string[],
     fabric: "",
     care: "",
     free_delivery: false,
@@ -64,17 +64,19 @@ export default function EditProductPage() {
 
   useEffect(() => {
     const load = async () => {
-      const [prodRes, colRes, catRes, prodColsRes] = await Promise.all([
+      const [prodRes, colRes, catRes, prodColsRes, prodCatsRes] = await Promise.all([
         fetch(`/api/products/${params.id}`),
         fetch("/api/collections"),
         fetch("/api/categories?all=true"),
         fetch(`/api/products/${params.id}/collections`),
+        fetch(`/api/products/${params.id}/categories`),
       ]);
 
       const data: Product = await prodRes.json();
       const cols = await colRes.json();
       const cats = await catRes.json();
       const prodCollectionIds = await prodColsRes.json();
+      const prodCategoryIds = await prodCatsRes.json();
 
       if (Array.isArray(cols)) setCollections(cols);
       if (Array.isArray(cats)) setCategories(cats);
@@ -86,7 +88,7 @@ export default function EditProductPage() {
         description: data.description || "",
         price: (data.price / 100).toString(),
         discount_price: data.discount_price != null ? (data.discount_price / 100).toString() : "",
-        category: data.category,
+        category_ids: Array.isArray(prodCategoryIds) ? prodCategoryIds : [],
         fabric: data.fabric || "",
         care: data.care || "",
         free_delivery: data.free_delivery || false,
@@ -105,6 +107,10 @@ export default function EditProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.category_ids.length === 0) {
+      setError("Select at least one category");
+      return;
+    }
     setSaving(true);
     setError("");
 
@@ -128,11 +134,18 @@ export default function EditProductPage() {
     });
 
     if (res.ok) {
-      await fetch(`/api/products/${params.id}/collections`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ collection_ids: form.collection_ids }),
-      });
+      await Promise.all([
+        fetch(`/api/products/${params.id}/collections`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ collection_ids: form.collection_ids }),
+        }),
+        fetch(`/api/products/${params.id}/categories`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ category_ids: form.category_ids }),
+        }),
+      ]);
       router.push("/admin/products");
     } else {
       const data = await res.json();
@@ -147,6 +160,15 @@ export default function EditProductPage() {
       collection_ids: f.collection_ids.includes(id)
         ? f.collection_ids.filter((c) => c !== id)
         : [...f.collection_ids, id],
+    }));
+  };
+
+  const toggleCategory = (id: string) => {
+    setForm((f) => ({
+      ...f,
+      category_ids: f.category_ids.includes(id)
+        ? f.category_ids.filter((c) => c !== id)
+        : [...f.category_ids, id],
     }));
   };
 
@@ -325,20 +347,26 @@ export default function EditProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Category *</label>
-              <select
-                required
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className={`${inputCls} appearance-none`}
-              >
-                {form.category && !categories.some((c) => c.name === form.category) && (
-                  <option value={form.category}>{form.category}</option>
-                )}
-                {categories.map((c) => (
-                  <option key={c.id} value={c.name}>{c.name}</option>
-                ))}
-              </select>
+              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Categories *</label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => {
+                  const selected = form.category_ids.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => toggleCategory(c.id)}
+                      className={`px-3 py-2 rounded-xl border text-[12px] font-medium transition-colors ${
+                        selected
+                          ? "bg-[#930500] border-[#930500] text-white"
+                          : "bg-[#fbf0da] border-[#dcc9a0]/40 text-[#8c6f52] hover:text-[#2b0e0a]"
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
             <div>
               <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Badge</label>

@@ -241,7 +241,7 @@ export default function ProductDetailPage() {
                           name: product.name,
                           price: product.price,
                           image: product.images[0] || "",
-                          category: product.category,
+                          category: product.categories.map((c) => c.name).join(", "),
                         })
                       }
                       className={`h-14 w-full min-[420px]:w-14 border rounded-lg flex items-center justify-center transition-all active:scale-90 ${

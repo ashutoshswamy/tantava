@@ -2,40 +2,51 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { apiError, validateProductInput, ValidationError } from "@/lib/api-utils";
+import type { Category } from "@/lib/supabase";
+
+async function productIdsIn(
+  supabase: ReturnType<typeof createServerSupabase>,
+  table: "product_collections" | "product_categories",
+  column: "collection_id" | "category_id",
+  value: string
+): Promise<string[]> {
+  const { data } = await supabase.from(table).select("product_id").eq(column, value);
+  return (data ?? []).map((l) => l.product_id);
+}
 
 export async function GET(req: NextRequest) {
   const supabase = createServerSupabase();
   const { searchParams } = new URL(req.url);
-  const category = searchParams.get("category");
+  const categoryId = searchParams.get("category_id");
   const active = searchParams.get("active");
   const collectionId = searchParams.get("collection_id");
   const limit = searchParams.get("limit");
 
   let productIds: string[] | null = null;
-  if (collectionId) {
-    const { data: links, error: linksError } = await supabase
-      .from("product_collections")
-      .select("product_id")
-      .eq("collection_id", collectionId);
-    if (linksError) return apiError("products.GET", linksError);
-    productIds = (links ?? []).map((l) => l.product_id);
-    if (productIds.length === 0) return NextResponse.json([]);
+  if (collectionId) productIds = await productIdsIn(supabase, "product_collections", "collection_id", collectionId);
+  if (categoryId) {
+    const catIds = await productIdsIn(supabase, "product_categories", "category_id", categoryId);
+    productIds = productIds ? productIds.filter((id) => catIds.includes(id)) : catIds;
   }
+  if (productIds && productIds.length === 0) return NextResponse.json([]);
 
   let query = supabase
     .from("products")
-    .select("*")
+    .select("*, product_categories(categories(*))")
     .order("sort_order", { ascending: true })
     .order("created_at", { ascending: false });
 
-  if (category) query = query.eq("category", category);
   if (active !== "all") query = query.eq("is_active", true);
   if (productIds) query = query.in("id", productIds);
   if (limit) query = query.limit(parseInt(limit, 10));
 
   const { data, error } = await query;
   if (error) return apiError("products.GET", error);
-  return NextResponse.json(data);
+  const products = (data ?? []).map(({ product_categories, ...rest }) => ({
+    ...rest,
+    categories: (product_categories ?? []).map((pc: { categories: Category }) => pc.categories),
+  }));
+  return NextResponse.json(products);
 }
 
 export async function POST(req: NextRequest) {

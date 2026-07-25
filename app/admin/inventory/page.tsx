@@ -9,7 +9,7 @@ type InventoryProduct = {
   id: string;
   name: string;
   sku: string | null;
-  category: string;
+  categories: string[];
   size_inventory: Record<string, number>;
   is_active: boolean;
 };
@@ -139,7 +139,7 @@ export default function AdminInventoryPage() {
                     <div className="min-w-0">
                       <p className="text-[#2b0e0a] font-medium text-[13px]">{product.name}</p>
                       <p className="text-[#dcc9a0] text-[11px] capitalize mt-0.5">
-                        {product.category}{product.sku ? ` · ${product.sku}` : ""}
+                        {product.categories.join(", ")}{product.sku ? ` · ${product.sku}` : ""}
                       </p>
                     </div>
                     <button
@@ -192,7 +192,7 @@ export default function AdminInventoryPage() {
                     <tr key={product.id} className="hover:bg-[#fbf0da]/30 transition-colors">
                       <td className="px-5 py-4">
                         <p className="text-[#2b0e0a] font-medium text-[13px]">{product.name}</p>
-                        <p className="text-[#dcc9a0] text-[11px] capitalize mt-0.5">{product.category}{product.sku ? ` · ${product.sku}` : ""}</p>
+                        <p className="text-[#dcc9a0] text-[11px] capitalize mt-0.5">{product.categories.join(", ")}{product.sku ? ` · ${product.sku}` : ""}</p>
                       </td>
                       {SIZES.map((size) => {
                         const qty = product.size_inventory[size] ?? 0;

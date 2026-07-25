@@ -47,10 +47,6 @@ export function validateProductInput(body: Record<string, unknown>, partial: boo
       out.discount_price = null;
     }
   }
-  if ("category" in body) {
-    const v = str(body.category);
-    if (v !== undefined) out.category = v;
-  }
   if ("description" in body) {
     const v = str(body.description);
     if (v !== undefined) out.description = v;
@@ -109,10 +105,10 @@ export function validateProductInput(body: Record<string, unknown>, partial: boo
   return out;
 }
 
-export function validateCollectionIds(body: Record<string, unknown>): string[] {
-  const v = body.collection_ids;
+export function validateIdArray(body: Record<string, unknown>, field: string): string[] {
+  const v = body[field];
   if (!Array.isArray(v) || !v.every((c) => typeof c === "string")) {
-    throw new ValidationError("collection_ids must be an array of strings");
+    throw new ValidationError(`${field} must be an array of strings`);
   }
   return v;
 }

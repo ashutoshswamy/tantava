@@ -8,12 +8,16 @@ export async function GET() {
   if (!userId || !authorized) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const supabase = createServerSupabase();
-  const { data: products, error } = await supabase
+  const { data, error } = await supabase
     .from("products")
-    .select("id, name, sku, category, size_inventory, is_active")
+    .select("id, name, sku, size_inventory, is_active, product_categories(categories(name))")
     .order("name", { ascending: true });
 
   if (error) return apiError("inventory.GET", error);
+  const products = (data ?? []).map(({ product_categories, ...rest }) => ({
+    ...rest,
+    categories: ((product_categories ?? []) as unknown as { categories: { name: string } }[]).map((pc) => pc.categories.name),
+  }));
 
   const { data: logs } = await supabase
     .from("inventory_logs")

@@ -408,7 +408,7 @@ export default function EditCollectionPage() {
                     )}
                     <div className="min-w-0">
                       <p className="font-medium text-[13px] text-[#2b0e0a] truncate">{p.name}</p>
-                      <p className="text-[11px] text-[#8c6f52]">{p.category}</p>
+                      <p className="text-[11px] text-[#8c6f52]">{p.categories.map((c) => c.name).join(", ")}</p>
                     </div>
                   </div>
                   <button

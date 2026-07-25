@@ -80,7 +80,7 @@ export default function AdminProductsPage() {
   const filtered = products.filter(
     (p) =>
       p.name.toLowerCase().includes(search.toLowerCase()) ||
-      p.category.toLowerCase().includes(search.toLowerCase()) ||
+      p.categories.some((c) => c.name.toLowerCase().includes(search.toLowerCase())) ||
       p.sku?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -175,7 +175,7 @@ export default function AdminProductsPage() {
                       {formatPrice(product.price)}
                     </p>
                     <p className="text-[12px] text-[#8c6f52] capitalize mt-0.5">
-                      {product.category} · Stock {totalStock(product.size_inventory)}
+                      {product.categories.map((c) => c.name).join(", ") || "Uncategorized"} · Stock {totalStock(product.size_inventory)}
                     </p>
                     <p className="text-[11px] text-[#dcc9a0] mt-0.5">Added {formatDate(product.created_at)}</p>
                   </div>
@@ -275,7 +275,7 @@ export default function AdminProductsPage() {
                     </td>
                     <td className="px-5 py-4 hidden md:table-cell">
                       <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium capitalize" style={{ backgroundColor: "#93050018", color: "#930500" }}>
-                        {product.category}
+                        {product.categories.map((c) => c.name).join(", ") || "Uncategorized"}
                       </span>
                     </td>
                     <td className="px-5 py-4 text-[#930500] font-semibold text-[13px]">

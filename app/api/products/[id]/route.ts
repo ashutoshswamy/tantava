@@ -2,13 +2,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
 import { apiError, validateProductInput, ValidationError } from "@/lib/api-utils";
+import type { Category } from "@/lib/supabase";
 
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = createServerSupabase();
-  const { data, error } = await supabase.from("products").select("*").eq("id", id).single();
+  const { data, error } = await supabase
+    .from("products")
+    .select("*, product_categories(categories(*))")
+    .eq("id", id)
+    .single();
   if (error) return apiError("products.[id].GET", error, 404, "Not found");
-  return NextResponse.json(data);
+  const { product_categories, ...rest } = data;
+  return NextResponse.json({
+    ...rest,
+    categories: (product_categories ?? []).map((pc: { categories: Category }) => pc.categories),
+  });
 }
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {

@@ -7,14 +7,14 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
   const { id } = await params;
   const supabase = createServerSupabase();
   const { data, error } = await supabase
-    .from("product_collections")
-    .select("collection_id")
+    .from("product_categories")
+    .select("category_id")
     .eq("product_id", id);
-  if (error) return apiError("products.[id].collections.GET", error);
-  return NextResponse.json(data.map((r) => r.collection_id));
+  if (error) return apiError("products.[id].categories.GET", error);
+  return NextResponse.json(data.map((r) => r.category_id));
 }
 
-// Replaces the full set of collections a product belongs to.
+// Replaces the full set of categories a product belongs to.
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const { userId, authorized } = await requireAdmin();
@@ -23,22 +23,22 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const supabase = createServerSupabase();
   const rawBody = await req.json();
 
-  let collectionIds: string[];
+  let categoryIds: string[];
   try {
-    collectionIds = validateIdArray(rawBody, "collection_ids");
+    categoryIds = validateIdArray(rawBody, "category_ids");
   } catch (e) {
     if (e instanceof ValidationError) return NextResponse.json({ error: e.message }, { status: 400 });
     throw e;
   }
 
-  const { error: deleteError } = await supabase.from("product_collections").delete().eq("product_id", id);
-  if (deleteError) return apiError("products.[id].collections.PUT", deleteError);
+  const { error: deleteError } = await supabase.from("product_categories").delete().eq("product_id", id);
+  if (deleteError) return apiError("products.[id].categories.PUT", deleteError);
 
-  if (collectionIds.length > 0) {
+  if (categoryIds.length > 0) {
     const { error: insertError } = await supabase
-      .from("product_collections")
-      .insert(collectionIds.map((collection_id) => ({ product_id: id, collection_id })));
-    if (insertError) return apiError("products.[id].collections.PUT", insertError);
+      .from("product_categories")
+      .insert(categoryIds.map((category_id) => ({ product_id: id, category_id })));
+    if (insertError) return apiError("products.[id].categories.PUT", insertError);
   }
 
   return NextResponse.json({ success: true });

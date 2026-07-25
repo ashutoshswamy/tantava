@@ -19,12 +19,15 @@ export async function GET() {
       .eq("status", "paid")
       .gte("created_at", since90Str),
     supabase.from("orders").select("id, status, total, created_at, user_id"),
-    supabase.from("products").select("id, name, category, price, size_inventory, is_active"),
+    supabase.from("products").select("id, name, price, size_inventory, is_active, product_categories(categories(name))"),
   ]);
 
   const paidOrders = paidOrdersRes.data || [];
   const allOrders = allOrdersRes.data || [];
-  const products = productsRes.data || [];
+  const products = (productsRes.data || []).map(({ product_categories, ...rest }) => ({
+    ...rest,
+    categories: ((product_categories ?? []) as unknown as { categories: { name: string } }[]).map((pc) => pc.categories.name),
+  }));
 
   // Revenue by day - last 30 days
   const last30Days = Array.from({ length: 30 }, (_, i) => {
@@ -54,8 +57,10 @@ export async function GET() {
     const items: { product_id: string; price: number; quantity: number }[] = order.items || [];
     for (const item of items) {
       const prod = productMap[item.product_id];
-      const cat = prod?.category ?? "other";
-      categoryRevenue[cat] = (categoryRevenue[cat] || 0) + item.price * item.quantity;
+      const cats = prod?.categories?.length ? prod.categories : ["other"];
+      for (const cat of cats) {
+        categoryRevenue[cat] = (categoryRevenue[cat] || 0) + item.price * item.quantity;
+      }
     }
   }
   const revenueByCategory = Object.entries(categoryRevenue)

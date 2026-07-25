@@ -48,7 +48,7 @@ export default function NewProductPage() {
     description: "",
     price: "",
     discount_price: "",
-    category: "",
+    category_ids: [] as string[],
     fabric: "",
     care: "",
     free_delivery: false,
@@ -69,12 +69,16 @@ export default function NewProductPage() {
       .then((data) => {
         if (!Array.isArray(data)) return;
         setCategories(data);
-        if (data[0]) setForm((f) => ({ ...f, category: f.category || data[0].name }));
+        if (data[0]) setForm((f) => ({ ...f, category_ids: f.category_ids.length ? f.category_ids : [data[0].id] }));
       });
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (form.category_ids.length === 0) {
+      setError("Select at least one category");
+      return;
+    }
     setSaving(true);
     setError("");
 
@@ -99,13 +103,20 @@ export default function NewProductPage() {
 
     if (res.ok) {
       const product = await res.json();
-      if (form.collection_ids.length > 0) {
-        await fetch(`/api/products/${product.id}/collections`, {
+      await Promise.all([
+        form.collection_ids.length > 0
+          ? fetch(`/api/products/${product.id}/collections`, {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ collection_ids: form.collection_ids }),
+            })
+          : Promise.resolve(),
+        fetch(`/api/products/${product.id}/categories`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ collection_ids: form.collection_ids }),
-        });
-      }
+          body: JSON.stringify({ category_ids: form.category_ids }),
+        }),
+      ]);
       router.push("/admin/products");
     } else {
       const data = await res.json();
@@ -120,6 +131,15 @@ export default function NewProductPage() {
       collection_ids: f.collection_ids.includes(id)
         ? f.collection_ids.filter((c) => c !== id)
         : [...f.collection_ids, id],
+    }));
+  };
+
+  const toggleCategory = (id: string) => {
+    setForm((f) => ({
+      ...f,
+      category_ids: f.category_ids.includes(id)
+        ? f.category_ids.filter((c) => c !== id)
+        : [...f.category_ids, id],
     }));
   };
 
@@ -293,18 +313,26 @@ export default function NewProductPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Category *</label>
-              <select
-                required
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className={`${inputCls} appearance-none`}
-              >
-                <option value="" disabled>Select a category</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.name}>{c.name}</option>
-                ))}
-              </select>
+              <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Categories *</label>
+              <div className="flex flex-wrap gap-2">
+                {categories.map((c) => {
+                  const selected = form.category_ids.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => toggleCategory(c.id)}
+                      className={`px-3 py-2 rounded-xl border text-[12px] font-medium transition-colors ${
+                        selected
+                          ? "bg-[#930500] border-[#930500] text-white"
+                          : "bg-[#fbf0da] border-[#dcc9a0]/40 text-[#8c6f52] hover:text-[#2b0e0a]"
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  );
+                })}
+              </div>
               {categories.length === 0 && (
                 <p className="text-[#dcc9a0] text-[11px] mt-1">
                   No categories yet — <Link href="/admin/categories/new" className="underline">create one first</Link>.

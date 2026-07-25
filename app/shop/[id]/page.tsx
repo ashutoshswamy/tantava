@@ -2,15 +2,24 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ProductDetailPage from "./client";
 import { createServerSupabase } from "@/lib/supabase-server";
-import type { Product } from "@/lib/supabase";
+import type { Category, Product } from "@/lib/supabase";
 
 type Props = { params: Promise<{ id: string }> };
 
 async function getProduct(id: string): Promise<Product | null> {
   "use cache";
   const supabase = createServerSupabase();
-  const { data } = await supabase.from("products").select("*").eq("id", id).single();
-  return data;
+  const { data } = await supabase
+    .from("products")
+    .select("*, product_categories(categories(*))")
+    .eq("id", id)
+    .single();
+  if (!data) return null;
+  const { product_categories, ...rest } = data;
+  return {
+    ...rest,
+    categories: (product_categories ?? []).map((pc: { categories: Category }) => pc.categories),
+  } as Product;
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -56,7 +65,7 @@ async function ProductJsonLd({ params }: Props) {
     description: product.description ?? undefined,
     image: product.images,
     sku: product.sku ?? undefined,
-    category: product.category,
+    category: product.categories.map((c) => c.name).join(", ") || undefined,
     offers: {
       "@type": "Offer",
       priceCurrency: "INR",

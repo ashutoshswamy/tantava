@@ -79,7 +79,7 @@ export default function CollectionSlugPage() {
       name: product.name,
       price: product.price,
       image: product.images[0] || "",
-      category: product.category,
+      category: product.categories.map((c) => c.name).join(", "),
     });
   };
 

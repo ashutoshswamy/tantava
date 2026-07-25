@@ -33,7 +33,7 @@ export type Product = {
   description: string | null;
   price: number;
   discount_price: number | null;
-  category: string;
+  categories: Category[];
   fabric: string | null;
   care: string | null;
   free_delivery: boolean;

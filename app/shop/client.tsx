@@ -49,7 +49,7 @@ export default function ShopPage() {
   const filtered = products
     .filter((p) => {
       const q = searchQuery.trim().toLowerCase();
-      return !q || p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q);
+      return !q || p.name.toLowerCase().includes(q) || p.categories.some((c) => c.name.toLowerCase().includes(q));
     })
     .sort((a, b) => {
       if (sort === "Price: Low to High") return a.price - b.price;
@@ -166,7 +166,7 @@ export default function ShopPage() {
                               name: product.name,
                               price: product.price,
                               image: product.images[0] || "",
-                              category: product.category,
+                              category: product.categories.map((c) => c.name).join(", "),
                             });
                           }}
                           className={`absolute top-3 right-3 z-10 w-10 h-10 rounded-full flex items-center justify-center backdrop-blur-sm transition-all shadow-sm ${
@@ -207,7 +207,7 @@ export default function ShopPage() {
                           {product.name}
                         </h3>
                         <p className="font-label-md text-label-md text-on-surface-variant capitalize">
-                          {product.category} •{" "}
+                          {product.categories.map((c) => c.name).join(", ")} •{" "}
                           {product.discount_price != null && product.discount_price < product.price ? (
                             <>
                               <span className="text-sale-green inline-flex items-center gap-0.5">
@@ -284,7 +284,7 @@ export default function ShopPage() {
                 <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-12 space-y-6">
                   <div>
                     <span className="font-label-md text-label-md text-primary tracking-widest uppercase capitalize">
-                      {modalProduct.category}
+                      {modalProduct.categories.map((c) => c.name).join(", ")}
                     </span>
                     <h2 className="font-headline-md text-headline-md text-primary mt-2">{modalProduct.name}</h2>
                     {modalProduct.discount_price != null && modalProduct.discount_price < modalProduct.price ? (

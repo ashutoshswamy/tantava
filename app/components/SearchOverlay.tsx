@@ -49,7 +49,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
           .filter(
             (p) =>
               p.name.toLowerCase().includes(query.toLowerCase()) ||
-              p.category.toLowerCase().includes(query.toLowerCase())
+              p.categories.some((c) => c.name.toLowerCase().includes(query.toLowerCase()))
           )
           .slice(0, 7)
       : [];
@@ -114,7 +114,7 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                     <div className="min-w-0">
                       <p className="font-headline-sm text-[15px] text-on-surface truncate">{p.name}</p>
                       <p className="font-label-md text-label-md text-primary">{formatPrice(p.price)}</p>
-                      <p className="font-label-md text-[11px] text-outline capitalize">{p.category}</p>
+                      <p className="font-label-md text-[11px] text-outline capitalize">{p.categories.map((c) => c.name).join(", ")}</p>
                     </div>
                   </Link>
                 ))}

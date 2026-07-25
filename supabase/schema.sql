@@ -70,7 +70,6 @@ create table if not exists products (
   description     text,
   price           integer not null check (price >= 0),
   discount_price  integer check (discount_price >= 0),
-  category        text not null,
   fabric          text,
   care            text,
   free_delivery   boolean not null default false,
@@ -84,7 +83,6 @@ create table if not exists products (
   updated_at      timestamptz not null default now()
 );
 
-create index if not exists products_category_idx  on products (category);
 create index if not exists products_is_active_idx on products (is_active);
 
 create or replace trigger products_updated_at
@@ -102,6 +100,18 @@ create table if not exists product_collections (
 );
 
 create index if not exists product_collections_collection_id_idx on product_collections (collection_id);
+
+-- ─────────────────────────────────────────────
+-- PRODUCT_CATEGORIES (many-to-many: a product can belong to several categories)
+-- ─────────────────────────────────────────────
+create table if not exists product_categories (
+  product_id  uuid not null references products(id) on delete cascade,
+  category_id uuid not null references categories(id) on delete cascade,
+  created_at  timestamptz not null default now(),
+  primary key (product_id, category_id)
+);
+
+create index if not exists product_categories_category_id_idx on product_categories (category_id);
 
 -- ─────────────────────────────────────────────
 -- STORE SETTINGS
