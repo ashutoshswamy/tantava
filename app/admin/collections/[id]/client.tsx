@@ -42,13 +42,15 @@ export default function EditCollectionPage() {
 
   useEffect(() => {
     const load = async () => {
-      const [colRes, allProdsRes] = await Promise.all([
+      const [colRes, allProdsRes, colProdsRes] = await Promise.all([
         fetch(`/api/collections/${id}`),
         fetch("/api/products?active=all"),
+        fetch(`/api/products?collection_id=${id}&active=all`),
       ]);
 
       const col: Collection = await colRes.json();
       const allProds: Product[] = await allProdsRes.json();
+      const inCol: Product[] = await colProdsRes.json();
 
       setForm({
         name: col.name,
@@ -59,8 +61,8 @@ export default function EditCollectionPage() {
         is_active: col.is_active,
       });
 
-      const inCol = allProds.filter((p) => p.collection_id === id);
-      const notInCol = allProds.filter((p) => p.collection_id !== id);
+      const inColIds = new Set(inCol.map((p) => p.id));
+      const notInCol = allProds.filter((p) => !inColIds.has(p.id));
 
       setCollectionProducts(inCol);
       setAllProducts(notInCol);
@@ -166,28 +168,28 @@ export default function EditCollectionPage() {
 
   const removeProduct = async (product: Product) => {
     setRemovingId(product.id);
-    const res = await fetch(`/api/products/${product.id}`, {
-      method: "PUT",
+    const res = await fetch(`/api/collections/${id}/products`, {
+      method: "DELETE",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ collection_id: null }),
+      body: JSON.stringify({ product_id: product.id }),
     });
     if (res.ok) {
       setCollectionProducts((prev) => prev.filter((p) => p.id !== product.id));
-      setAllProducts((prev) => [...prev, { ...product, collection_id: null }]);
+      setAllProducts((prev) => [...prev, product]);
     }
     setRemovingId(null);
   };
 
   const addProduct = async (product: Product) => {
     setAddingId(product.id);
-    const res = await fetch(`/api/products/${product.id}`, {
-      method: "PUT",
+    const res = await fetch(`/api/collections/${id}/products`, {
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ collection_id: id }),
+      body: JSON.stringify({ product_id: product.id }),
     });
     if (res.ok) {
       setAllProducts((prev) => prev.filter((p) => p.id !== product.id));
-      setCollectionProducts((prev) => [...prev, { ...product, collection_id: id }]);
+      setCollectionProducts((prev) => [...prev, product]);
     }
     setAddingId(null);
   };

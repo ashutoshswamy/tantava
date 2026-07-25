@@ -59,20 +59,22 @@ export default function EditProductPage() {
     sku: "",
     badge: "",
     is_active: true,
-    collection_id: "",
+    collection_ids: [] as string[],
   });
 
   useEffect(() => {
     const load = async () => {
-      const [prodRes, colRes, catRes] = await Promise.all([
+      const [prodRes, colRes, catRes, prodColsRes] = await Promise.all([
         fetch(`/api/products/${params.id}`),
         fetch("/api/collections"),
         fetch("/api/categories?all=true"),
+        fetch(`/api/products/${params.id}/collections`),
       ]);
 
       const data: Product = await prodRes.json();
       const cols = await colRes.json();
       const cats = await catRes.json();
+      const prodCollectionIds = await prodColsRes.json();
 
       if (Array.isArray(cols)) setCollections(cols);
       if (Array.isArray(cats)) setCategories(cats);
@@ -93,7 +95,7 @@ export default function EditProductPage() {
         sku: data.sku || "",
         badge: data.badge || "",
         is_active: data.is_active,
-        collection_id: data.collection_id || "",
+        collection_ids: Array.isArray(prodCollectionIds) ? prodCollectionIds : [],
       });
       setImageMeta((data.images.length > 0 ? data.images : [""]).map(() => null));
       setLoading(false);
@@ -117,7 +119,6 @@ export default function EditProductPage() {
       badge: form.badge || null,
       sku: form.sku || null,
       care: form.care || null,
-      collection_id: form.collection_id || null,
     };
 
     const res = await fetch(`/api/products/${params.id}`, {
@@ -127,12 +128,26 @@ export default function EditProductPage() {
     });
 
     if (res.ok) {
+      await fetch(`/api/products/${params.id}/collections`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ collection_ids: form.collection_ids }),
+      });
       router.push("/admin/products");
     } else {
       const data = await res.json();
       setError(data.error || "Failed to update product");
     }
     setSaving(false);
+  };
+
+  const toggleCollection = (id: string) => {
+    setForm((f) => ({
+      ...f,
+      collection_ids: f.collection_ids.includes(id)
+        ? f.collection_ids.filter((c) => c !== id)
+        : [...f.collection_ids, id],
+    }));
   };
 
   const updateImage = (idx: number, val: string) => {
@@ -367,17 +382,31 @@ export default function EditProductPage() {
           </div>
 
           <div>
-            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Collection</label>
-            <select
-              value={form.collection_id}
-              onChange={(e) => setForm({ ...form, collection_id: e.target.value })}
-              className={`${inputCls} appearance-none`}
-            >
-              <option value="">No Collection</option>
-              {collections.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+            <label className="text-[11px] font-semibold text-[#8c6f52] uppercase tracking-wider mb-1.5 block">Collections</label>
+            {collections.length === 0 ? (
+              <p className="text-[#dcc9a0] text-[12px]">No collections yet.</p>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {collections.map((c) => {
+                  const selected = form.collection_ids.includes(c.id);
+                  return (
+                    <button
+                      key={c.id}
+                      type="button"
+                      onClick={() => toggleCollection(c.id)}
+                      className={`px-3 py-2 rounded-xl border text-[12px] font-medium transition-colors ${
+                        selected
+                          ? "bg-[#930500] border-[#930500] text-white"
+                          : "bg-[#fbf0da] border-[#dcc9a0]/40 text-[#8c6f52] hover:text-[#2b0e0a]"
+                      }`}
+                    >
+                      {c.name}
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+            <p className="text-[#dcc9a0] text-[11px] mt-1.5">A product can belong to multiple collections.</p>
           </div>
         </div>
 

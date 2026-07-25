@@ -96,11 +96,6 @@ export function validateProductInput(body: Record<string, unknown>, partial: boo
     }
     out.size_inventory = body.size_inventory;
   }
-  if ("collection_id" in body) {
-    const v = body.collection_id;
-    if (v !== null && typeof v !== "string") throw new ValidationError("collection_id must be a string or null");
-    out.collection_id = v;
-  }
   if ("is_active" in body) {
     if (typeof body.is_active !== "boolean") throw new ValidationError("is_active must be a boolean");
     out.is_active = body.is_active;
@@ -112,6 +107,14 @@ export function validateProductInput(body: Record<string, unknown>, partial: boo
   }
 
   return out;
+}
+
+export function validateCollectionIds(body: Record<string, unknown>): string[] {
+  const v = body.collection_ids;
+  if (!Array.isArray(v) || !v.every((c) => typeof c === "string")) {
+    throw new ValidationError("collection_ids must be an array of strings");
+  }
+  return v;
 }
 
 export function validateCategoryInput(body: Record<string, unknown>, partial: boolean) {

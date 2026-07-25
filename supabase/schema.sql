@@ -79,7 +79,6 @@ create table if not exists products (
   sku             text unique,
   badge           text,
   is_active       boolean not null default true,
-  collection_id   uuid references collections(id) on delete set null,
   sort_order      integer not null default 0,
   created_at      timestamptz not null default now(),
   updated_at      timestamptz not null default now()
@@ -91,6 +90,18 @@ create index if not exists products_is_active_idx on products (is_active);
 create or replace trigger products_updated_at
   before update on products
   for each row execute function set_updated_at();
+
+-- ─────────────────────────────────────────────
+-- PRODUCT_COLLECTIONS (many-to-many: a product can belong to several collections)
+-- ─────────────────────────────────────────────
+create table if not exists product_collections (
+  product_id    uuid not null references products(id) on delete cascade,
+  collection_id uuid not null references collections(id) on delete cascade,
+  created_at    timestamptz not null default now(),
+  primary key (product_id, collection_id)
+);
+
+create index if not exists product_collections_collection_id_idx on product_collections (collection_id);
 
 -- ─────────────────────────────────────────────
 -- STORE SETTINGS

@@ -11,6 +11,17 @@ export async function GET(req: NextRequest) {
   const collectionId = searchParams.get("collection_id");
   const limit = searchParams.get("limit");
 
+  let productIds: string[] | null = null;
+  if (collectionId) {
+    const { data: links, error: linksError } = await supabase
+      .from("product_collections")
+      .select("product_id")
+      .eq("collection_id", collectionId);
+    if (linksError) return apiError("products.GET", linksError);
+    productIds = (links ?? []).map((l) => l.product_id);
+    if (productIds.length === 0) return NextResponse.json([]);
+  }
+
   let query = supabase
     .from("products")
     .select("*")
@@ -19,7 +30,7 @@ export async function GET(req: NextRequest) {
 
   if (category) query = query.eq("category", category);
   if (active !== "all") query = query.eq("is_active", true);
-  if (collectionId) query = query.eq("collection_id", collectionId);
+  if (productIds) query = query.in("id", productIds);
   if (limit) query = query.limit(parseInt(limit, 10));
 
   const { data, error } = await query;
