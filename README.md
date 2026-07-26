@@ -1,6 +1,6 @@
 # Tantava
 
-E-commerce storefront and admin panel for Tantava, an Indian ethnic wear label — sarees, lehengas, fusion wear, gowns, and jewellery.
+E-commerce storefront and admin panel for Tantava, a curated Indian ethnic & Indo-Western wear label — kurtas, anarkalis, co-ord sets, festive wear, and office/everyday staples.
 
 Built with Next.js 16 (App Router), Supabase (Postgres), Clerk (auth), and Razorpay (payments).
 
