@@ -25,12 +25,10 @@ export default function AboutPage() {
           className="mb-stack-md text-center max-w-2xl mx-auto"
         >
           <h1 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-4">
-            About Tantava
+            About Us
           </h1>
-          <p className="font-body-lg text-body-lg text-on-surface-variant">
-            Tantava is a celebration of handloom craft — timeless silhouettes cut
-            from fabric woven by artisans across India, made for the way you
-            actually live and dress.
+          <p className="font-body-lg text-body-lg text-on-surface-variant italic">
+            Threads of tradition and trends.
           </p>
         </motion.header>
 
@@ -41,17 +39,27 @@ export default function AboutPage() {
           className="max-w-3xl mx-auto space-y-6 font-body-md text-body-md text-on-surface-variant"
         >
           <p>
-            Every Tantava piece begins with fabric, not a sketch. We work
-            directly with handloom weavers and small ateliers, choosing yarns
-            and weaves first and letting the garment take shape around what the
-            cloth wants to be. The result is clothing that drapes honestly and
-            wears in, not out.
+            There&apos;s a difference between clothing that fills a rack and
+            clothing that actually earns a place in your wardrobe. That
+            difference is where Tantava started.
           </p>
           <p>
-            We ship pan-India, keep sizing wide (XS–XXXL), and take orders
-            straight over WhatsApp for anyone who prefers a conversation to a
-            checkout page. You&apos;ll also find us at pop-ups and exhibitions
-            through the year — details are always on our Instagram.
+            Founded in 2026, Tantava Curated is our current collection —
+            festive wear, office staples, everyday dresses, co-ord sets, and
+            ethnic and Indo-Western pieces, each one chosen for how it&apos;s
+            cut, how it&apos;s made, and how long it lasts. Nothing here made
+            it in by accident. Every piece had to earn its place — good enough
+            for a second look, a second wear, a second season.
+          </p>
+          <p>
+            Next up is Tantava Creations, our first step into building instead
+            of just choosing. Original designs, made in-house, carrying the
+            same care that went into curating everything before it.
+          </p>
+          <p>Two names, one instinct: curate first, create next.</p>
+          <p>
+            Tantava isn&apos;t trying to dress everyone. Just the women paying
+            attention.
           </p>
         </motion.div>
 

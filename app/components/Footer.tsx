@@ -25,7 +25,7 @@ export default function Footer() {
             Tantava
           </Link>
           <p className="font-body-md text-body-md text-on-surface-variant mb-6 max-w-xs">
-            Ethnic &amp; Indo-Western wear - kurtas, anarkalis, and fusion sets for office, festive, and everyday elegance. Pan India shipping.
+            Festive wear, office staples, everyday essentials — all thoughtfully curated, never mass-produced. Elegant kurtas, anarkalis, and contemporary Indo-Western styles, shipped across India.
           </p>
           <div className="flex gap-4">
             <a href="https://instagram.com/_tantava" className="text-on-surface-variant hover:text-primary transition-all" aria-label="Instagram">
