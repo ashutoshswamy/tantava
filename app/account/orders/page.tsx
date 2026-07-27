@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -224,11 +225,15 @@ export default function OrdersPage() {
                           key={idx}
                           className="flex items-center gap-2.5 bg-surface rounded-xl px-3 py-2 border border-outline-variant/15"
                         >
-                          <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-9 h-11 object-contain rounded-lg bg-surface-container"
-                          />
+                          {item.image && (
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              width={36}
+                              height={44}
+                              className="w-9 h-11 object-contain rounded-lg bg-surface-container"
+                            />
+                          )}
                           <div>
                             <p className="font-label-md text-[12px] text-on-surface leading-tight max-w-[120px] line-clamp-1">
                               {item.name}

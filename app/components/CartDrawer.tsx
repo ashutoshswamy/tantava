@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useCart } from "@/store/cart";
 import { X, ShoppingBag, Minus, Plus, Trash2, MessageCircle } from "lucide-react";
@@ -98,11 +99,15 @@ export default function CartDrawer({ open, onClose }: CartDrawerProps) {
                       className="flex gap-4 group"
                     >
                       <div className="w-24 h-28 bg-surface-container rounded-lg overflow-hidden flex-shrink-0 relative">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-contain"
-                        />
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="96px"
+                            className="object-contain"
+                          />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-label-md text-label-md text-on-surface truncate">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -213,10 +214,12 @@ export default function HomePage() {
                         className="group relative rounded-2xl overflow-hidden bg-surface-container block w-full h-full"
                       >
                         {col.cover_image ? (
-                          <img
+                          <Image
                             src={col.cover_image}
                             alt={col.name}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            fill
+                            sizes="(min-width: 640px) 100vw, 100vw"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center">
@@ -286,11 +289,15 @@ export default function HomePage() {
               >
                 <Link href={`/shop/${product.id}`} className="min-w-[220px] sm:min-w-[280px] md:min-w-[340px] group cursor-pointer block">
                   <div className="relative aspect-[0.73] overflow-hidden rounded-lg mb-4 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-white">
-                    <img
-                      alt={product.name}
-                      className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                      src={product.images[0] || ""}
-                    />
+                    {product.images[0] && (
+                      <Image
+                        alt={product.name}
+                        fill
+                        sizes="(min-width: 768px) 340px, (min-width: 640px) 280px, 220px"
+                        className="object-contain transition-transform duration-700 group-hover:scale-105"
+                        src={product.images[0]}
+                      />
+                    )}
                     {product.badge && (
                       <div className="absolute top-4 left-4 bg-secondary border border-primary-container px-3 py-1 text-on-secondary font-label-md text-[12px]">
                         {product.badge}

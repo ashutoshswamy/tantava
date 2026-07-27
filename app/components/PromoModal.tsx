@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { X, Sparkles, ChevronDown, ChevronUp } from "lucide-react";
 import type { StoreSettings } from "@/lib/supabase";
@@ -70,8 +71,9 @@ export default function PromoModal() {
         {!collapsed && (
           <div className="px-4 pb-4">
             {hasPromo && settings!.promo_modal_image && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={settings!.promo_modal_image} alt="" className="w-full aspect-[16/9] object-cover rounded-lg mb-3" />
+              <div className="relative w-full aspect-[16/9] rounded-lg mb-3 overflow-hidden">
+                <Image src={settings!.promo_modal_image} alt="" fill sizes="400px" className="object-cover" />
+              </div>
             )}
 
             {hasPromo && settings!.promo_modal_message && (

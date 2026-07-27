@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Search, X, Loader2 } from "lucide-react";
 import type { Product } from "@/lib/supabase";
@@ -104,12 +105,16 @@ export default function SearchOverlay({ open, onClose }: SearchOverlayProps) {
                     onClick={onClose}
                     className="flex items-center gap-4 px-6 py-3 hover:bg-surface-container transition-colors"
                   >
-                    <div className="w-12 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high">
-                      <img
-                        src={p.images[0] || ""}
-                        alt={p.name}
-                        className="w-full h-full object-contain"
-                      />
+                    <div className="relative w-12 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container-high">
+                      {p.images[0] && (
+                        <Image
+                          src={p.images[0]}
+                          alt={p.name}
+                          fill
+                          sizes="48px"
+                          className="object-contain"
+                        />
+                      )}
                     </div>
                     <div className="min-w-0">
                       <p className="font-headline-sm text-[15px] text-on-surface truncate">{p.name}</p>

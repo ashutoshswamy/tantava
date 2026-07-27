@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -105,16 +106,23 @@ export default function ProductDetailPage() {
             <div className="lg:col-span-7 flex flex-col sm:flex-row-reverse gap-4">
               <div className="relative w-full aspect-[1/1.2] bg-white overflow-hidden rounded-lg group">
                 <AnimatePresence mode="sync">
-                  <motion.img
+                  <motion.div
                     key={selectedImg}
-                    alt={product.name}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.7, ease: "easeInOut" }}
-                    className="absolute inset-0 w-full h-full object-contain"
-                    src={product.images[selectedImg] || product.images[0]}
-                  />
+                    className="absolute inset-0"
+                  >
+                    <Image
+                      alt={product.name}
+                      fill
+                      priority
+                      sizes="(min-width: 1024px) 50vw, 100vw"
+                      className="object-contain"
+                      src={product.images[selectedImg] || product.images[0]}
+                    />
+                  </motion.div>
                 </AnimatePresence>
                 {product.badge && (
                   <div className="absolute top-4 left-4 bg-secondary text-on-secondary px-3 py-1 rounded-sm flex items-center gap-2 border border-primary-container">
@@ -137,9 +145,9 @@ export default function ProductDetailPage() {
                     <button
                       key={i}
                       onClick={() => setSelectedImg(i)}
-                      className={`flex-shrink-0 w-20 h-24 bg-white rounded-sm overflow-hidden p-0.5 transition-opacity ${i === selectedImg ? "product-thumbnail-active" : "opacity-60 hover:opacity-100"}`}
+                      className={`relative flex-shrink-0 w-20 h-24 bg-white rounded-sm overflow-hidden p-0.5 transition-opacity ${i === selectedImg ? "product-thumbnail-active" : "opacity-60 hover:opacity-100"}`}
                     >
-                      <img alt={`Thumbnail ${i + 1}`} className="w-full h-full object-contain rounded-sm" src={img} />
+                      <Image alt={`Thumbnail ${i + 1}`} fill sizes="80px" className="object-contain rounded-sm" src={img} />
                     </button>
                   ))}
                 </div>

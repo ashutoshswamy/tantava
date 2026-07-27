@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
@@ -131,10 +132,13 @@ export default function CollectionSlugPage() {
         <div className="relative overflow-hidden">
           {collection.cover_image ? (
             <div className="relative h-48 sm:h-64 md:h-80">
-              <img
+              <Image
                 src={collection.cover_image}
                 alt={collection.name}
-                className="w-full h-full object-cover"
+                fill
+                priority
+                sizes="100vw"
+                className="object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60" />
               <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-4 text-center">
@@ -194,10 +198,12 @@ export default function CollectionSlugPage() {
                   <Link href={`/shop/${product.id}`} className="block">
                     <div className="relative aspect-[3/4] overflow-hidden bg-white">
                       {product.images[0] ? (
-                        <img
+                        <Image
                           src={product.images[0]}
                           alt={product.name}
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                          fill
+                          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-contain group-hover:scale-105 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full bg-white" />
@@ -281,7 +287,7 @@ export default function CollectionSlugPage() {
           >
             <div className="flex items-center gap-3">
               {selectedProduct.images[0] && (
-                <img src={selectedProduct.images[0]} alt={selectedProduct.name} className="w-12 h-12 rounded-lg object-cover border border-outline-variant/40 bg-surface-container" />
+                <Image src={selectedProduct.images[0]} alt={selectedProduct.name} width={48} height={48} className="w-12 h-12 rounded-lg object-cover border border-outline-variant/40 bg-surface-container" />
               )}
               <div>
                 <h3 className="font-label-md text-[14px] text-on-surface leading-snug">{selectedProduct.name}</h3>

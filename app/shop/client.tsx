@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -182,11 +183,15 @@ export default function ShopPage() {
                             Sold Out
                           </div>
                         )}
-                        <img
-                          alt={product.name}
-                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                          src={product.images[0] || ""}
-                        />
+                        {product.images[0] && (
+                          <Image
+                            alt={product.name}
+                            fill
+                            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 45vw, 90vw"
+                            className="object-contain transition-transform duration-700 group-hover:scale-105"
+                            src={product.images[0]}
+                          />
+                        )}
                         <div className="absolute bottom-4 left-0 right-0 flex gap-2 px-4 md:translate-y-8 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 transition-all duration-500">
                           <button
                             onClick={() => { setModalProduct(product); setSelectedSize(firstAvailableSize(product)); setModalImg(0); }}

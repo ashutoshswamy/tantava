@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -96,11 +97,15 @@ export default function WishlistPage() {
                     className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                   >
                     <Link href={`/shop/${item.productId}`} className="block relative aspect-[0.73] overflow-hidden bg-white">
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                      />
+                      {item.image && (
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          sizes="(min-width: 1280px) 25vw, (min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                          className="object-contain transition-transform duration-700 group-hover:scale-105"
+                        />
+                      )}
                     </Link>
 
                     <div className="p-4 space-y-3">

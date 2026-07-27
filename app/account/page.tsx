@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
@@ -54,7 +55,7 @@ export default function AccountPage() {
             {/* Avatar card */}
             <div className="bg-surface-container-low rounded-xl p-8 flex flex-col items-center text-center gap-4">
               {user?.imageUrl ? (
-                <img src={user.imageUrl} alt="Profile" className="w-20 h-20 rounded-full object-cover" />
+                <Image src={user.imageUrl} alt="Profile" width={80} height={80} className="w-20 h-20 rounded-full object-cover" />
               ) : (
                 <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
                   <User size={40} className="text-primary" />
@@ -135,11 +136,15 @@ export default function AccountPage() {
                       className="group bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 hover:shadow-md transition-shadow"
                     >
                       <Link href={`/shop/${item.productId}`} className="block relative aspect-[0.73] overflow-hidden bg-surface-container">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-                        />
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="(min-width: 768px) 33vw, 100vw"
+                            className="object-contain transition-transform duration-700 group-hover:scale-105"
+                          />
+                        )}
                       </Link>
                       <div className="p-4 space-y-3">
                         <div>

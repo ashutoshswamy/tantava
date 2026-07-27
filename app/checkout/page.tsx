@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useCart } from "@/store/cart";
@@ -353,12 +354,16 @@ export default function CheckoutPage() {
                 <div className="space-y-4 mb-6">
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-4">
-                      <div className="w-16 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-full h-full object-contain"
-                        />
+                      <div className="relative w-16 h-20 bg-surface-container rounded-lg overflow-hidden flex-shrink-0">
+                        {item.image && (
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            sizes="64px"
+                            className="object-contain"
+                          />
+                        )}
                       </div>
                       <div className="flex-1">
                         <h3 className="font-label-md text-label-md text-on-surface">
