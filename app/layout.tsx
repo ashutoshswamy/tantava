@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Nunito, Playfair_Display } from "next/font/google";
 import Script from "next/script";
 import { ClerkProvider } from "@clerk/nextjs";
-import ThemeInjector from "./components/ThemeInjector";
+import { getSettings } from "@/lib/settings";
+import { deriveThemeVars, DEFAULT_THEME_SEEDS } from "@/lib/theme-color";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -88,15 +89,29 @@ const organizationJsonLd = {
   sameAs: ["https://instagram.com/_tantava"],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Theme is derived server-side from admin-picked colors and inlined as a
+  // <style> tag so the page paints in the right colors on first render —
+  // no client fetch, no flash of default theme.
+  const settings = await getSettings().catch(() => null);
+  const themeVars = deriveThemeVars({
+    background: settings?.theme_background || DEFAULT_THEME_SEEDS.background,
+    primary: settings?.theme_primary || DEFAULT_THEME_SEEDS.primary,
+    secondary: settings?.theme_secondary || DEFAULT_THEME_SEEDS.secondary,
+  });
+  const themeCss = `:root{${Object.entries(themeVars)
+    .map(([k, v]) => `${k}:${v}`)
+    .join(";")}}`;
+
   return (
     <ClerkProvider>
       <html lang="en" className={`${cormorant.variable} ${nunito.variable} ${playfair.variable}`}>
         <head>
+          <style dangerouslySetInnerHTML={{ __html: themeCss }} />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
@@ -110,7 +125,6 @@ function gtag(){dataLayer.push(arguments);}
 gtag('js', new Date());
 gtag('config', 'G-SDE2LDM8ZE');`}
           </Script>
-          <ThemeInjector />
           {children}
         </body>
       </html>

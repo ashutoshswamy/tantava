@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { requireAdmin } from "@/lib/auth";
+import { getSettings } from "@/lib/settings";
 import { apiError, validateSettingsInput, ValidationError } from "@/lib/api-utils";
 
 export async function GET() {
-  const supabase = createServerSupabase();
-  const { data, error } = await supabase.from("store_settings").select("*").eq("id", true).single();
-  if (error) return apiError("settings.GET", error);
-  return NextResponse.json(data);
+  try {
+    return NextResponse.json(await getSettings());
+  } catch (error) {
+    return apiError("settings.GET", error);
+  }
 }
 
 export async function PUT(req: NextRequest) {
@@ -32,5 +35,6 @@ export async function PUT(req: NextRequest) {
     .select()
     .single();
   if (error) return apiError("settings.PUT", error);
+  revalidateTag("settings", "max");
   return NextResponse.json(data);
 }
